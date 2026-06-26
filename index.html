@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Имкон · Платформа возможностей</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  /* ---- бэкдроп сайта ---- */
+  html,body{height:100%}
+  body{margin:0;background:
+      radial-gradient(1100px 720px at 82% -12%, #ECECFB 0%, transparent 58%),
+      radial-gradient(900px 600px at -12% 112%, #EAF0FB 0%, transparent 55%),
+      var(--bg);
+    display:flex;align-items:center;justify-content:center;padding:28px;gap:42px}
+  .brandside{max-width:340px}
+  .brandside .logo{display:flex;align-items:center;gap:12px}
+  .brandside h1{font:600 40px/1.05 var(--font-head);color:var(--ink);margin:18px 0 0}
+  .brandside p{font:400 16px/1.55 var(--font-ui);color:var(--text-3);margin-top:12px}
+  .brandside .feats{margin-top:22px;display:flex;flex-direction:column;gap:12px}
+  .brandside .feat{display:flex;gap:10px;align-items:flex-start;font:500 14px var(--font-ui);color:var(--text-2)}
+  .brandside .feat b{color:var(--ink);font-weight:600}
+  .brandside .dot{width:9px;height:9px;border-radius:99px;margin-top:5px;flex-shrink:0}
+
+  /* ---- телефон-приложение ---- */
+  .device{position:relative}
+  .phone{position:relative;width:var(--phone-w);height:var(--phone-h);background:var(--bg);
+    border:var(--bw-frame) solid var(--ink);border-radius:var(--r-phone);overflow:hidden;
+    display:flex;flex-direction:column;box-shadow:var(--sh-phone);color:var(--ink-2)}
+  .screen{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+  .screen::-webkit-scrollbar{width:0}
+  .langfab{position:absolute;top:-14px;right:0;transform:translateY(-100%)}
+
+  /* экранная анимация */
+  .screen > .view{animation:imkonRise .34s cubic-bezier(.2,.8,.2,1) both}
+
+  /* служебные */
+  .top{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px var(--font-ui);color:var(--ink)}
+  .top .dots{letter-spacing:2px}
+  .hd{display:flex;align-items:center;gap:14px;padding:16px 22px 0}
+  .hd .back{cursor:pointer;display:flex}
+  .center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 30px}
+  .muted{color:var(--muted)}
+  .pad{padding:0 var(--sp-7)}
+  .foot{padding:14px var(--sp-7) var(--sp-8);display:flex;flex-direction:column;gap:11px}
+  .listgap{display:flex;flex-direction:column;gap:11px}
+  a.plain{text-decoration:none;color:inherit}
+
+  /* тост */
+  .toast{position:absolute;left:18px;right:18px;bottom:84px;background:var(--ink);color:var(--bg);
+    font:600 14px var(--font-ui);padding:14px 16px;border-radius:14px;box-shadow:var(--sh-node);
+    opacity:0;transform:translateY(12px);transition:.25s;pointer-events:none;text-align:center;z-index:5}
+  .toast.show{opacity:1;transform:translateY(0)}
+
+  /* AI-чат */
+  .bubble{max-width:80%;padding:12px 14px;border-radius:16px;font:400 14px/1.4 var(--font-ui)}
+  .bubble.ai{background:#fff;border:1px solid var(--line-card);border-bottom-left-radius:5px;align-self:flex-start;color:var(--ink)}
+  .bubble.me{background:var(--teal);color:#fff;border-bottom-right-radius:5px;align-self:flex-end}
+
+  @media (max-width:880px){
+    body{padding:0;gap:0}
+    .brandside{display:none}
+    .device{width:100%;height:100%}
+    .phone{width:100vw;height:100dvh;border:none;border-radius:0}
+    .langfab{top:auto;bottom:74px;right:14px;transform:none}
+  }
+
+  /* ====== ПЛАВНОСТЬ: вход экрана ====== */
+  .screen > .view{animation:imkonViewIn .44s cubic-bezier(.2,.85,.25,1) both;will-change:transform,opacity}
+  @keyframes imkonViewIn{from{opacity:0;transform:translateY(13px) scale(.992)}to{opacity:1;transform:none}}
+  .screen.back > .view{animation:imkonViewBack .44s cubic-bezier(.2,.85,.25,1) both}
+  @keyframes imkonViewBack{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+  /* мягкие транзишены на интерактиве */
+  .im-filter,.im-tab,.im-chip,.im-option,.seg button,.gph-dot{transition:background .18s ease,color .18s ease,border-color .18s ease,transform .18s cubic-bezier(.2,.85,.25,1)}
+  .im-filter:active,.im-tab:active{transform:scale(.96)}
+
+  /* ====== Bottom sheet ====== */
+  .sheet-wrap{position:absolute;inset:0;z-index:8;display:none}
+  .sheet-wrap.show{display:block}
+  .sheet-scrim{position:absolute;inset:0;background:rgba(20,33,31,.42);opacity:0;transition:opacity .3s ease}
+  .sheet-wrap.show .sheet-scrim{opacity:1}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:24px 24px 0 0;
+    padding:9px 22px 24px;box-shadow:0 -12px 44px -14px rgba(20,33,31,.45);transform:translateY(101%);
+    transition:transform .36s cubic-bezier(.2,.85,.25,1)}
+  .sheet-wrap.show .sheet{transform:none}
+  .sheet .grip{width:40px;height:4px;border-radius:99px;background:var(--line-input);margin:0 auto 16px}
+
+  /* ====== AI «печатает» ====== */
+  .typing{display:inline-flex;gap:5px;padding:14px 16px;background:#fff;border:1px solid var(--line-card);
+    border-radius:16px;border-bottom-left-radius:5px;align-self:flex-start;animation:imkonViewIn .3s both}
+  .typing i{width:7px;height:7px;border-radius:99px;background:var(--muted)}
+  .typing i{animation:imkonBlink 1.25s infinite both}
+  .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes imkonBlink{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-4px)}}
+  .bubble{animation:imkonViewIn .34s cubic-bezier(.2,.85,.25,1) both}
+
+  /* ====== Obsidian-граф «Мой путь» ====== */
+  .gph{position:relative;flex:1;overflow:hidden;touch-action:none;cursor:grab;
+    background:radial-gradient(420px 320px at 28% 18%, #efe7d4 0%, transparent 60%),
+               radial-gradient(360px 300px at 88% 92%, #e7efe9 0%, transparent 60%), var(--bg)}
+  .gph.drag{cursor:grabbing}
+  .gph-stage{position:absolute;top:0;left:0;transform-origin:0 0;will-change:transform}
+  .gph-edges{position:absolute;top:0;left:0;overflow:visible;pointer-events:none}
+  .gph-node{position:absolute;display:flex;flex-direction:column;align-items:center;gap:7px;
+    transform:translate(-50%,-50%);cursor:pointer;-webkit-user-select:none;user-select:none;
+    animation:imkonPop .5s cubic-bezier(.2,.9,.3,1.25) both}
+  @keyframes imkonPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}60%{transform:translate(-50%,-50%) scale(1.07)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+  .gph-node:nth-of-type(1){animation-delay:.05s}.gph-node:nth-of-type(2){animation-delay:.12s}
+  .gph-node:nth-of-type(3){animation-delay:.19s}.gph-node:nth-of-type(4){animation-delay:.26s}
+  .gph-node:nth-of-type(5){animation-delay:.33s}.gph-node:nth-of-type(6){animation-delay:.40s}
+  .gph-node:nth-of-type(7){animation-delay:.47s}
+  .gph-edges{animation:imkonEdgeIn .6s ease .12s both}
+  @keyframes imkonEdgeIn{from{opacity:0}to{opacity:1}}
+  .gph-dot{width:46px;height:46px;border-radius:99px;display:flex;align-items:center;justify-content:center;
+    border:3px solid var(--line-input);background:var(--surface-sunk);color:var(--muted-2);box-shadow:var(--sh-card)}
+  .gph-node:active .gph-dot{transform:scale(.9)}
+  .gph-node[data-st="done"]    .gph-dot{background:var(--gold); border-color:var(--gold); color:#fff;box-shadow:var(--sh-node)}
+  .gph-node[data-st="current"] .gph-dot{background:var(--teal); border-color:var(--teal); color:#fff;width:64px;height:64px;box-shadow:var(--sh-node);animation:imkonPulse 2.2s infinite}
+  .gph-node[data-st="goal"]    .gph-dot{background:var(--terra);border-color:var(--terra);color:#fff;width:56px;height:56px;box-shadow:var(--sh-node)}
+  .gph-lbl{font:600 11px var(--font-ui);color:var(--text-2);max-width:96px;text-align:center;line-height:1.25;
+    background:rgba(247,242,233,.72);padding:2px 7px;border-radius:8px;backdrop-filter:blur(2px)}
+  .gph-node[data-st="locked"] .gph-lbl{color:var(--muted-2)}
+  .gph-node[data-st="current"] .gph-lbl{color:var(--ink);font-weight:700}
+  .gph-zoom{position:absolute;right:14px;bottom:16px;display:flex;flex-direction:column;gap:8px;z-index:4}
+  .gph-zoom button{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink);font:600 19px var(--font-ui);cursor:pointer;box-shadow:var(--sh-card);display:flex;align-items:center;justify-content:center}
+  .gph-zoom button:active{transform:scale(.92)}
+  .gph-hint{position:absolute;left:14px;top:12px;z-index:4;font:600 11px var(--font-ui);color:var(--muted);
+    background:rgba(247,242,233,.82);padding:6px 12px;border-radius:99px;display:flex;align-items:center;gap:7px;backdrop-filter:blur(3px);pointer-events:none}
+  .gph-hint .pin{width:7px;height:7px;border-radius:99px;background:var(--teal)}
+
+  /* ====== Segmented (граф/список) ====== */
+  .seg{display:inline-flex;background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:4px}
+  .seg button{font:600 12px var(--font-ui);padding:7px 15px;border:none;border-radius:99px;background:transparent;color:var(--text-3);cursor:pointer}
+  .seg button.on{background:var(--ink);color:var(--bg)}
+
+  /* ====== AI-герой на главной ====== */
+  .ai-hero{position:relative;overflow:hidden;background:var(--surface);border:1.5px solid var(--teal-border);border-radius:20px;padding:18px 17px;box-shadow:var(--sh-card)}
+  .ai-hero::before{content:"";position:absolute;top:-46px;right:-34px;width:170px;height:170px;border-radius:50%;background:radial-gradient(circle,rgba(91,91,214,.16),transparent 70%);pointer-events:none}
+  .ai-hero .avatar{width:40px;height:40px;border-radius:99px;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:19px;box-shadow:var(--sh-node);flex-shrink:0}
+  .ai-hero-q{font:600 22px/1.18 var(--font-head);color:var(--ink);margin-top:14px;position:relative}
+  .ai-ask{display:flex;align-items:center;gap:10px;margin-top:14px;background:var(--surface-sunk);border:1.5px solid var(--line-input);border-radius:14px;padding:12px 12px;cursor:pointer;transition:border-color .18s ease}
+  .ai-ask:hover{border-color:var(--teal)}
+  .ai-ask .ph{flex:1;font:500 14px var(--font-ui);color:var(--muted)}
+  .ai-ask .go{width:34px;height:34px;border-radius:10px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+  /* ====== Работа: теги, бейдж, карточка ====== */
+  .im-tag{display:inline-flex;align-items:center;gap:5px;font:600 12px var(--font-ui);color:var(--text-3);background:var(--surface-sunk);border:1px solid var(--line);padding:5px 9px;border-radius:8px;white-space:nowrap}
+  .im-badge-new{font:700 9px var(--font-ui);letter-spacing:.05em;text-transform:uppercase;color:#fff;background:var(--teal);padding:2px 7px;border-radius:99px}
+  .im-job{transition:transform .14s cubic-bezier(.2,.85,.25,1),border-color .15s ease}
+  .im-job:active{transform:scale(.99)}
+  .im-job:hover{border-color:var(--teal-border)}
+
+  /* ====== Главная: статы ====== */
+  .stat{flex:1;background:var(--surface);border:1px solid var(--line-card);border-radius:14px;padding:12px 13px}
+  .stat .n{font:700 22px var(--font-head);line-height:1}
+  .stat .l{font:600 10px var(--font-ui);letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-top:5px}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.001ms!important;transition-duration:.001ms!important}
+  }
+</style>
+</head>
+<body>
+
+  <!-- левая колонка-бренд (десктоп) -->
+  <aside class="brandside">
+    <div class="logo">
+      <svg width="44" height="44" viewBox="0 0 48 48" fill="none"><rect x="3" y="3" width="42" height="42" rx="13" fill="#5B5BD6"/><path d="M24 13l2.6 7.4L34 23l-7.4 2.6L24 33l-2.6-7.4L14 23l7.4-2.6L24 13z" fill="#fff"/></svg>
+      <div style="font:700 26px var(--font-head);color:var(--ink)">Имкон</div>
+    </div>
+    <h1 data-i18n="brand_h">Возможности находят тебя</h1>
+    <p data-i18n="brand_p">Платформа возможностей для молодёжи Таджикистана: стипендии, курсы, работа и путь до реальной профессии.</p>
+    <div class="feats">
+      <div class="feat"><span class="dot" style="background:var(--teal)"></span><span><b>AI-путь</b> — построим дорогу шаг за шагом до работы</span></div>
+      <div class="feat"><span class="dot" style="background:var(--gold)"></span><span><b>Паспорти Эътимод</b> — достижения, которым верит работодатель</span></div>
+      <div class="feat"><span class="dot" style="background:var(--terra)"></span><span><b>Работа и подработки</b> — вакансии, гиги, фриланс</span></div>
+    </div>
+  </aside>
+
+  <!-- устройство -->
+  <div class="device">
+    <div class="langfab">
+      <div class="im-pills">
+        <button class="im-pill" data-lang="tg">Тоҷикӣ</button>
+        <button class="im-pill is-on" data-lang="ru">Русский</button>
+      </div>
+    </div>
+    <div class="phone">
+      <div class="top"><span>9:41</span><span class="dots">●●●</span></div>
+      <div class="screen" id="screen"></div>
+      <nav class="im-nav" id="nav" hidden></nav>
+      <div class="toast" id="toast"></div>
+      <div class="sheet-wrap" id="sheet"></div>
+    </div>
+  </div>
+
+<script>
+/* ============================================================
+   ИМКОН · интерактивный прототип (frontend only, без бэкенда)
+   Данные и тексты — из исходного канваса. Состояние в localStorage.
+   ============================================================ */
+
+/* ---------- иконки ---------- */
+/* Чистый Lucide-стиль: ровный тонкий штрих 24×24 */
+const IC = {
+  book:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z',
+  code:'M16 18l6-6-6-6M8 6l-6 6 6 6',
+  scale:'M16 16l3-8 3 8c-2 1.5-4 1.5-6 0M2 16l3-8 3 8c-2 1.5-4 1.5-6 0M7 21h10M12 3v18M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2',
+  cross:'M9 3h6v6h6v6h-6v6H9v-6H3V9h6z',
+  hands:'M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.51 4.04 3 5.5l7 7z',
+  coin:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6v12M15.5 9a3.5 3 0 0 0-3.5-2c-2 0-3.2 1-3.2 2.3 0 1.5 1.2 2 3.7 2.7s3.7 1.2 3.7 2.7c0 1.3-1.2 2.3-3.2 2.3a3.5 3 0 0 1-3.5-2',
+  work:'M4 7h16a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1zM8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18',
+  puzzle:'M9.5 2a2 2 0 0 1 2 2c0 .5-.2 1-.5 1.5h3a1 1 0 0 1 1 1v3c.5-.3 1-.5 1.5-.5a2 2 0 1 1 0 4c-.5 0-1-.2-1.5-.5v3a1 1 0 0 1-1 1h-3c.3.5.5 1 .5 1.5a2 2 0 1 1-4 0c0-.5.2-1 .5-1.5h-3a1 1 0 0 1-1-1v-3c-.5.3-1 .5-1.5.5a2 2 0 1 1 0-4c.5 0 1 .2 1.5.5V6.5a1 1 0 0 1 1-1h3C7.7 5 7.5 4.5 7.5 4a2 2 0 0 1 2-2z',
+  globe:'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20',
+  react:'M12 2 2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5',
+  server:'M3 5h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zM3 14h18a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1zM6 7.5h.01M6 16.5h.01',
+  flag:'M4 21V4M4 4h13l-2.5 4L17 12H4',
+  check:'M5 12l4.5 4.5L19 7',
+  up:'M3 17l6-6 4 4 8-8M15 7h6v6',
+  home:'M3 10.5 12 3l9 7.5M5 9.5V21h14V9.5',
+  path:'M6 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 9a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM8 17h6a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h5',
+  user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21c0-4 4-6.5 8-6.5s8 2.5 8 6.5',
+  bell:'M6 9a6 6 0 1 1 12 0c0 5 2 6 2 6H4s2-1 2-6M10 20a2 2 0 0 0 4 0',
+  send:'M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z',
+  arrow:'M15 18l-6-6 6-6',
+  lock:'M5 11a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-8zM8 10V7a4 4 0 0 1 8 0v3',
+  cap:'M22 10 12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 2.5 6 2.5s6-1 6-2.5v-5M22 10v6',
+  spark:'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3zM18.5 13.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z',
+  eye:'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+  spark2:'M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z',
+  crown:'M4 18h16M5 18l-1-9 5 4 3-7 3 7 5-4-1 9',
+  filter:'M3 5h18l-7 8v6l-4 2v-8z',
+  pin:'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+  star:'M12 3l2.9 6.3 6.6.6-5 4.4 1.5 6.6L12 17.8 5.5 21l1.5-6.6-5-4.4 6.6-.6z'
+};
+/* ---------- лого компаний/организаций (фирменные монограммы) ---------- */
+function brandFor(org){const o=(org||'').toLowerCase();
+  if(o.includes('alif'))return{bg:'#7A2FF6',t:'a'};
+  if(o.includes('megafon')||o.includes('мегафон'))return{bg:'#1FA84B',t:'M'};
+  if(o.includes('zypl'))return{bg:'#111118',t:'z'};
+  if(o.includes('babilon'))return{bg:'#E23B2E',t:'B'};
+  if(o.includes('oson'))return{bg:'#F7941D',t:'O'};
+  if(o.includes('spitamen'))return{bg:'#0E7C66',t:'S'};
+  if(o.includes('dc'))return{bg:'#2563EB',t:'DC',fs:.3};
+  if(o.includes('илмхона')||o.includes('ilmhona'))return{bg:'#16A34A',t:'И'};
+  if(o.includes('ielts'))return{bg:'#B5121B',t:'IE',fs:.3};
+  if(o.includes('sitora')||o.includes('ситора'))return{bg:'#CA8A04',t:'S'};
+  if(o.includes('codecademy'))return{bg:'#1F2937',t:'C'};
+  if(o.includes('bootcamp'))return{bg:'#5B5BD6',t:'B'};
+  if(o.includes('президент')||o.includes('минобр')||o.includes('маориф')||o.includes('вазорат')||o.includes('донишгоҳ')||o.includes('университ')||o.includes('славян')||o.includes('технич')||o.includes('ттс'))return{bg:'#1E7A34',glyph:1};
+  return{bg:'#3A3A46',t:(o.replace(/[^a-zа-яё]/i,'')[0]||'?').toUpperCase()};
+}
+function logo(org,{s=44,r=12}={}){const b=brandFor(org);const fs=Math.round(s*(b.fs||0.4));
+  const inner=b.glyph?svg('crown',{s:Math.round(s*0.5),c:'#F4C430'})
+    :`<span style="font:800 ${fs}px/1 var(--font-head);letter-spacing:-.02em;color:#fff">${b.t}</span>`;
+  return `<div style="width:${s}px;height:${s}px;border-radius:${r}px;background:${b.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:var(--sh-card);overflow:hidden">${inner}</div>`;
+}
+function svg(id,{s=22,c='currentColor',w=2,fill='none'}={}){
+  return `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="${fill}" stroke="${c}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"><path d="${IC[id]||''}"/></svg>`;
+}
+
+/* ---------- i18n ---------- */
+const TR = {
+ ru:{
+  brand_h:'Возможности находят тебя',
+  brand_p:'Платформа возможностей для молодёжи Таджикистана: стипендии, курсы, работа и путь до реальной профессии.',
+  c:{back:'Назад',next:'Далее',skip:'Пропустить',more:'Подробнее',save:'Сохранить',share:'Поделиться',done:'Готово',send:'Отправить',cancel:'Отмена'},
+  w:{slogan:'Возможности находят тебя',login:'Войти',register:'Создать аккаунт',tg:'Войти через Telegram',have:'Уже есть аккаунт?'},
+  su:{title:'Создай аккаунт в Имкон',sub:'Свой профиль возможностей — остаётся с тобой навсегда',name_l:'Как тебя зовут?',name_ph:'Например, Шухрат',email_l:'Email или телефон',email_ph:'shuhrat@mail.tj',pass_l:'Пароль',pass_ph:'Минимум 6 символов',create:'Создать аккаунт',or:'или',tg:'Войти через Telegram',have:'Уже есть аккаунт?',login:'Войти',agree:'Создавая аккаунт, ты принимаешь правила Имкон'},
+  r:{step:'Шаг',status_q:'Кто ты сейчас?',status_hint:'Подберём возможности под твой этап',name_q:'Как тебя зовут?',name_ph:'Твоё имя',age_q:'Сколько тебе лет?',city_q:'Откуда ты?',need_q:'Что тебе нужно?',need_hint:'Можно выбрать несколько',parents_q:'Родители работают за рубежом?',parents_sub:'Это поможет подобрать поддержку и стипендии',skills_q:'Навыки и языки',skills_hint:'Можно пропустить и заполнить позже',ready:'Готово! Добро пожаловать',go:'Перейти в Имкон'},
+  nav:{home:'Главная',path:'Мой путь',work:'Работа',uni:'Вузы',profile:'Профиль'},
+  h:{hello:'Салом',ai_b:'Не знаешь, что выбрать?',ai_s:'Спроси AI — подберём под тебя',more:'Показать ещё',d:'дн.',cont_t:'Продолжи путь',cont_s:'Сейчас:',cont_cta:'К карте',rec:'Возможности под тебя',new:'новое',trust:'Trust',apps_l:'Заявки',steps_l:'Шагов',all:'Все',deadline_soon:'скоро дедлайн',ai_name:'Имкон AI',ai_hero_q:'Чем помочь сегодня?',ai_ask:'Спроси меня…',q_scholar:'Найти стипендию',q_path:'Построить путь',q_job:'Найти работу'},
+  f:['Все','Стипендии','Курсы','Работа'],
+  od:{who:'Кто может участвовать',deadline:'Дедлайн',contact:'Контакт',desc:'Описание',apply:'Подать заявку',notify:'Уведомить о похожем',applied:'Заявка отправлена ✓'},
+  ai:{title:'AI-помощник',q1:'Салом! Задам пару вопросов и подберу путь. Что тебе сейчас интереснее?',o1:'Учёба',o2:'Заработок',o3:'Новая профессия',u1:'Хочу новую профессию, в IT',q2:'Отлично! Я вижу твою цель. Что сделаем?',a1:'Показать возможности',a2:'Построить мой путь',a3:'Создать резюме',typing:'печатает…',online:'на связи',guide_t:'Я веду тебя к цели',guide_s:'Соберу визуальную карту пути и покажу, с чего начать прямо сейчас',open_map:'Открыть карту пути',ph:'Напиши сообщение…'},
+  p:{empty_t:'Кем ты хочешь стать?',empty_s:'Напиши цель словами — построим путь шаг за шагом, до реальной работы',empty_ph:'например: фулл-стак разработчик',build:'Построить мой путь',goal_l:'Цель',passed:'Пройдено',here:'ты здесь',take:'Пройти курс',locked:'Откроется после прошлого шага',free:'бесплатно',share:'Поделиться путём',finish:'Реальная работа',rebuild:'Изменить цель',graph:'Граф',list:'Список',tap:'Тяни, чтобы двигать · тапни узел',map:'Карта пути',l_done:'Пройдено',l_cur:'Сейчас',l_lock:'Закрыто',l_goal:'Цель',node_done:'Шаг пройден',node_lock:'Сначала пройди предыдущий шаг',node_goal:'Финиш пути — реальная работа',optional:'по желанию'},
+  pr:{passport:'Паспорти Эътимод',trust:'Trust Score',trust_sub:'растёт с каждым подтверждением',verified:'Подтверждённые достижения',skills:'Навыки',langs:'Языки',add:'Добавить достижение',pending:'ожидает подтверждения',by:'подтвердил',mini:'Мой путь',share:'Поделиться',pdf:'Резюме PDF',edit:'Редактировать',org:'Я организация',apps:'Мои заявки'},
+  sh:{title:'Поделиться профилем',link_l:'Ссылка на твой живой профиль',copy:'Копировать ссылку',copied:'Ссылка скопирована ✓',send:'Отправить',pdf:'Скачать PDF-резюме',vis:'Профиль открыт',vis_sub:'Работодатели могут найти тебя по ссылке',preview:'Как видит работодатель'},
+  pub:{badge:'Так видит профиль работодатель',contact:'Связаться',invite:'Пригласить на собеседование',trust:'Подтверждённый профиль',path:'Карьерный путь',invited:'Приглашение отправлено ✓'},
+  wk:{title:'Работа',tab0:'Работа',tab1:'Стажировки',tab2:'Фриланс',apply:'Откликнуться',take:'Откликнуться',create:'Создать свой гиг',apps:'Мои заявки',taken:'Отклик отправлен ✓',cur:'сомони',month:'/мес',filters:'Фильтры',all:'Все',reset:'Сбросить',f_sphere:'Сфера',f_company:'Компания',f_fmt:'Формат',f_city:'Город',apply2:'Показать',newb:'Новое',about:'О вакансии',req:'Требования',respond:'Откликнуться',found:'найдено',any:'Любой'},
+  ap:{title:'Мои заявки',st:['Отправлено','Просмотрено','В шортлисте','Принято','Отклонено']},
+  gig:{title:'Создание гига',name_l:'Название — «Я сделаю…»',name_ph:'Я сделаю логотип за 2 дня',cat_l:'Категория',price_l:'Цена',price_ph:'от 200 сомони',term_l:'Срок',term_ph:'2 дня',desc_l:'Описание',ai:'AI поможет с описанием',publish:'Опубликовать',published:'Гиг опубликован ✓'},
+  uni:{title:'Вузы',score:'проходной балл',cost:'стоимость',sch:'есть',deadline:'дедлайн',add:'В мой путь',added:'Добавлено в путь ✓'},
+  org:{title:'Кабинет организации',sub:'Запросы на подтверждение достижений',who:'Илмхона · образовательный центр',req:'указал(а), что прошёл у вас',confirm:'Подтвердить',reject:'Отклонить',empty:'Все запросы обработаны',confirmed:'Подтверждено ✓',rejected:'Отклонено'},
+  nt:{title:'Уведомления',n1:'Появилась работа под тебя',n1s:'Frontend-стажировка · Alif Tech',n2:'Илмхона подтвердила твоё достижение',n2s:'«Веб-разработка, 120 ч» ✅',n3:'Та же профессия, но зарплата выше',n3s:'Junior Frontend · +1500 сомони',ago:['5 мин','1 ч','вчера']}
+ },
+ tg:{
+  brand_h:'Имконҳо туро меёбанд',
+  brand_p:'Платформаи имконҳо барои ҷавонони Тоҷикистон: стипендия, курс, кор ва роҳ то касби воқеӣ.',
+  c:{back:'Бозгашт',next:'Идома',skip:'Гузаронидан',more:'Муфассал',save:'Захира',share:'Мубодила',done:'Тайёр',send:'Фиристодан',cancel:'Бекор'},
+  w:{slogan:'Имконҳо туро меёбанд',login:'Ворид шудан',register:'Аккаунт сохтан',tg:'Тавассути Telegram ворид шавед',have:'Аллакай аккаунт доред?'},
+  su:{title:'Дар Имкон аккаунт созед',sub:'Профили имконҳои ту — ҳамеша бо ту мемонад',name_l:'Номат чист?',name_ph:'Мисол, Шухрат',email_l:'Email ё телефон',email_ph:'shuhrat@mail.tj',pass_l:'Парол',pass_ph:'Камаш 6 аломат',create:'Аккаунт сохтан',or:'ё',tg:'Тавассути Telegram',have:'Аллакай аккаунт доред?',login:'Ворид шавед',agree:'Бо сохтани аккаунт қоидаҳои Имконро қабул мекунед'},
+  r:{step:'Қадам',status_q:'Ҳозир ту кистӣ?',status_hint:'Имконҳоро мувофиқи марҳилаи ту меёбем',name_q:'Номат чист?',name_ph:'Номи ту',age_q:'Чанд сола ҳастӣ?',city_q:'Аз куҷоӣ?',need_q:'Ба ту чӣ лозим аст?',need_hint:'Якчандтоашро интихоб кардан мумкин',parents_q:'Волидайн дар хориҷа кор мекунанд?',parents_sub:'Ин барои интихоби дастгирӣ ва стипендия кӯмак мекунад',skills_q:'Малакаҳо ва забонҳо',skills_hint:'Метавонед гузаронед ва баъдтар пур кунед',ready:'Тайёр! Хуш омадед',go:'Ба Имкон гузаред'},
+  nav:{home:'Асосӣ',path:'Роҳи ман',work:'Кор',uni:'Донишгоҳ',profile:'Профил'},
+  h:{hello:'Салом',ai_b:'Намедонӣ чиро интихоб кунӣ?',ai_s:'Аз AI пурс — барои ту меёбем',more:'Бештар нишон диҳед',d:'рӯз',cont_t:'Роҳро идома деҳ',cont_s:'Ҳозир:',cont_cta:'Ба харита',rec:'Имконҳо барои ту',new:'нав',trust:'Эътимод',apps_l:'Дархостҳо',steps_l:'Қадам',all:'Ҳама',deadline_soon:'мӯҳлат наздик',ai_name:'Имкон AI',ai_hero_q:'Имрӯз чӣ кӯмак кунам?',ai_ask:'Аз ман пурс…',q_scholar:'Стипендия ёфтан',q_path:'Роҳ сохтан',q_job:'Кор ёфтан'},
+  f:['Ҳама','Стипендияҳо','Курсҳо','Кор'],
+  od:{who:'Кӣ метавонад иштирок кунад',deadline:'Мӯҳлат',contact:'Тамос',desc:'Тавсиф',apply:'Дархост фиристодан',notify:'Дар бораи монанд хабар диҳед',applied:'Дархост фиристода шуд ✓'},
+  ai:{title:'Ёрдамчии AI',q1:'Салом! Чанд савол медиҳам ва роҳ интихоб мекунам. Ҳозир ба ту чӣ ҷолибтар аст?',o1:'Таҳсил',o2:'Даромад',o3:'Касби нав',u1:'Касби нав мехоҳам, дар IT',q2:'Олӣ! Ҳадафатро дидам. Чӣ кунем?',a1:'Имконҳоро нишон диҳед',a2:'Роҳамро бисоз',a3:'Резюме созед',typing:'менависад…',online:'дар тамос',guide_t:'Туро ба ҳадаф мебарам',guide_s:'Харитаи роҳро ҷамъ мекунам ва нишон медиҳам аз чӣ оғоз кунӣ',open_map:'Харитаи роҳро кушо',ph:'Паём навис…'},
+  p:{empty_t:'Мехоҳӣ кӣ шавӣ?',empty_s:'Ҳадафро бо калима навис — мо роҳро қадам ба қадам то кори воқеӣ месозем',empty_ph:'мисол: барномасози full-stack',build:'Роҳамро бисоз',goal_l:'Ҳадаф',passed:'Гузашта',here:'ту инҷоӣ',take:'Курсро гузаред',locked:'Баъди қадами қаблӣ кушода мешавад',free:'ройгон',share:'Роҳро мубодила кунед',finish:'Кори воқеӣ',rebuild:'Ҳадафро иваз кунед',graph:'Граф',list:'Рӯйхат',tap:'Бикаш барои ҳаракат · ба гиреҳ зан',map:'Харитаи роҳ',l_done:'Гузашта',l_cur:'Ҳозир',l_lock:'Баста',l_goal:'Ҳадаф',node_done:'Қадам гузашт',node_lock:'Аввал қадами қаблиро гузар',node_goal:'Финиши роҳ — кори воқеӣ',optional:'ихтиёрӣ'},
+  pr:{passport:'Паспорти Эътимод',trust:'Балли эътимод',trust_sub:'бо ҳар тасдиқ боло меравад',verified:'Дастовардҳои тасдиқшуда',skills:'Малакаҳо',langs:'Забонҳо',add:'Дастоварди нав',pending:'интизори тасдиқ',by:'тасдиқ кард',mini:'Роҳи ман',share:'Мубодила',pdf:'Резюмеи PDF',edit:'Таҳрир',org:'Ман ташкилотам',apps:'Дархостҳои ман'},
+  sh:{title:'Мубодилаи профил',link_l:'Истиноди профили зиндаи ту',copy:'Истинодро нусха кунед',copied:'Истинод нусха шуд ✓',send:'Фиристодан',pdf:'Резюмеи PDF боргирӣ',vis:'Профил кушода аст',vis_sub:'Корфармоён метавонанд туро бо истинод ёбанд',preview:'Корфармо чунин мебинад'},
+  pub:{badge:'Профилро корфармо чунин мебинад',contact:'Тамос гирифтан',invite:'Даъват ба мусоҳиба',trust:'Профили тасдиқшуда',path:'Роҳи касбӣ',invited:'Даъватнома фиристода шуд ✓'},
+  wk:{title:'Кор',tab0:'Кор',tab1:'Коромӯзӣ',tab2:'Фриланс',apply:'Дархост',take:'Дархост',create:'Хидмати худро созед',apps:'Дархостҳои ман',taken:'Дархост фиристода шуд ✓',cur:'сомонӣ',month:'/моҳ',filters:'Филтрҳо',all:'Ҳама',reset:'Тоза',f_sphere:'Соҳа',f_company:'Ширкат',f_fmt:'Формат',f_city:'Шаҳр',apply2:'Нишон деҳ',newb:'Нав',about:'Дар бораи кор',req:'Талабот',respond:'Дархост',found:'ёфт шуд',any:'Ҳама'},
+  ap:{title:'Дархостҳои ман',st:['Фиристода шуд','Дида шуд','Дар рӯйхати кӯтоҳ','Қабул шуд','Рад шуд']},
+  gig:{title:'Эҷоди хидмат',name_l:'Ном — «Ман мекунам…»',name_ph:'Ман дар 2 рӯз логотип месозам',cat_l:'Категория',price_l:'Нарх',price_ph:'аз 200 сомонӣ',term_l:'Мӯҳлат',term_ph:'2 рӯз',desc_l:'Тавсиф',ai:'AI бо тавсиф кӯмак мекунад',publish:'Нашр кардан',published:'Хидмат нашр шуд ✓'},
+  uni:{title:'Донишгоҳҳо',score:'балли қабул',cost:'арзиш',sch:'стипендия ҳаст',deadline:'мӯҳлат',add:'Ба роҳи ман',added:'Ба роҳ илова шуд ✓'},
+  org:{title:'Кабинети ташкилот',sub:'Дархостҳои тасдиқи дастовардҳо',who:'Илмхона · маркази таълимӣ',req:'қайд кард, ки дар назди шумо гузашт',confirm:'Тасдиқ',reject:'Рад',empty:'Ҳама дархостҳо коркард шуданд',confirmed:'Тасдиқ шуд ✓',rejected:'Рад шуд'},
+  nt:{title:'Огоҳиҳо',n1:'Кори мувофиқи ту пайдо шуд',n1s:'Frontend-таҷриба · Alif Tech',n2:'Илмхона дастоварди туро тасдиқ кард',n2s:'«Веб-сайтсозӣ, 120 соат» ✅',n3:'Ҳамон касб, аммо музди баландтар',n3s:'Junior Frontend · +1500 сомонӣ',ago:['5 дақ','1 соат','дирӯз']}
+ }
+};
+
+/* ---------- данные ---------- */
+const DATA = {
+ cities:{ru:['Душанбе','Худжанд','Бохтар','Куляб','ГБАО','Другой'],tg:['Душанбе','Хуҷанд','Бохтар','Кӯлоб','ВМКБ','Дигар']},
+ needs:{
+  ru:[{ic:'book',t:'Учёба и стипендии'},{ic:'code',t:'Курсы'},{ic:'scale',t:'Юрпомощь'},{ic:'cross',t:'Медпомощь'},{ic:'hands',t:'Волонтёрство'},{ic:'coin',t:'Гранты'},{ic:'work',t:'Работа'},{ic:'puzzle',t:'Подработки'},{ic:'globe',t:'Фриланс'}],
+  tg:[{ic:'book',t:'Таҳсил ва'},{ic:'code',t:'Курсҳо'},{ic:'scale',t:'Кумаки ҳуқуқӣ'},{ic:'cross',t:'Кумаки тиббӣ'},{ic:'hands',t:'Волонтёрӣ'},{ic:'coin',t:'Грантҳо'},{ic:'work',t:'Кор'},{ic:'puzzle',t:'Корҳои иловагӣ'},{ic:'globe',t:'Фриланс'}]},
+ opps:{
+  ru:[{ic:'book',cat:'Стипендия',fc:1,title:'Стипендия Президента РТ',org:'Минобрнауки',days:12,body:'Полная стипендия на год обучения для талантливых студентов: покрывает обучение и проживание. Заявка онлайн, решение — за 3 недели.',req:'18–25 лет · средний балл от 4.5 · гражданство РТ',contact:'stipendiya@maorif.tj'},
+      {ic:'code',cat:'Курс',fc:2,title:'Бесплатный курс Python',org:'Илмхона',days:5,body:'8 недель практики с нуля до первого проекта. Сертификат и помощь с трудоустройством.',req:'от 16 лет · ноутбук · 6 ч в неделю',contact:'@ilmhona_bot'},
+      {ic:'work',cat:'Стажировка',fc:3,title:'Контент-менеджер',org:'Alif Academy',days:3,body:'Оплачиваемая стажировка 3 месяца. Ведение соцсетей, тексты, базовый дизайн.',req:'18+ · грамотный русский · портфолио приветствуется',contact:'hr@alif.tj'},
+      {ic:'coin',cat:'Грант',fc:3,title:'Грант молодым предпринимателям',org:'Sitora Fund',days:21,body:'До 30 000 сомони на запуск бизнеса. Менторство и обучение включены.',req:'18–30 лет · идея бизнеса · бизнес-план',contact:'grants@sitora.tj'}],
+  tg:[{ic:'book',cat:'Стипендия',fc:1,title:'Стипендияи Президенти ҶТ',org:'Вазорати маориф',days:12,body:'Стипендияи пурра барои як соли таҳсил ба донишҷӯёни лаёқатманд: пардохти таҳсил ва истиқоматро дар бар мегирад. Дархост онлайн, қарор — дар 3 ҳафта.',req:'18–25 сола · бали миёна аз 4.5 · шаҳрвандии ҶТ',contact:'stipendiya@maorif.tj'},
+      {ic:'code',cat:'Курс',fc:2,title:'Курси ройгони Python',org:'Илмхона',days:5,body:'8 ҳафта амалия аз сифр то лоиҳаи аввал. Сертификат ва кӯмак бо кор.',req:'аз 16 сола · ноутбук · 6 соат дар ҳафта',contact:'@ilmhona_bot'},
+      {ic:'work',cat:'Таҷриба',fc:3,title:'Менеҷери контент',org:'Alif Academy',days:3,body:'Таҷрибаи пулакӣ 3 моҳ. Шабакаҳои иҷтимоӣ, матн, дизайни оддӣ.',req:'18+ · русии хуб · портфолио хуб аст',contact:'hr@alif.tj'},
+      {ic:'coin',cat:'Грант',fc:3,title:'Гранти ҷавонони соҳибкор',org:'Sitora Fund',days:21,body:'То 30 000 сомонӣ барои оғози бизнес. Менторӣ ва омӯзиш дохил.',req:'18–30 сола · ғояи бизнес · нақшаи бизнес',contact:'grants@sitora.tj'}]},
+ path:{
+  ru:[{ic:'code',title:'Основы HTML и CSS',state:'done',course:'Илмхона · бесплатно',time:'3 недели'},
+      {ic:'code',title:'JavaScript с нуля',state:'done',course:'Codecademy · бесплатно',time:'4 недели'},
+      {ic:'react',title:'React и интерфейсы',state:'current',course:'Bootcamp TJ · бесплатно',time:'5 недель'},
+      {ic:'server',title:'Backend: Node.js и базы',state:'locked',course:'Будет рекомендован',time:'6 недель'},
+      {ic:'flag',title:'Junior Full-Stack — работа',state:'goal',course:'Alif · Zypl.ai',time:''}],
+  tg:[{ic:'code',title:'Асосҳои HTML ва CSS',state:'done',course:'Илмхона · ройгон',time:'3 ҳафта'},
+      {ic:'code',title:'JavaScript аз сифр',state:'done',course:'Codecademy · ройгон',time:'4 ҳафта'},
+      {ic:'react',title:'React ва интерфейс',state:'current',course:'Bootcamp TJ · ройгон',time:'5 ҳафта'},
+      {ic:'server',title:'Backend: Node.js ва базаҳо',state:'locked',course:'Тавсия мешавад',time:'6 ҳафта'},
+      {ic:'flag',title:'Junior Full-Stack — кор',state:'goal',course:'Alif · Zypl.ai',time:''}]},
+ ach:{
+  ru:[{t:'Веб-разработка · 120 ч · проект 8/10',by:'Илмхона',v:true},{t:'Английский язык · уровень B2',by:'IELTS Center',v:true},{t:'Графический дизайн · 30 ч',by:'',v:false},{t:'Волонтёрство · 40 ч',by:'',v:false}],
+  tg:[{t:'Веб-сайтсозӣ · 120 соат · лоиҳа 8/10',by:'Илмхона',v:true},{t:'Забони англисӣ · сатҳи B2',by:'IELTS Center',v:true},{t:'Тарроҳии графикӣ · 30 соат',by:'',v:false},{t:'Волонтёрӣ · 40 соат',by:'',v:false}]},
+ skills:{ru:[{n:'Веб-разработка',v:true},{n:'JavaScript',v:true},{n:'Figma',v:false},{n:'Английский B2',v:true},{n:'Тайм-менеджмент',v:false}],
+         tg:[{n:'Веб-сайтсозӣ',v:true},{n:'JavaScript',v:true},{n:'Figma',v:false},{n:'Англисӣ B2',v:true},{n:'Идораи вақт',v:false}]},
+ langs:{ru:[{n:'Таджикский',l:'родной'},{n:'Русский',l:'свободно'},{n:'Английский',l:'B2'}],
+        tg:[{n:'Тоҷикӣ',l:'модарӣ'},{n:'Русӣ',l:'озод'},{n:'Англисӣ',l:'B2'}]},
+ jobs:{ru:[{title:'Junior Frontend-разработчик',org:'Alif Tech',pay:'4000–6000',sph:'IT',city:'Душанбе',fmt:'Гибрид',new:true,desc:'Разработка интерфейсов финтех-продуктов Alif на React. Команда из 6 человек, наставник, ревью кода.',req:'JavaScript, основы React, Git. Английский — чтение документации.'},
+           {title:'Аналитик данных',org:'Zypl.ai',pay:'4500–7000',sph:'IT',city:'Душанбе',fmt:'Гибрид',new:true,desc:'Работа с моделями кредитного скоринга: подготовка данных, дашборды, гипотезы.',req:'SQL, Python (pandas), статистика. Excel на продвинутом.'},
+           {title:'SMM-менеджер',org:'Babilon-T',pay:'от 3200',sph:'Маркетинг',city:'Душанбе',fmt:'Офис',desc:'Ведение соцсетей оператора связи: контент-план, тексты, работа с подрядчиками.',req:'Грамотный русский и таджикский, опыт ведения аккаунтов, базовый дизайн.'},
+           {title:'Специалист поддержки',org:'MegaFon Tajikistan',pay:'от 2800',sph:'Поддержка',city:'Душанбе',fmt:'Офис',desc:'Консультирование абонентов по тарифам и услугам в чате и по телефону.',req:'Коммуникабельность, грамотная речь, готовность к сменному графику.'},
+           {title:'Менеджер по продажам',org:'Spitamen Bank',pay:'от 3500',sph:'Продажи',city:'Душанбе',fmt:'Офис',desc:'Продажа банковских продуктов физлицам, работа с клиентской базой и планом.',req:'Опыт в продажах от 6 мес., нацеленность на результат.'},
+           {title:'QA-инженер (junior)',org:'DC Tech',pay:'3000–4000',sph:'IT',city:'Худжанд',fmt:'Удалёнка',desc:'Ручное тестирование веб- и мобильных приложений, ведение тест-кейсов и багов.',req:'Внимательность, основы тест-дизайна, желание расти в автотесты.'},
+           {title:'Графический дизайнер',org:'OSON',pay:'3500–5000',sph:'Дизайн',city:'Душанбе',fmt:'Гибрид',desc:'Дизайн для платёжного сервиса: баннеры, соцсети, презентации, гайдлайны.',req:'Figma, насмотренность, портфолио. Плюс — моушн в After Effects.'}],
+       tg:[{title:'Junior Frontend-барномасоз',org:'Alif Tech',pay:'4000–6000',sph:'IT',city:'Душанбе',fmt:'Гибрид',new:true,desc:'Сохтани интерфейси маҳсулоти финтехи Alif дар React. Дастаи 6 нафара, мураббӣ, ревюи код.',req:'JavaScript, асосҳои React, Git. Англисӣ — хондани ҳуҷҷат.'},
+           {title:'Таҳлилгари маълумот',org:'Zypl.ai',pay:'4500–7000',sph:'IT',city:'Душанбе',fmt:'Гибрид',new:true,desc:'Кор бо моделҳои скоринги қарзӣ: тайёрии маълумот, дашборд, фарзияҳо.',req:'SQL, Python (pandas), омор. Excel дар сатҳи баланд.'},
+           {title:'Менеҷери SMM',org:'Babilon-T',pay:'аз 3200',sph:'Маркетинг',city:'Душанбе',fmt:'Офис',desc:'Идораи шабакаҳои оператори алоқа: нақшаи контент, матн, кор бо паймонкорон.',req:'Русӣ ва тоҷикии хуб, таҷрибаи идораи аккаунт, дизайни оддӣ.'},
+           {title:'Мутахассиси дастгирӣ',org:'MegaFon Tajikistan',pay:'аз 2800',sph:'Поддержка',city:'Душанбе',fmt:'Офис',desc:'Машварат ба муштариён оид ба тарифу хидматҳо дар чат ва телефон.',req:'Муоширатпазирӣ, нутқи дуруст, омодагӣ ба ҷадвали навбатӣ.'},
+           {title:'Менеҷери фурӯш',org:'Spitamen Bank',pay:'аз 3500',sph:'Продажи',city:'Душанбе',fmt:'Офис',desc:'Фурӯши маҳсулоти бонкӣ ба шахсони воқеӣ, кор бо базаи муштариён.',req:'Таҷрибаи фурӯш аз 6 моҳ, нигаронида ба натиҷа.'},
+           {title:'QA-муҳандис (junior)',org:'DC Tech',pay:'3000–4000',sph:'IT',city:'Хуҷанд',fmt:'Удалёнка',desc:'Тестикунии дастии барномаҳои веб ва мобилӣ, пешбурди тест-кейс ва баг.',req:'Диққат, асосҳои тест-дизайн, хоҳиши рушд ба автотест.'},
+           {title:'Тарроҳи графикӣ',org:'OSON',pay:'3500–5000',sph:'Дизайн',city:'Душанбе',fmt:'Гибрид',desc:'Дизайн барои хидмати пардохт: баннер, шабакаҳо, презентатсия, гайдлайн.',req:'Figma, завқи дидан, портфолио. Плюс — моушн дар After Effects.'}]},
+ interns:{ru:[{title:'Frontend-стажёр',org:'Alif Academy',pay:'1500',sph:'IT',city:'Душанбе',fmt:'Офис'},
+              {title:'Стажёр-маркетолог',org:'Babilon-T',pay:'1200',sph:'Маркетинг',city:'Душанбе',fmt:'Гибрид'},
+              {title:'Data-стажёр',org:'Zypl.ai',pay:'2000',sph:'IT',city:'Душанбе',fmt:'Гибрид'},
+              {title:'Стажёр в финансах',org:'Spitamen Bank',pay:'1800',sph:'Финансы',city:'Душанбе',fmt:'Офис'},
+              {title:'Стажёр-дизайнер',org:'OSON',pay:'1500',sph:'Дизайн',city:'Худжанд',fmt:'Офис'}],
+          tg:[{title:'Frontend-коромӯз',org:'Alif Academy',pay:'1500',sph:'IT',city:'Душанбе',fmt:'Офис'},
+              {title:'Коромӯзи маркетинг',org:'Babilon-T',pay:'1200',sph:'Маркетинг',city:'Душанбе',fmt:'Гибрид'},
+              {title:'Data-коромӯз',org:'Zypl.ai',pay:'2000',sph:'IT',city:'Душанбе',fmt:'Гибрид'},
+              {title:'Коромӯз дар молия',org:'Spitamen Bank',pay:'1800',sph:'Финансы',city:'Душанбе',fmt:'Офис'},
+              {title:'Коромӯзи дизайн',org:'OSON',pay:'1500',sph:'Дизайн',city:'Хуҷанд',fmt:'Офис'}]},
+ services:{ru:[{title:'Сделаю логотип за 2 дня',org:'Дизайн · 12 заказов · ★4.9',pay:'от 200',sph:'Дизайн'},
+               {title:'Настрою рекламу в Instagram',org:'Маркетинг · 8 заказов · ★4.8',pay:'от 350',sph:'Маркетинг'},
+               {title:'Сверстаю лендинг на Tilda',org:'Веб · 5 заказов · ★5.0',pay:'от 600',sph:'IT'},
+               {title:'Смонтирую видео для Reels',org:'Видео · 20 заказов · ★4.9',pay:'от 150',sph:'Дизайн'}],
+           tg:[{title:'Дар 2 рӯз логотип месозам',org:'Дизайн · 12 фармоиш · ★4.9',pay:'аз 200',sph:'Дизайн'},
+               {title:'Рекламаи Instagram танзим мекунам',org:'Маркетинг · 8 фармоиш · ★4.8',pay:'аз 350',sph:'Маркетинг'},
+               {title:'Лендинг дар Tilda месозам',org:'Веб · 5 фармоиш · ★5.0',pay:'аз 600',sph:'IT'},
+               {title:'Видео барои Reels монтаж мекунам',org:'Видео · 20 фармоиш · ★4.9',pay:'аз 150',sph:'Дизайн'}]},
+ myApps:{ru:[{title:'Аналитик данных · Zypl.ai',status:3},{title:'Контент-менеджер · Alif Academy',status:2},{title:'Frontend-разработчик · Alif Tech',status:1},{title:'Грант · Sitora Fund',status:0},{title:'SMM-менеджер · Babilon-T',status:4}],
+         tg:[{title:'Таҳлилгари маълумот · Zypl.ai',status:3},{title:'Менеҷери контент · Alif Academy',status:2},{title:'Frontend-барномасоз · Alif Tech',status:1},{title:'Грант · Sitora Fund',status:0},{title:'Менеҷери SMM · Babilon-T',status:4}]},
+ unis:{ru:[{name:'Таджикский технический университет',city:'Душанбе',dir:'IT · инженерия',score:'140',cost:'8 500 сом/год',deadline:'15 июля',sch:true},{name:'Российско-Таджикский (Славянский) ун-т',city:'Душанбе',dir:'Экономика · право',score:'155',cost:'12 000 сом/год',deadline:'1 авг',sch:true}],
+       tg:[{name:'Донишгоҳи техникии Тоҷикистон',city:'Душанбе',dir:'IT · муҳандисӣ',score:'140',cost:'8 500 сом/сол',deadline:'15 июл',sch:true},{name:'Донишгоҳи (Славянии) Русияву Тоҷикистон',city:'Душанбе',dir:'Иқтисод · ҳуқуқ',score:'155',cost:'12 000 сом/сол',deadline:'1 авг',sch:true}]},
+ verify:{ru:[{name:'Фарзона Раҳимова',course:'Курс «Веб-разработка», 120 ч',when:'2 дня назад'},{name:'Бахтиёр Сафаров',course:'Курс «Python для начинающих»',when:'5 дней назад'},{name:'Нилуфар Каримова',course:'Стажировка, 3 мес',when:'неделю назад'}],
+         tg:[{name:'Фарзона Раҳимова',course:'Курси «Веб-сайтсозӣ», 120 соат',when:'2 рӯз пеш'},{name:'Бахтиёр Сафаров',course:'Курси «Python барои навомӯзон»',when:'5 рӯз пеш'},{name:'Нилуфар Каримова',course:'Таҷриба, 3 моҳ',when:'як ҳафта пеш'}]},
+ statuses:{
+  ru:[{id:'school', ic:'book',t:'Школьник',  s:'Учусь в школе, 9–11 класс'},
+      {id:'student',ic:'cap', t:'Студент',   s:'Колледж или университет'},
+      {id:'grad',   ic:'work',t:'Выпустился',s:'Закончил учёбу, ищу работу'},
+      {id:'working',ic:'up',  t:'Работаю',   s:'Хочу расти или сменить профессию'}],
+  tg:[{id:'school', ic:'book',t:'Хонанда',    s:'Дар мактаб, синфи 9–11'},
+      {id:'student',ic:'cap', t:'Донишҷӯ',    s:'Коллеҷ ё донишгоҳ'},
+      {id:'grad',   ic:'work',t:'Хатмкарда',  s:'Таҳсилро тамом кардам, кор меҷӯям'},
+      {id:'working',ic:'up',  t:'Кор мекунам',s:'Рушд ё иваз кардани касб'}]},
+ graphExtra:{
+  ru:[{id:'ts',  ic:'code', title:'TypeScript',        course:'по желанию · бесплатно',time:'2 недели',state:'locked'},
+      {id:'proj',ic:'react',title:'Проект в портфолио',course:'практика',            time:'3 недели',state:'locked'}],
+  tg:[{id:'ts',  ic:'code', title:'TypeScript',        course:'ихтиёрӣ · ройгон',    time:'2 ҳафта', state:'locked'},
+      {id:'proj',ic:'react',title:'Лоиҳа дар портфолио',course:'амалия',             time:'3 ҳафта', state:'locked'}]},
+ notifs:[{ic:'work',k:'n1',bg:'var(--terra)'},{ic:'check',k:'n2',bg:'var(--teal)'},{ic:'up',k:'n3',bg:'var(--gold)'}]
+};
+
+/* ---------- состояние ---------- */
+const DEF = {lang:'ru',screen:'welcome',registered:false,reg:{name:'',email:'',pass:'',status:null,age:null,city:null,needs:[],parents:null,skills:[]},
+  navTab:'home',filter:0,workTab:0,workSphere:'Все',wf:{company:null,fmt:null,city:null},jobIndex:0,goal:null,visible:true,oppIndex:0,pathView:'graph'};
+let S = load();
+function load(){try{const r=JSON.parse(localStorage.getItem('imkon'));return r?{...structuredClone(DEF),...r,reg:{...DEF.reg,...(r.reg||{})}}:structuredClone(DEF)}catch(e){return structuredClone(DEF)}}
+function save(){localStorage.setItem('imkon',JSON.stringify(S))}
+function T(){return TR[S.lang]}
+
+/* ---------- утилиты ---------- */
+const screenEl=()=>document.getElementById('screen');
+const navEl=()=>document.getElementById('nav');
+function go(scr){S.screen=scr;save();render()}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2000)}
+function backBtn(to){return `<div class="hd"><div class="back" data-go="${to}">${svg('arrow',{c:'var(--ink)'})}</div></div>`}
+function progress(p){return `<div class="im-progress" style="margin:0 4px"><i style="width:${p}%"></i></div>`}
+
+/* ---------- bottom sheet ---------- */
+function openSheet(inner){const w=document.getElementById('sheet');
+  w.innerHTML=`<div class="sheet-scrim" data-sheet-close></div><div class="sheet"><div class="grip" data-sheet-close></div>${inner}</div>`;
+  requestAnimationFrame(()=>w.classList.add('show'));}
+function closeSheet(){const w=document.getElementById('sheet');w.classList.remove('show');setTimeout(()=>{if(!w.classList.contains('show'))w.innerHTML=''},360);}
+
+/* ---------- граф «Мой путь»: тап по узлу ---------- */
+let _graph=null;
+function openNodeSheet(id){const n=_graph&&_graph[id];if(!n)return;const p=T().p;
+  const ncls=n.state==='done'?'im-node--done':n.state==='current'?'im-node--current':n.state==='goal'?'im-node--goal':'';
+  const stxt={done:p.node_done,current:p.here,locked:p.node_lock,goal:p.node_goal}[n.state]||'';
+  const stcol=n.state==='current'?'var(--teal)':n.state==='goal'?'var(--terra)':n.state==='done'?'var(--gold)':'var(--muted)';
+  const cta=n.state==='current'?`<button class="im-btn im-btn--primary" data-action="toast" data-msg="${p.take} ✓" data-sheet-close>${p.take}</button>`
+    :n.state==='goal'?`<div class="im-card im-card--warm" style="display:flex;align-items:center;justify-content:center;gap:7px;font:600 14px var(--font-ui);color:var(--terra)">${svg('flag',{s:16,c:'var(--terra)'})} ${p.finish}</div>`
+    :n.state==='locked'?`<button class="im-btn im-btn--ghost" style="opacity:.65;pointer-events:none;display:flex;align-items:center;justify-content:center;gap:7px">${svg('lock',{s:16,c:'var(--muted)'})}${p.l_lock}</button>`
+    :`<button class="im-btn im-btn--outline" data-sheet-close>${T().c.done}</button>`;
+  openSheet(`<div class="im-row" style="gap:13px">
+      <div class="im-node ${ncls}" style="width:46px;height:46px;animation:none">${nodeIcon(n)}</div>
+      <div style="flex:1"><div class="im-title" style="font-size:17px">${n.title}</div><div class="im-meta" style="margin-top:3px">${n.course||''}${n.time?' · '+n.time:''}</div></div>
+    </div>
+    <div style="margin-top:12px;font:600 12px var(--font-ui);color:${stcol}">${stxt}</div>
+    <div style="margin-top:14px">${cta}</div>`);
+}
+function initGraph(){
+  const gph=document.getElementById('gph');const stage=document.getElementById('gphStage');if(!gph||!stage)return;
+  const GM=graphModel(S.lang);_graph={};GM.nodes.forEach(n=>_graph[n.id]=n);
+  let scale=1,tx=0,ty=0,down=false,moved=false,sx=0,sy=0,ox=0,oy=0;
+  const clamp=s=>Math.min(1.9,Math.max(.55,s));
+  const SMOOTH='transform .42s cubic-bezier(.2,.85,.25,1)';
+  const apply=(smooth)=>{stage.style.transition=smooth?SMOOTH:'none';stage.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`};
+  function fit(){const r=gph.getBoundingClientRect();const pad=44;
+    scale=clamp(Math.min((r.width-2*pad)/GM.w,(r.height-2*pad)/GM.h,1));
+    tx=(r.width-GM.w*scale)/2;ty=(r.height-GM.h*scale)/2+4;apply(true);}
+  function zoomAt(cx,cy,f,smooth){const ns=clamp(scale*f);tx=cx-(cx-tx)*(ns/scale);ty=cy-(cy-ty)*(ns/scale);scale=ns;apply(smooth);}
+  requestAnimationFrame(fit);
+  if(window._gphMove){window.removeEventListener('pointermove',window._gphMove);window.removeEventListener('pointerup',window._gphUp);}
+  gph.addEventListener('pointerdown',e=>{down=true;moved=false;sx=e.clientX;sy=e.clientY;ox=tx;oy=ty;gph.classList.add('drag');});
+  window._gphMove=e=>{if(!down)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.abs(dx)+Math.abs(dy)>6)moved=true;tx=ox+dx;ty=oy+dy;apply(false);};
+  window._gphUp=()=>{down=false;gph.classList.remove('drag');};
+  window.addEventListener('pointermove',window._gphMove);window.addEventListener('pointerup',window._gphUp);
+  gph.addEventListener('wheel',e=>{e.preventDefault();const r=gph.getBoundingClientRect();zoomAt(e.clientX-r.left,e.clientY-r.top,e.deltaY<0?1.12:1/1.12,false);},{passive:false});
+  gph.querySelectorAll('[data-zoom]').forEach(b=>b.addEventListener('click',ev=>{ev.stopPropagation();const z=+b.dataset.zoom;if(z===0)return fit();const r=gph.getBoundingClientRect();zoomAt(r.width/2,r.height/2,z>0?1.18:1/1.18,true);}));
+  stage.querySelectorAll('.gph-node').forEach(nd=>nd.addEventListener('click',()=>{if(moved)return;openNodeSheet(nd.dataset.node);}));
+}
+
+/* ====================================================================
+   ЭКРАНЫ
+   ==================================================================== */
+const V = {};
+
+/* --- Welcome --- */
+V.welcome=()=>{const w=T().w;return `<div class="view" style="height:100%;display:flex;flex-direction:column">
+  <div class="center">
+    <svg width="58" height="58" viewBox="0 0 48 48" fill="none"><rect x="3" y="3" width="42" height="42" rx="13" fill="#5B5BD6"/><path d="M24 13l2.6 7.4L34 23l-7.4 2.6L24 33l-2.6-7.4L14 23l7.4-2.6L24 13z" fill="#fff"/></svg>
+    <div class="im-h1" style="margin-top:18px">Имкон</div>
+    <div class="im-body" style="margin-top:10px">${w.slogan}</div>
+    <div class="im-pills" style="margin-top:26px">
+      <button class="im-pill ${S.lang==='tg'?'is-on':''}" data-lang="tg">Тоҷикӣ</button>
+      <button class="im-pill ${S.lang==='ru'?'is-on':''}" data-lang="ru">Русский</button>
+    </div>
+  </div>
+  <div class="foot">
+    <button class="im-btn im-btn--primary" data-go="signup">${w.register}</button>
+    <button class="im-btn im-btn--outline" data-action="login" style="display:flex;align-items:center;justify-content:center;gap:8px">
+      ${svg('send',{s:18,c:'var(--ink)',fill:'var(--ink)',w:0})}${w.tg}
+    </button>
+    <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:6px;font:500 13px var(--font-ui);color:var(--text-3)">
+      ${w.have} <span data-action="login" role="button" style="color:var(--teal);font-weight:600;cursor:pointer">${w.login}</span>
+    </div>
+  </div></div>`};
+
+/* --- Регистрация аккаунта (именно у нас) --- */
+V.signup=()=>{const su=T().su;return `<div class="view" style="height:100%;display:flex;flex-direction:column">
+  <div class="hd"><div class="back" data-go="welcome">${svg('arrow',{c:'var(--ink)'})}</div></div>
+  <div class="pad" style="padding-top:8px;flex:1;overflow-y:auto">
+    <svg width="42" height="42" viewBox="0 0 48 48" fill="none"><rect x="3" y="3" width="42" height="42" rx="13" fill="#5B5BD6"/><path d="M24 13l2.6 7.4L34 23l-7.4 2.6L24 33l-2.6-7.4L14 23l7.4-2.6L24 13z" fill="#fff"/></svg>
+    <div class="im-q" style="font-size:26px;margin-top:14px">${su.title}</div>
+    <div class="im-body" style="margin-top:8px">${su.sub}</div>
+    <div style="margin-top:22px"><label class="im-label">${su.name_l}</label><input class="im-input" placeholder="${su.name_ph}" value="${S.reg.name||''}" data-model="name"></div>
+    <div style="margin-top:14px"><label class="im-label">${su.email_l}</label><input class="im-input" placeholder="${su.email_ph}" value="${S.reg.email||''}" data-model="email"></div>
+    <div style="margin-top:14px"><label class="im-label">${su.pass_l}</label><input class="im-input" type="password" placeholder="${su.pass_ph}" value="${S.reg.pass||''}" data-model="pass"></div>
+    <div style="display:flex;align-items:center;gap:12px;margin:20px 0 4px"><div class="im-divider" style="flex:1"></div><span class="im-meta">${su.or}</span><div class="im-divider" style="flex:1"></div></div>
+    <button class="im-btn im-btn--outline" data-action="login" style="display:flex;align-items:center;justify-content:center;gap:8px">${svg('send',{s:18,c:'var(--ink)',fill:'var(--ink)',w:0})}${su.tg}</button>
+  </div>
+  <div class="foot">
+    <button class="im-btn im-btn--primary" data-action="create-account">${su.create}</button>
+    <div class="im-meta" style="text-align:center;line-height:1.4">${su.agree}</div>
+  </div></div>`};
+
+/* --- Регистрация --- */
+function regShell(step,total,inner,nextScr,nextEnabled=true,backScr){
+  const r=T().r,c=T().c;
+  return `<div class="view" style="height:100%;display:flex;flex-direction:column">
+    <div class="hd"><div class="back" data-go="${backScr}">${svg('arrow',{c:'var(--ink)'})}</div>${progress(step/total*100)}</div>
+    <div class="pad" style="padding-top:30px;flex:1;overflow-y:auto">
+      <div class="im-step">${r.step} ${step} / ${total}</div>
+      ${inner}
+    </div>
+    <div class="foot"><div class="im-btn-row">
+      <button class="im-btn im-btn--ghost" data-go="${backScr}">${c.back}</button>
+      <button class="im-btn im-btn--primary im-btn--grow ${nextEnabled?'':'disabled'}" data-go="${nextScr}" ${nextEnabled?'':'style="opacity:.5;pointer-events:none"'}>${c.next}</button>
+    </div></div></div>`;
+}
+V['reg-status']=()=>{const r=T().r;const list=DATA.statuses[S.lang];
+  return regShell(1,6,
+  `<div class="im-q" style="margin-top:14px">${r.status_q}</div>
+   <div class="im-meta" style="margin-top:6px">${r.status_hint}</div>
+   <div class="listgap" style="margin-top:22px">${list.map(o=>{const on=S.reg.status===o.id;
+     return `<div class="im-option ${on?'is-on':''}" style="flex-direction:row;align-items:center;gap:13px" data-pick="status" data-val="${o.id}">
+       <div style="width:42px;height:42px;border-radius:12px;background:${on?'var(--teal)':'var(--surface-tint)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">${svg(o.ic,{s:20,c:on?'#fff':'var(--teal)'})}</div>
+       <div style="flex:1"><div style="font:600 15px var(--font-ui);color:var(--ink)">${o.t}</div><div class="im-meta" style="margin-top:2px">${o.s}</div></div>
+       <span class="badge" style="position:static;opacity:${on?1:0}">✓</span>
+     </div>`}).join('')}</div>`,
+  'reg-age',!!S.reg.status,'signup')};
+V['reg-age']=()=>{const r=T().r;const ages=['14–17','18–22','23–27','28–35'];
+  return regShell(2,6,
+  `<div class="im-q" style="margin-top:14px">${r.age_q}</div>
+   <div class="im-grid-2" style="margin-top:26px">${ages.map(a=>`<button class="im-btn im-btn--ghost ${S.reg.age===a?'sel':''}" style="padding:22px 0;font-size:19px;color:var(--ink);${S.reg.age===a?'border-color:var(--teal);background:var(--surface-tint)':''}" data-pick="age" data-val="${a}">${a}</button>`).join('')}</div>`,
+  'reg-city',!!S.reg.age,'reg-status')};
+V['reg-city']=()=>{const r=T().r;const cities=DATA.cities[S.lang];
+  return regShell(3,6,
+  `<div class="im-q" style="margin-top:14px">${r.city_q}</div>
+   <div class="listgap" style="margin-top:24px">${cities.map(c=>`<button class="im-btn im-btn--ghost" style="text-align:left;color:var(--ink);${S.reg.city===c?'border-color:var(--teal);background:var(--surface-tint)':''}" data-pick="city" data-val="${c}">${c}</button>`).join('')}</div>`,
+  'reg-needs',!!S.reg.city,'reg-age')};
+V['reg-needs']=()=>{const r=T().r;const st=S.reg.status;
+  const list=DATA.needs[S.lang].map((o,i)=>({...o,i})).filter(o=> st==='school' ? o.i<6 : (st==='working'||st==='grad') ? o.i>=1 : true);
+  return regShell(4,6,
+  `<div class="im-q" style="margin-top:14px">${r.need_q}</div>
+   <div class="im-meta" style="margin-top:6px">${r.need_hint}</div>
+   <div class="im-grid-2" style="margin-top:22px">${list.map(o=>{const on=S.reg.needs.includes(o.i);
+     return `<div class="im-option ${on?'is-on':''}" data-toggle="need" data-val="${o.i}">${svg(o.ic,{c:on?'var(--teal)':'var(--ink)'})}<span style="font:600 14px var(--font-ui)">${o.t}</span><span class="badge">✓</span></div>`}).join('')}</div>`,
+  'reg-parents',S.reg.needs.length>0,'reg-city')};
+V['reg-parents']=()=>{const r=T().r,c=T().c;
+  return regShell(5,6,
+  `<div class="im-q" style="margin-top:14px">${r.parents_q}</div>
+   <div class="im-body" style="margin-top:8px">${r.parents_sub}</div>
+   <div class="im-grid-2" style="margin-top:26px">
+     <button class="im-btn im-btn--ghost" style="padding:22px 0;color:var(--ink);${S.reg.parents==='yes'?'border-color:var(--teal);background:var(--surface-tint)':''}" data-pick="parents" data-val="yes">${S.lang==='ru'?'Да':'Ҳа'}</button>
+     <button class="im-btn im-btn--ghost" style="padding:22px 0;color:var(--ink);${S.reg.parents==='no'?'border-color:var(--teal);background:var(--surface-tint)':''}" data-pick="parents" data-val="no">${S.lang==='ru'?'Нет':'Не'}</button>
+   </div>`,
+  'reg-skills',!!S.reg.parents,'reg-needs')};
+V['reg-skills']=()=>{const r=T().r;const sk=DATA.skills[S.lang];
+  return regShell(6,6,
+  `<div class="im-q" style="margin-top:14px">${r.skills_q}</div>
+   <div class="im-meta" style="margin-top:6px">${r.skills_hint}</div>
+   <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:22px">${sk.map((s,i)=>{const on=S.reg.skills.includes(i);
+     return `<span class="im-chip ${on?'im-chip--on':'im-chip--off'}" data-toggle="skill" data-val="${i}" style="cursor:pointer">${s.n} ${on?'<span class="tick">✓</span>':'+'}</span>`}).join('')}</div>`,
+  'done',true,'reg-parents')};
+V['done']=()=>{const r=T().r;return `<div class="view center" style="height:100%">
+  <div class="im-node im-node--current" style="width:74px;height:74px">${svg('check',{s:30,c:'#fff',w:2.4})}</div>
+  <div class="im-h1" style="font-size:26px;margin-top:20px">${r.ready},<br>${S.reg.name||'друг'}!</div>
+  <div class="im-body" style="margin-top:10px">${T().w.slogan}</div>
+  <button class="im-btn im-btn--primary" style="margin-top:28px;width:auto;padding:15px 34px" data-action="enter">${r.go}</button>
+</div>`};
+
+/* --- Home --- */
+function chevron(c){return svg('arrow',{c}).replace('M15 18l-6-6 6-6','M9 6l6 6-6 6')}
+V.home=()=>{const h=T().h,f=T().f,p=T().p;const fc=S.filter;
+  const opps=DATA.opps[S.lang].filter(o=>fc===0?true:o.fc===fc);
+  const steps=DATA.path[S.lang];const passed=steps.filter(s=>s.state==='done').length;const cur=steps.find(s=>s.state==='current');
+  const appsCount=DATA.myApps[S.lang].length;
+  const contCard = S.goal
+   ? `<div class="pad" style="margin-top:14px"><div class="im-card im-card--warm" style="cursor:pointer" data-go="path">
+       <div class="im-spread"><div class="im-step" style="color:var(--terra)">${h.cont_t}</div><span class="im-here">${p.here}</span></div>
+       <div class="im-title" style="font-size:16px;margin-top:9px">${cur?cur.title:S.goal}</div>
+       <div class="im-meta" style="margin-top:3px">${h.cont_s} ${S.goal}</div>
+       <div class="im-progress" style="margin-top:11px"><i style="width:${passed/steps.length*100}%;background:var(--teal)"></i></div>
+       <div class="im-spread" style="margin-top:10px"><span class="im-meta">${passed}/${steps.length}</span><span style="font:600 13px var(--font-ui);color:var(--teal);display:flex;align-items:center;gap:4px">${h.cont_cta} ${chevron('var(--teal)')}</span></div>
+     </div></div>`
+   : `<div class="pad" style="margin-top:14px"><div class="im-card" style="cursor:pointer;display:flex;align-items:center;gap:12px" data-go="path">
+       <div class="im-node im-node--goal" style="width:40px;height:40px;animation:none">${svg('flag',{s:18,c:'#fff'})}</div>
+       <div style="flex:1"><div style="font:600 15px var(--font-head);color:var(--ink)">${p.empty_t}</div><div class="im-meta" style="margin-top:2px">${p.build}</div></div>
+       ${chevron('var(--muted)')}
+     </div></div>`;
+  return `<div class="view">
+   <div class="pad" style="padding-top:18px;display:flex;justify-content:space-between;align-items:flex-start">
+     <div><div class="im-meta">${h.hello},</div><div class="im-title" style="font-size:22px">${S.reg.name||'Шухрат'}</div></div>
+     <div class="back" data-go="notifs" style="position:relative;cursor:pointer">${svg('bell',{c:'var(--ink)'})}<span style="position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:99px;background:var(--terra)"></span></div>
+   </div>
+
+   <div class="pad" style="margin-top:14px"><div class="ai-hero" data-go="ai" style="cursor:pointer">
+     <div class="im-row" style="gap:10px">
+       <div class="avatar imkon-float">${svg('spark',{s:20,c:'#fff',fill:'#fff',w:0})}</div>
+       <div><div style="font:600 14px var(--font-ui);color:var(--ink)">${h.ai_name}</div>
+         <div class="im-meta" style="color:var(--teal);display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:9px;background:var(--teal);display:inline-block"></span>${T().ai.online}</div></div>
+     </div>
+     <div class="ai-hero-q">${h.ai_hero_q}</div>
+     <div class="ai-ask" data-go="ai"><span class="ph">${h.ai_ask}</span><span class="go">${svg('send',{s:17,c:'#fff',fill:'#fff',w:0})}</span></div>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:11px">
+       <span class="im-chip" data-go="ai" style="cursor:pointer">${svg('cap',{s:15,c:'var(--teal)'})} ${h.q_scholar}</span>
+       <span class="im-chip" data-go="ai" style="cursor:pointer">${svg('path',{s:15,c:'var(--teal)'})} ${h.q_path}</span>
+       <span class="im-chip" data-go="ai" style="cursor:pointer">${svg('work',{s:15,c:'var(--teal)'})} ${h.q_job}</span>
+     </div>
+   </div></div>
+
+   ${contCard}
+
+   <div class="pad" style="margin-top:14px;display:flex;gap:10px">
+     <div class="stat"><div class="n" style="color:var(--teal)">82</div><div class="l">${h.trust}</div></div>
+     <div class="stat"><div class="n" style="color:var(--gold)">${passed}/${steps.length}</div><div class="l">${h.steps_l}</div></div>
+     <div class="stat" style="cursor:pointer" data-go="apps"><div class="n" style="color:var(--ink)">${appsCount}</div><div class="l">${h.apps_l}</div></div>
+   </div>
+
+   <div class="pad" style="margin-top:20px"><div class="im-title" style="font-size:17px">${h.rec}</div></div>
+   <div style="display:flex;gap:8px;overflow-x:auto;padding:12px 26px 4px">${f.map((x,i)=>`<button class="im-filter ${fc===i?'is-on':''}" data-filter="${i}">${x}</button>`).join('')}</div>
+   <div class="pad listgap imkon-stagger" style="padding-top:8px;padding-bottom:18px">
+     ${opps.map((o)=>oppCard(o,DATA.opps[S.lang].indexOf(o))).join('')||`<div class="im-meta" style="text-align:center;padding:30px">—</div>`}
+   </div></div>`};
+function oppCard(o,idx){return `<div class="im-card im-opp im-job" data-opp="${idx}" style="cursor:pointer">
+   ${logo(o.org,{s:44})}
+   <div style="flex:1;min-width:0"><div class="cat">${o.cat}</div><div class="im-title" style="font-size:16px;margin-top:3px">${o.title}</div><div class="im-meta" style="margin-top:3px">${o.org}</div></div>
+   <div class="days">${o.days} ${T().h.d}</div></div>`}
+
+/* --- Opportunity detail --- */
+V.opp=()=>{const od=T().od;const o=DATA.opps[S.lang][S.oppIndex];
+  return `<div class="view">${backBtn('home')}
+   <div class="pad">
+     <div class="im-row" style="gap:13px">${logo(o.org,{s:54,r:15})}<div style="flex:1;min-width:0"><div class="cat" style="color:var(--teal);font:700 11px var(--font-ui);letter-spacing:.06em;text-transform:uppercase">${o.cat}</div><div class="im-meta" style="margin-top:2px">${o.org}</div></div></div>
+     <div class="im-q" style="font-size:24px;margin-top:14px">${o.title}</div>
+     <div class="im-card" style="margin-top:18px;display:flex;align-items:center;gap:10px;background:#FEF1F1;border-color:#F6D4D4"><span style="width:8px;height:8px;border-radius:99px;background:var(--terra);flex-shrink:0"></span><div style="font:600 14px var(--font-ui);color:var(--terra)">${od.deadline}: ${o.days} ${T().h.d}</div></div>
+     <div style="margin-top:20px"><div class="im-step" style="color:var(--muted)">${od.desc}</div><p class="im-body" style="margin-top:8px">${o.body}</p></div>
+     <div style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${od.who}</div><p class="im-body" style="margin-top:8px;color:var(--ink)">${o.req}</p></div>
+     <div style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${od.contact}</div><p class="im-body" style="margin-top:8px;color:var(--teal)">${o.contact}</p></div>
+   </div>
+   <div class="foot">
+     <button class="im-btn im-btn--primary" data-action="apply">${od.apply}</button>
+     <button class="im-btn im-btn--ghost" data-action="notify">${od.notify}</button>
+   </div></div>`};
+
+/* --- AI chat (помощник-проводник) --- */
+V.ai=()=>{const ai=T().ai;
+  return `<div class="view" style="height:100%;display:flex;flex-direction:column">
+   <div class="hd" style="justify-content:space-between;padding-bottom:14px;border-bottom:1px solid var(--line)">
+     <div style="display:flex;align-items:center;gap:11px">
+       <div class="back" data-go="home">${svg('arrow',{c:'var(--ink)'})}</div>
+       <div style="width:38px;height:38px;border-radius:99px;background:var(--surface-tint);display:flex;align-items:center;justify-content:center">${svg('spark',{s:18,c:'var(--teal)',fill:'var(--teal)',w:0})}</div>
+       <div><div class="im-title" style="font-size:16px">${ai.title}</div><div class="im-meta" style="color:var(--teal);display:flex;align-items:center;gap:5px"><span style="width:7px;height:7px;border-radius:9px;background:var(--teal);display:inline-block"></span>${ai.online}</div></div>
+     </div>
+   </div>
+   <div class="pad" id="aiChat" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:11px;padding-top:18px;padding-bottom:12px"></div>
+   <div class="foot" style="padding-top:10px">
+     <div class="im-row" style="gap:9px">
+       <div class="im-input" style="flex:1;color:var(--muted);display:flex;align-items:center;pointer-events:none">${ai.ph}</div>
+       <button class="im-btn" style="width:48px;height:48px;padding:0;background:var(--teal);display:flex;align-items:center;justify-content:center;border-radius:14px" data-action="ai-path">${svg('send',{s:20,c:'#fff',fill:'#fff',w:0})}</button>
+     </div>
+   </div></div>`};
+function initAI(){
+  const ai=T().ai;const chat=document.getElementById('aiChat');if(!chat)return;
+  (window._aiTimers||[]).forEach(clearTimeout);window._aiTimers=[];
+  chat.innerHTML='';
+  const sc=()=>{chat.scrollTop=chat.scrollHeight};
+  const add=html=>{chat.insertAdjacentHTML('beforeend',html);sc()};
+  const typing=()=>add(`<div class="typing" id="aiTyping"><i></i><i></i><i></i></div>`);
+  const untype=()=>{const t=document.getElementById('aiTyping');if(t)t.remove()};
+  const at=(ms,fn)=>window._aiTimers.push(setTimeout(()=>{if(document.getElementById('aiChat'))fn()},ms));
+  add(`<div class="bubble ai">${ai.q1}</div>`);
+  at(500,()=>add(`<div style="display:flex;flex-wrap:wrap;gap:8px;align-self:flex-start">
+     <span class="im-chip" style="cursor:pointer" data-action="ai-path">${ai.o1}</span>
+     <span class="im-chip" style="cursor:pointer" data-action="ai-path">${ai.o2}</span>
+     <span class="im-chip im-chip--on" style="cursor:pointer" data-action="ai-path">${ai.o3}</span></div>`));
+  at(1300,()=>add(`<div class="bubble me">${ai.u1}</div>`));
+  at(1700,typing);
+  at(2700,()=>{untype();add(`<div class="bubble ai">${ai.q2}</div>`)});
+  at(3100,typing);
+  at(4200,()=>{untype();add(`<div class="im-card im-card--tint" style="align-self:stretch">
+     <div style="display:flex;align-items:center;gap:10px"><div style="width:30px;height:30px;border-radius:9px;background:var(--teal);display:flex;align-items:center;justify-content:center;flex-shrink:0">${svg('spark',{s:16,c:'#fff',fill:'#fff',w:0})}</div><div style="font:600 15px var(--font-head);color:var(--ink)">${ai.guide_t}</div></div>
+     <div class="im-body" style="margin-top:7px">${ai.guide_s}</div>
+     <button class="im-btn im-btn--primary im-btn--sm" style="width:100%;margin-top:12px" data-action="ai-path">${ai.open_map}</button></div>`)});
+}
+
+/* --- Path: модель графа --- */
+function graphModel(lang){
+  const sp=DATA.path[lang], ex=DATA.graphExtra[lang];
+  // координаты подобраны вручную — органичный, не ровный граф
+  const P={s0:[96,82],s1:[236,156],s2:[138,300],ts:[56,432],s3:[290,392],proj:[252,524],s4:[170,616]};
+  const N=[['s0',sp[0]],['s1',sp[1]],['s2',sp[2]],['ts',ex[0]],['s3',sp[3]],['proj',ex[1]],['s4',sp[4]]]
+    .map(([id,d])=>({id,...d,x:P[id][0],y:P[id][1]}));
+  const E=[['s0','s1','gold'],['s1','s2','teal'],['s2','ts','beige'],['s2','s3','beige'],['ts','proj','beige'],['s3','proj','beige'],['proj','s4','beige']];
+  return {nodes:N,edges:E,w:360,h:690};
+}
+function nodeIcon(n){return n.state==='done'?svg('check',{c:'#fff',w:2.4}):n.state==='locked'?svg('lock',{c:'var(--muted-2)'}):n.state==='goal'?svg('flag',{c:'#fff'}):svg(n.ic,{c:'#fff'})}
+function edgeD(a,b){const mx=(a.x+b.x)/2,my=(a.y+b.y)/2,dx=b.x-a.x,dy=b.y-a.y,o=.13;return `M${a.x} ${a.y} Q${mx-dy*o} ${my+dx*o} ${b.x} ${b.y}`}
+function legendDot(c,t){return `<span style="display:inline-flex;align-items:center;gap:5px;font:600 11px var(--font-ui);color:var(--text-3)"><i style="width:9px;height:9px;border-radius:9px;background:${c};display:inline-block"></i>${t}</span>`}
+
+/* --- Path --- */
+V.path=()=>{const p=T().p;
+  if(!S.goal) return `<div class="view center" style="height:100%">
+    <div class="im-node im-node--goal" style="width:64px;height:64px;animation:none">${svg('flag',{s:26,c:'#fff'})}</div>
+    <div class="im-q" style="margin-top:20px">${p.empty_t}</div>
+    <div class="im-body" style="margin-top:10px">${p.empty_s}</div>
+    <input class="im-input" id="goalInput" style="margin-top:22px;text-align:center" placeholder="${p.empty_ph}">
+    <button class="im-btn im-btn--primary" style="margin-top:14px" data-action="build-path">${p.build}</button>
+    <div class="im-meta" style="margin-top:14px;display:flex;align-items:center;gap:6px" data-go="ai" role="button">${svg('spark',{s:15,c:'var(--teal)',fill:'var(--teal)',w:0})} <span style="color:var(--teal);font-weight:600;cursor:pointer">${T().h.ai_b}</span></div>
+  </div>`;
+  const steps=DATA.path[S.lang];const passed=steps.filter(s=>s.state==='done').length;const total=steps.length;
+  const graph=S.pathView!=='list';
+  const head=`<div class="pad" style="padding-top:16px;display:flex;justify-content:space-between;align-items:center;gap:10px">
+     <div style="min-width:0"><div class="im-step" style="color:var(--muted)">${p.goal_l}</div><div class="im-title" style="font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${S.goal}</div></div>
+     <div class="seg"><button class="${graph?'on':''}" data-pathview="graph">${p.graph}</button><button class="${graph?'':'on'}" data-pathview="list">${p.list}</button></div>
+   </div>`;
+  if(graph){
+    const GM=graphModel(S.lang);const byId={};GM.nodes.forEach(n=>byId[n.id]=n);
+    const col={gold:'var(--gold)',teal:'var(--teal)',beige:'var(--line-input)'};
+    const edges=GM.edges.map(([a,b,k])=>`<path d="${edgeD(byId[a],byId[b])}" stroke="${col[k]}" stroke-width="${k==='beige'?2.5:3.5}" fill="none" stroke-linecap="round" ${k==='beige'?'stroke-dasharray="0.5 9"':''}/>`).join('');
+    const nodes=GM.nodes.map(n=>`<div class="gph-node" data-st="${n.state}" data-node="${n.id}" style="left:${n.x}px;top:${n.y}px"><div class="gph-dot">${nodeIcon(n)}</div><div class="gph-lbl">${n.title}</div></div>`).join('');
+    return `<div class="view" style="height:100%;display:flex;flex-direction:column">
+     ${head}
+     <div class="pad" style="margin-top:8px;display:flex;align-items:center;gap:13px;flex-wrap:wrap">
+       <span class="im-meta">${p.passed}: ${passed}/${total}</span>
+       ${legendDot('var(--gold)',p.l_done)}${legendDot('var(--teal)',p.l_cur)}${legendDot('var(--terra)',p.l_goal)}
+     </div>
+     <div class="gph" id="gph">
+       <div class="gph-hint"><span class="pin"></span>${p.tap}</div>
+       <div class="gph-stage" id="gphStage">
+         <svg class="gph-edges" width="${GM.w}" height="${GM.h}">${edges}</svg>
+         ${nodes}
+       </div>
+       <div class="gph-zoom">
+         <button data-zoom="1">+</button><button data-zoom="-1">−</button>
+         <button data-zoom="0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ink)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3" stroke-linecap="round"/></svg></button>
+       </div>
+     </div></div>`;
+  }
+  return `<div class="view" style="display:flex;flex-direction:column">
+   ${head}
+   <div class="pad" style="margin-top:8px"><div class="im-meta">${p.passed}: ${passed} / ${total}</div><div class="im-progress" style="margin-top:6px"><i style="width:${passed/total*100}%"></i></div></div>
+   <div class="pad listgap" style="padding-top:18px;padding-bottom:20px">
+   ${steps.map((s,i)=>{const cur=s.state==='current';const cls=s.state==='done'?'im-node--done':cur?'im-node--current':s.state==='goal'?'im-node--goal':'';
+     const ico=nodeIcon(s);
+     return `<div style="display:flex;gap:14px;align-items:flex-start">
+       <div style="display:flex;flex-direction:column;align-items:center">
+         <div class="im-node ${cls}" style="width:44px;height:44px">${ico}</div>
+         ${i<steps.length-1?`<div class="im-seg ${s.state==='done'?'im-seg--gold':''}" style="height:34px"></div>`:''}
+       </div>
+       <div class="im-card ${s.state==='goal'?'im-card--warm':cur?'im-card--tint':''}" style="flex:1">
+         <div class="im-title" style="font-size:15px;color:${s.state==='locked'?'var(--muted)':'var(--ink)'}">${s.title}</div>
+         <div class="im-meta" style="margin-top:3px">${s.course}${s.time?' · '+s.time:''}</div>
+         ${cur?`<div style="margin-top:8px"><span class="im-here">${p.here}</span></div><button class="im-btn im-btn--primary im-btn--sm" style="margin-top:10px;width:100%" data-action="toast" data-msg="${p.take} ✓">${p.take}</button>`:''}
+         ${s.state==='goal'?`<div class="im-meta" style="margin-top:6px;color:var(--terra);font-weight:600;display:flex;align-items:center;gap:6px">${svg('flag',{s:14,c:'var(--terra)'})} ${p.finish}</div>`:''}
+       </div></div>`}).join('')}
+   <button class="im-btn im-btn--outline" style="margin-top:6px" data-action="toast" data-msg="${p.share} ✓">${p.share}</button>
+   </div>
+   </div>`};
+
+/* --- Profile / Passport --- */
+V.profile=()=>{const pr=T().pr;const ach=DATA.ach[S.lang];const sk=DATA.skills[S.lang];const lg=DATA.langs[S.lang];
+  return `<div class="view">
+   <div class="pad" style="padding-top:18px;display:flex;justify-content:space-between;align-items:flex-start">
+     <div class="im-step" style="color:var(--gold)">${pr.passport}</div>
+     <div class="back" data-go="settings-org" style="cursor:pointer">${svg('cap',{s:20,c:'var(--muted)'})}</div>
+   </div>
+   <div class="pad" style="margin-top:10px"><div class="im-card" style="display:flex;align-items:center;gap:16px">
+     <div style="width:64px;height:64px;border-radius:99px;background:var(--surface-tint);display:flex;align-items:center;justify-content:center;font:700 24px var(--font-head);color:var(--teal)">${(S.reg.name||'Ш')[0]}</div>
+     <div style="flex:1"><div class="im-title" style="font-size:19px">${S.reg.name||'Шухрат'}</div><div class="im-meta">${DATA.cities[S.lang][0]} · ${S.reg.age||'18–22'}</div></div>
+     <div style="text-align:center"><div class="im-trust" style="font-size:38px">82</div><div class="im-trust-cap">${pr.trust}</div></div>
+   </div><div class="im-meta" style="text-align:center;margin-top:8px">${pr.trust_sub}</div></div>
+
+   <div class="pad" style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${pr.verified}</div>
+     <div class="listgap" style="margin-top:10px">${ach.map(a=>`<div class="im-card ${a.v?'':'im-card--sunk'}" style="display:flex;gap:11px;align-items:flex-start">
+       <div class="im-node ${a.v?'im-node--current':''}" style="width:34px;height:34px;animation:none;${a.v?'':'background:var(--surface);border-color:var(--line-input)'}">${a.v?svg('check',{s:16,c:'#fff',w:2.4}):svg('up',{s:15,c:'var(--muted-2)'}).replace('M12 19V6M6 12l6-6 6 6','M12 7v5l3 2')}</div>
+       <div style="flex:1"><div style="font:600 14px var(--font-ui);color:var(--ink)">${a.t}</div><div class="im-meta" style="margin-top:2px;color:${a.v?'var(--teal)':'var(--muted-2)'}">${a.v?pr.by+' '+a.by:pr.pending}</div></div>
+     </div>`).join('')}</div>
+     <button class="im-btn im-btn--ghost im-btn--sm" style="width:100%;margin-top:11px" data-action="toast" data-msg="${pr.add} +">${pr.add}</button>
+   </div>
+
+   <div class="pad" style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${pr.skills}</div>
+     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">${sk.map(s=>`<span class="im-chip ${s.v?'im-chip--on':'im-chip--off'}">${s.n}${s.v?' <span class="tick">✓</span>':''}</span>`).join('')}</div></div>
+   <div class="pad" style="margin-top:16px"><div class="im-step" style="color:var(--muted)">${pr.langs}</div>
+     <div class="listgap" style="margin-top:10px">${lg.map(l=>`<div class="im-spread"><span style="font:600 14px var(--font-ui)">${l.n}</span><span class="im-meta">${l.l}</span></div>`).join('')}</div></div>
+
+   <div class="pad listgap" style="margin-top:20px;padding-bottom:20px">
+     <button class="im-btn im-btn--primary" data-go="share">${pr.share}</button>
+     <div class="im-btn-row"><button class="im-btn im-btn--ghost im-btn--grow" data-go="apps">${pr.apps}</button><button class="im-btn im-btn--ghost im-btn--grow" data-action="toast" data-msg="PDF ✓">${pr.pdf}</button></div>
+   </div></div>`};
+
+/* --- Share --- */
+V.share=()=>{const sh=T().sh;return `<div class="view">${backBtn('profile')}
+  <div class="pad"><div class="im-q" style="font-size:24px">${sh.title}</div>
+   <div class="im-card" style="margin-top:20px"><div class="im-step" style="color:var(--muted)">${sh.link_l}</div>
+     <div class="im-spread" style="margin-top:8px;background:var(--surface-sunk);border-radius:10px;padding:12px 14px"><span style="font:500 13px var(--font-ui);color:var(--teal);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">imkon.tj/u/${(S.reg.name||'shuhrat').toLowerCase()}</span></div>
+     <button class="im-btn im-btn--primary" style="margin-top:12px" data-action="copy">${sh.copy}</button>
+   </div>
+   <div class="im-card" style="margin-top:14px;display:flex;align-items:center;justify-content:space-between">
+     <div style="flex:1"><div style="font:600 14px var(--font-ui);color:var(--ink)">${sh.vis}</div><div class="im-meta" style="margin-top:2px">${sh.vis_sub}</div></div>
+     <div data-action="toggle-vis" style="cursor:pointer;width:46px;height:28px;border-radius:99px;background:${S.visible?'var(--teal)':'var(--line-input)'};position:relative;transition:.2s"><span style="position:absolute;top:3px;left:${S.visible?'21px':'3px'};width:22px;height:22px;border-radius:99px;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)"></span></div>
+   </div>
+   <div class="listgap" style="margin-top:14px">
+     <button class="im-btn im-btn--outline" data-go="public" style="display:flex;align-items:center;justify-content:center;gap:8px">${svg('eye',{s:17,c:'var(--ink)'})} ${sh.preview}</button>
+     <button class="im-btn im-btn--ghost" data-action="toast" data-msg="PDF ✓">${sh.pdf}</button>
+   </div></div></div>`};
+
+/* --- Public profile --- */
+V.public=()=>{const pub=T().pub;const sk=DATA.skills[S.lang];const ach=DATA.ach[S.lang].filter(a=>a.v);
+  return `<div class="view">
+   <div class="hd"><div class="back" data-go="share">${svg('arrow',{c:'var(--ink)'})}</div></div>
+   <div class="pad"><div class="im-card im-card--warm" style="display:flex;align-items:center;gap:8px;font:600 12px var(--font-ui);color:var(--terra)">${svg('user',{s:16,c:'var(--terra)'})}${pub.badge}</div>
+   <div class="im-card" style="margin-top:14px;text-align:center">
+     <div style="width:72px;height:72px;border-radius:99px;background:var(--surface-tint);display:flex;align-items:center;justify-content:center;font:700 28px var(--font-head);color:var(--teal);margin:0 auto">${(S.reg.name||'Ш')[0]}</div>
+     <div class="im-title" style="font-size:20px;margin-top:12px">${S.reg.name||'Шухрат'}</div>
+     <div class="im-meta" style="margin-top:2px">Junior Full-Stack · ${DATA.cities[S.lang][0]}</div>
+     <div style="display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:var(--surface-tint);border:1px solid var(--teal-border);color:var(--teal);font:600 12px var(--font-ui);padding:6px 12px;border-radius:99px">${svg('check',{s:14,c:'var(--teal)',w:2.4})} ${pub.trust} · 82</div>
+   </div>
+   <div style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${T().pr.verified}</div>
+     <div class="listgap" style="margin-top:10px">${ach.map(a=>`<div class="im-card" style="display:flex;gap:10px;align-items:center"><div class="im-node im-node--done" style="width:30px;height:30px;animation:none">${svg('check',{s:14,c:'#fff',w:2.4})}</div><div style="flex:1;font:600 13px var(--font-ui)">${a.t}</div></div>`).join('')}</div></div>
+   <div style="margin-top:16px"><div class="im-step" style="color:var(--muted)">${T().pr.skills}</div><div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">${sk.filter(s=>s.v).map(s=>`<span class="im-chip im-chip--on">${s.n} <span class="tick">✓</span></span>`).join('')}</div></div>
+   </div>
+   <div class="foot"><button class="im-btn im-btn--primary" data-action="invite">${pub.invite}</button><button class="im-btn im-btn--outline" data-action="toast" data-msg="${pub.contact} ✓">${pub.contact}</button></div></div>`};
+
+/* --- Work --- */
+const SPHERES=[{id:'IT',tg:'IT'},{id:'Маркетинг',tg:'Маркетинг'},{id:'Финансы',tg:'Молия'},{id:'Дизайн',tg:'Дизайн'},{id:'Продажи',tg:'Фурӯш'},{id:'Поддержка',tg:'Дастгирӣ'}];
+function workFilter(list){return list.filter(j=>{
+  if(S.workSphere!=='Все' && j.sph!==S.workSphere) return false;
+  if(S.wf.company && j.org!==S.wf.company) return false;
+  if(S.wf.fmt && j.fmt!==S.wf.fmt) return false;
+  if(S.wf.city && j.city!==S.wf.city) return false;
+  return true;});}
+function workCard(j,tab,idx){const wk=T().wk;const isJob=tab===0;
+  const payTxt = tab===1 ? `${j.pay} ${wk.cur}${wk.month}` : `${j.pay} ${wk.cur}`;
+  const tags=[j.city,j.fmt,j.sph].filter(Boolean);
+  return `<div class="im-card im-job" ${isJob?`data-job="${idx}"`:''} style="${isJob?'cursor:pointer':''}">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      ${logo(j.org,{s:44})}
+      <div style="flex:1;min-width:0">
+        <div class="im-row" style="gap:7px;flex-wrap:wrap"><div class="im-title" style="font-size:16px">${j.title}</div>${j.new?`<span class="im-badge-new">${wk.newb}</span>`:''}</div>
+        <div class="im-meta" style="margin-top:2px">${j.org}</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:11px">${tags.map(t=>`<span class="im-tag">${t}</span>`).join('')}</div>
+    <div class="im-spread" style="margin-top:12px"><span style="font:800 16px var(--font-head);color:var(--ink);letter-spacing:-.02em">${payTxt}</span>
+      <button class="im-btn im-btn--primary im-btn--sm" data-action="respond" data-msg="${wk.taken}">${tab===2?T().c.more:wk.respond}</button></div>
+  </div>`;}
+V.work=()=>{const wk=T().wk;const tab=S.workTab;
+  const raw=tab===0?DATA.jobs[S.lang]:tab===1?DATA.interns[S.lang]:DATA.services[S.lang];
+  const list=workFilter(raw);const idxOf=j=>raw.indexOf(j);
+  const nF=(S.wf.company?1:0)+(S.wf.fmt?1:0)+(S.wf.city?1:0);
+  const chips=[{id:'Все',l:wk.all}].concat(SPHERES.map(s=>({id:s.id,l:S.lang==='tg'?s.tg:s.id})));
+  return `<div class="view" style="display:flex;flex-direction:column">
+   <div class="pad" style="padding-top:18px;display:flex;justify-content:space-between;align-items:center"><div class="im-title" style="font-size:22px">${wk.title}</div><button class="im-btn im-btn--ghost im-btn--sm" data-go="apps">${wk.apps}</button></div>
+   <div class="pad" style="margin-top:14px"><div class="im-tabs">${[0,1,2].map(i=>`<button class="im-tab ${tab===i?'is-on':''}" data-worktab="${i}">${wk['tab'+i]}</button>`).join('')}</div></div>
+   <div style="display:flex;gap:8px;align-items:center;padding:14px 26px 2px">
+     <button class="im-filter" style="display:flex;align-items:center;gap:6px;flex-shrink:0;${nF?'border-color:var(--teal);color:var(--teal);background:var(--surface-tint)':''}" data-action="open-filters">${svg('filter',{s:14,c:nF?'var(--teal)':'var(--text-2)'})}${wk.filters}${nF?` · ${nF}`:''}</button>
+     <div style="display:flex;gap:8px;overflow-x:auto">${chips.map(c=>`<button class="im-filter ${S.workSphere===c.id?'is-on':''}" data-sphere="${c.id}">${c.l}</button>`).join('')}</div>
+   </div>
+   <div class="pad" style="padding-top:12px"><div class="im-meta">${list.length} ${wk.found}</div></div>
+   <div class="pad listgap imkon-stagger" style="padding-top:8px;padding-bottom:18px">
+     ${list.map(j=>workCard(j,tab,idxOf(j))).join('')||`<div class="im-meta" style="text-align:center;padding:30px">—</div>`}
+     ${tab===2?`<button class="im-btn im-btn--outline" data-go="gig" style="border-style:dashed;margin-top:4px">+ ${wk.create}</button>`:''}
+   </div></div>`;};
+function openFilterSheet(){const wk=T().wk;
+  const companies=[...new Set(DATA.jobs[S.lang].concat(DATA.interns[S.lang]).map(j=>j.org))];
+  const fmts=[...new Set(DATA.jobs[S.lang].concat(DATA.interns[S.lang]).map(j=>j.fmt))];
+  const cities=[...new Set(DATA.jobs[S.lang].concat(DATA.interns[S.lang]).map(j=>j.city))];
+  const group=(label,key,opts)=>`<div style="margin-top:15px"><div class="im-step" style="color:var(--muted)">${label}</div>
+     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:9px">
+       <button class="im-filter ${!S.wf[key]?'is-on':''}" data-jf="${key}" data-jfv="">${wk.any}</button>
+       ${opts.map(o=>`<button class="im-filter ${S.wf[key]===o?'is-on':''}" data-jf="${key}" data-jfv="${o}">${o}</button>`).join('')}
+     </div></div>`;
+  openSheet(`<div class="im-spread"><div class="im-title" style="font-size:18px">${wk.filters}</div><button class="im-btn im-btn--ghost im-btn--sm" data-action="reset-filters">${wk.reset}</button></div>
+    ${group(wk.f_company,'company',companies)}
+    ${group(wk.f_fmt,'fmt',fmts)}
+    ${group(wk.f_city,'city',cities)}
+    <button class="im-btn im-btn--primary" style="margin-top:20px" data-action="apply-filters">${wk.apply2}</button>`);}
+
+/* --- Job detail --- */
+V.job=()=>{const wk=T().wk;const j=DATA.jobs[S.lang][S.jobIndex];if(!j)return V.work();
+  return `<div class="view" style="display:flex;flex-direction:column">
+   <div class="hd"><div class="back" data-go="work">${svg('arrow',{c:'var(--ink)'})}</div></div>
+   <div class="pad" style="flex:1;overflow-y:auto">
+     <div class="im-row" style="gap:14px">${logo(j.org,{s:58,r:15})}<div style="flex:1;min-width:0"><div class="im-q" style="font-size:21px">${j.title}</div><div class="im-meta" style="margin-top:3px">${j.org}</div></div></div>
+     <div style="font:800 24px var(--font-head);color:var(--ink);letter-spacing:-.025em;margin-top:16px">${j.pay} ${wk.cur}</div>
+     <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:12px"><span class="im-tag">${svg('pin',{s:13,c:'var(--text-3)'})} ${j.city}</span><span class="im-tag">${j.fmt}</span><span class="im-tag">${j.sph}</span></div>
+     <div style="margin-top:20px"><div class="im-step" style="color:var(--muted)">${wk.about}</div><p class="im-body" style="margin-top:8px;color:var(--text)">${j.desc}</p></div>
+     <div style="margin-top:18px"><div class="im-step" style="color:var(--muted)">${wk.req}</div><p class="im-body" style="margin-top:8px;color:var(--text)">${j.req}</p></div>
+   </div>
+   <div class="foot"><button class="im-btn im-btn--primary" data-action="respond" data-msg="${wk.taken}">${wk.respond}</button></div></div>`;};
+
+/* --- My applications --- */
+V.apps=()=>{const ap=T().ap;const stC=['var(--st-sent)','var(--st-seen)','var(--st-short)','var(--st-accepted)','var(--st-rejected)'];const stKey=['sent','seen','short','accepted','rejected'];
+  return `<div class="view">${backBtn('work')}
+   <div class="pad"><div class="im-q" style="font-size:22px">${ap.title}</div>
+   <div class="listgap" style="margin-top:18px">${DATA.myApps[S.lang].map(a=>`<div class="im-card">
+     <div class="im-spread"><div style="font:600 14px var(--font-ui);flex:1">${a.title}</div><span class="im-status" data-st="${stKey[a.status]}">${ap.st[a.status]}</span></div>
+     <div class="im-progress" style="margin-top:12px;background:var(--line)"><i style="width:${(a.status+1)/5*100}%;background:${stC[a.status]}"></i></div>
+   </div>`).join('')}</div></div></div>`};
+
+/* --- Create gig --- */
+V.gig=()=>{const g=T().gig;return `<div class="view">${backBtn('work')}
+  <div class="pad"><div class="im-q" style="font-size:22px">${g.title}</div>
+   <div style="margin-top:20px"><label class="im-label">${g.name_l}</label><input class="im-input" placeholder="${g.name_ph}"></div>
+   <div style="margin-top:14px"><label class="im-label">${g.cat_l}</label><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="im-chip im-chip--on">Дизайн</span><span class="im-chip im-chip--off">IT</span><span class="im-chip im-chip--off">Маркетинг</span><span class="im-chip im-chip--off">Переводы</span></div></div>
+   <div class="im-grid-2" style="margin-top:14px"><div><label class="im-label">${g.price_l}</label><input class="im-input" placeholder="${g.price_ph}"></div><div><label class="im-label">${g.term_l}</label><input class="im-input" placeholder="${g.term_ph}"></div></div>
+   <div style="margin-top:14px"><label class="im-label">${g.desc_l}</label><textarea class="im-input" rows="3" style="resize:none;font-family:var(--font-ui)"></textarea>
+     <button class="im-btn im-btn--ghost im-btn--sm" style="width:100%;margin-top:8px;color:var(--teal);display:flex;align-items:center;justify-content:center;gap:7px" data-action="toast" data-msg="${g.ai}">${svg('spark',{s:15,c:'var(--teal)',fill:'var(--teal)',w:0})} ${g.ai}</button></div>
+  </div>
+  <div class="foot"><button class="im-btn im-btn--primary" data-action="publish-gig">${g.publish}</button></div></div>`};
+
+/* --- Universities --- */
+V.uni=()=>{const u=T().uni;return `<div class="view">
+   <div class="pad" style="padding-top:18px"><div class="im-title" style="font-size:22px">${u.title}</div></div>
+   <div style="display:flex;gap:8px;overflow-x:auto;padding:14px 26px 4px"><button class="im-filter is-on">${S.lang==='ru'?'Все':'Ҳама'}</button><button class="im-filter">IT</button><button class="im-filter">${S.lang==='ru'?'Экономика':'Иқтисод'}</button><button class="im-filter">${u.sch}</button></div>
+   <div class="pad listgap" style="padding-top:10px;padding-bottom:18px">${DATA.unis[S.lang].map(uni=>`<div class="im-card">
+     <div class="im-title" style="font-size:16px">${uni.name}</div>
+     <div class="im-meta" style="margin-top:3px">${uni.city} · ${uni.dir}</div>
+     <div class="im-grid-2" style="margin-top:12px;gap:8px">
+       <div class="im-card im-card--sunk" style="padding:10px 12px"><div class="im-meta">${u.score}</div><div style="font:700 17px var(--font-head);color:var(--ink)">${uni.score}</div></div>
+       <div class="im-card im-card--sunk" style="padding:10px 12px"><div class="im-meta">${u.cost}</div><div style="font:600 14px var(--font-ui);color:var(--ink)">${uni.cost}</div></div>
+     </div>
+     <div class="im-spread" style="margin-top:12px">${uni.sch?`<span class="im-chip im-chip--on">${svg('cap',{s:14,c:'var(--teal)'})} ${u.sch}</span>`:'<span></span>'}<button class="im-btn im-btn--primary im-btn--sm" data-action="toast" data-msg="${u.added}">${u.add}</button></div>
+   </div>`).join('')}</div></div>`};
+
+/* --- Org cabinet --- */
+V['settings-org']=()=>V.org();
+V.org=()=>{const o=T().org;const list=DATA.verify[S.lang].filter((_,i)=>!(S._handled||[]).includes(i));
+  return `<div class="view">${backBtn('profile')}
+   <div class="pad"><div class="im-q" style="font-size:22px">${o.title}</div><div class="im-meta" style="margin-top:6px">${o.who}</div>
+   <div class="im-card im-card--tint" style="margin-top:14px;font:600 13px var(--font-ui);color:var(--teal)">${o.sub}</div>
+   <div class="listgap" style="margin-top:14px;padding-bottom:18px">${list.length?list.map(v=>{const idx=DATA.verify[S.lang].indexOf(v);return `<div class="im-card">
+     <div style="display:flex;gap:11px;align-items:flex-start"><div style="width:40px;height:40px;border-radius:99px;background:var(--surface-tint);display:flex;align-items:center;justify-content:center;font:700 15px var(--font-head);color:var(--teal)">${v.name[0]}</div>
+       <div style="flex:1"><div style="font:600 14px var(--font-ui)">${v.name}</div><div class="im-meta" style="margin-top:2px">${o.req}</div><div class="im-meta" style="margin-top:4px;color:var(--ink)">${v.course}</div><div class="im-meta" style="margin-top:2px;color:var(--muted-2)">${v.when}</div></div></div>
+     <div class="im-btn-row" style="margin-top:12px"><button class="im-btn im-btn--ghost im-btn--grow" data-handle="${idx}" data-ok="0">${o.reject}</button><button class="im-btn im-btn--primary im-btn--grow" data-handle="${idx}" data-ok="1">${o.confirm}</button></div>
+   </div>`}).join(''):`<div class="center" style="padding:40px 0"><div style="font:600 16px var(--font-head);color:var(--teal)">${o.empty}</div></div>`}</div></div></div>`};
+
+/* --- Notifications --- */
+V.notifs=()=>{const nt=T().nt;return `<div class="view">${backBtn('home')}
+  <div class="pad"><div class="im-q" style="font-size:22px">${nt.title}</div>
+   <div class="listgap" style="margin-top:18px;padding-bottom:18px">${DATA.notifs.map((n,i)=>`<div class="im-card" style="display:flex;gap:12px;align-items:flex-start">
+     <div style="width:40px;height:40px;border-radius:12px;background:${n.bg};display:flex;align-items:center;justify-content:center;flex-shrink:0">${svg(n.ic,{s:18,c:'#fff'})}</div>
+     <div style="flex:1"><div style="font:600 14px var(--font-ui);color:var(--ink)">${nt[n.k]}</div><div class="im-meta" style="margin-top:3px">${nt[n.k+'s']}</div></div>
+     <div class="im-meta" style="white-space:nowrap">${nt.ago[i]}</div>
+   </div>`).join('')}</div></div></div>`};
+
+/* ====================================================================
+   РЕНДЕР + НАВИГАЦИЯ
+   ==================================================================== */
+const MAIN={home:1,path:1,work:1,uni:1,profile:1};
+function render(){
+  document.documentElement.lang=S.lang;
+  document.querySelectorAll('.langfab .im-pill').forEach(p=>p.classList.toggle('is-on',p.dataset.lang===S.lang));
+  document.querySelectorAll('[data-i18n]').forEach(el=>{const v=T()[el.dataset.i18n];if(v)el.textContent=v});
+  const scr=S.screen;
+  // закрыть открытый шит при смене экрана
+  const sw=document.getElementById('sheet');if(sw){sw.classList.remove('show');sw.innerHTML=''}
+  screenEl().innerHTML=(V[scr]||V.welcome)();
+  screenEl().scrollTop=0;
+  // нижняя навигация только в основном приложении
+  const showNav=S.registered && MAIN[scr];
+  const nv=navEl();nv.hidden=!showNav;
+  if(showNav){const n=T().nav;const tabs=[['home','home',n.home],['path','path',n.path],['work','work',n.work],['uni','cap',n.uni],['profile','user',n.profile]];
+    nv.innerHTML=tabs.map(([k,ic,lbl])=>`<a class="plain ${scr===k?'is-on':''}" data-go="${k}">${svg(ic,{s:22})}${lbl}</a>`).join('');}
+  // пост-рендер: интерактив графа и AI-чата
+  if(scr==='path' && S.goal && S.pathView!=='list') initGraph();
+  if(scr==='ai') initAI();
+  save();
+}
+
+/* ---------- обработчик кликов ---------- */
+document.body.addEventListener('click',e=>{
+  const t=e.target.closest('[data-go],[data-action],[data-pick],[data-toggle],[data-filter],[data-worktab],[data-sphere],[data-job],[data-jf],[data-pathview],[data-lang],[data-opp],[data-ai],[data-handle],[data-sheet-close]');
+  if(!t)return;
+  // закрыть шит (не мешает действию на той же кнопке)
+  if(t.hasAttribute('data-sheet-close'))closeSheet();
+  // язык
+  if(t.dataset.lang){S.lang=t.dataset.lang;render();return}
+  // навигация
+  if(t.dataset.go){go(t.dataset.go);return}
+  // открыть возможность
+  if(t.dataset.opp!=null){S.oppIndex=+t.dataset.opp;go('opp');return}
+  // фильтр ленты
+  if(t.dataset.filter!=null){S.filter=+t.dataset.filter;render();return}
+  // таб работы
+  if(t.dataset.worktab!=null){S.workTab=+t.dataset.worktab;render();return}
+  // чип сферы
+  if(t.dataset.sphere){S.workSphere=t.dataset.sphere;render();return}
+  // открыть вакансию
+  if(t.dataset.job!=null){S.jobIndex=+t.dataset.job;go('job');return}
+  // выбор фильтра в шите (без закрытия)
+  if(t.dataset.jf){S.wf[t.dataset.jf]=t.dataset.jfv||null;openFilterSheet();return}
+  // переключатель граф/список
+  if(t.dataset.pathview){S.pathView=t.dataset.pathview;render();return}
+  // одиночный выбор
+  if(t.dataset.pick){S.reg[t.dataset.pick]=t.dataset.val;render();return}
+  // мультивыбор
+  if(t.dataset.toggle){const key=t.dataset.toggle==='need'?'needs':'skills';const v=+t.dataset.val;const arr=S.reg[key];const i=arr.indexOf(v);i<0?arr.push(v):arr.splice(i,1);render();return}
+  // AI варианты (визуальные)
+  if(t.dataset.ai){return}
+  // обработка запроса организации
+  if(t.dataset.handle!=null){S._handled=(S._handled||[]).concat(+t.dataset.handle);toast(+t.dataset.ok?T().org.confirmed:T().org.rejected);render();return}
+  // действия
+  const a=t.dataset.action;
+  if(a==='login'){S.registered=true;go('home')}
+  else if(a==='create-account'){go('reg-status')}
+  else if(a==='enter'){S.registered=true;go('home')}
+  else if(a==='apply'){toast(T().od.applied)}
+  else if(a==='respond'){toast(t.dataset.msg||T().wk.taken)}
+  else if(a==='open-filters'){openFilterSheet()}
+  else if(a==='reset-filters'){S.wf={company:null,fmt:null,city:null};openFilterSheet()}
+  else if(a==='apply-filters'){closeSheet();render()}
+  else if(a==='notify'){toast(T().od.notify+' ✓')}
+  else if(a==='ai-path'){S.goal=T().p.empty_ph.replace(/^[^:]*:\s*/,'');S.goal=S.lang==='ru'?'Фулл-стак разработчик':'Барномасози Full-stack';go('path')}
+  else if(a==='build-path'){const inp=document.getElementById('goalInput');S.goal=(inp&&inp.value.trim())||(S.lang==='ru'?'Фулл-стак разработчик':'Барномасози Full-stack');go('path')}
+  else if(a==='rebuild'){S.goal=null;go('path')}
+  else if(a==='copy'){const link='imkon.tj/u/'+(S.reg.name||'shuhrat').toLowerCase();(navigator.clipboard&&navigator.clipboard.writeText(link).catch(()=>{}));toast(T().sh.copied)}
+  else if(a==='toggle-vis'){S.visible=!S.visible;render()}
+  else if(a==='invite'){toast(T().pub.invited)}
+  else if(a==='publish-gig'){toast(T().gig.published);setTimeout(()=>go('work'),700)}
+  else if(a==='toast'){toast(t.dataset.msg||'✓')}
+});
+
+/* ---------- ввод имени ---------- */
+document.body.addEventListener('input',e=>{const m=e.target.closest('[data-model]');if(m){S.reg[m.dataset.model]=e.target.value}});
+
+/* старт */
+if(!S.registered && S.screen!=='welcome' && S.screen!=='signup' && S.screen.indexOf('reg')<0 && S.screen!=='done') S.screen='welcome';
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* ============================================================
+   ИМКОН · Components — v2 «Clean Minimal-Tech»
+   Поверх tokens.css. Единый гротеск Inter, тонкие линии, мягкие тени,
+   индиго-акцент, фокус-ринги. Подключай вторым.
+   ============================================================ */
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: var(--font-ui);
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+.im-canvas { background: var(--bg); min-height: 100vh; }
+
+/* ---------- Рамка телефона ---------- */
+.im-phone {
+  position: relative;
+  width: var(--phone-w);
+  height: var(--phone-h);
+  background: var(--bg);
+  border: var(--bw-frame) solid var(--ink);
+  border-radius: var(--r-phone);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  color: var(--ink-2);
+  box-shadow: var(--sh-phone);
+}
+.im-statusbar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 22px 0;
+  font: 600 12px var(--font-ui);
+  color: var(--ink);
+}
+.im-statusbar .dots { letter-spacing: 2px; }
+
+.im-screen { flex: 1; display: flex; flex-direction: column; }
+.im-pad    { padding: 0 var(--sp-7); }
+.im-foot   { padding: 0 var(--sp-7) var(--sp-8); display: flex; flex-direction: column; gap: var(--sp-3); }
+
+/* ---------- Типографика (единый Inter, плотный трекинг) ---------- */
+.im-display { font: 800 40px/1.05 var(--font-head); letter-spacing: -.025em; color: var(--ink); }
+.im-h1      { font: 700 28px var(--font-head);      letter-spacing: -.02em;  color: var(--ink); }
+.im-q       { font: 700 25px/1.2 var(--font-head);  letter-spacing: -.02em;  color: var(--ink); }
+.im-title   { font: 600 17px var(--font-head);      letter-spacing: -.01em;  color: var(--ink); }
+.im-body    { font: 400 15px/1.55 var(--font-ui);   color: var(--text-2); }
+.im-meta    { font: 500 13px var(--font-ui);        color: var(--text-3); }
+
+/* секц. метка — тихая (uppercase, muted), не кричит цветом */
+.im-section { font: 600 12px var(--font-ui); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+/* шаг / over-label — индиго капсом */
+.im-step    { font: 600 12px var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--teal); }
+
+/* ---------- Кнопки ---------- */
+.im-btn {
+  font: 600 15px var(--font-ui);
+  letter-spacing: -.01em;
+  padding: 14px;
+  border-radius: var(--r-btn);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: transform .12s ease, background .15s ease, opacity .15s ease, border-color .15s ease;
+}
+.im-btn:active { transform: scale(.98); }
+.im-btn--primary { background: var(--teal); color: #fff; }
+.im-btn--primary:hover { background: #4F4FCB; }
+.im-btn--dark    { background: var(--ink);  color: #fff; }
+.im-btn--dark:hover { background: #1C1C24; }
+.im-btn--outline { background: var(--surface); color: var(--ink); border: 1px solid var(--line-input); }
+.im-btn--outline:hover { border-color: var(--ink); }
+.im-btn--ghost   { background: var(--surface); color: var(--text-2); border: 1px solid var(--line); }
+.im-btn--ghost:hover { border-color: var(--line-input); color: var(--ink); }
+.im-btn--sm      { font-size: 13px; padding: 9px 15px; width: auto; }
+
+.im-btn-row { display: flex; gap: var(--sp-3); }
+.im-btn-row .im-btn { width: auto; }
+.im-btn-row .im-btn--grow { flex: 1; }
+
+/* ---------- Поля ввода ---------- */
+.im-input {
+  width: 100%;
+  font: 500 16px var(--font-ui);
+  padding: 14px;
+  border: 1px solid var(--line-input);
+  border-radius: var(--r-btn);
+  background: var(--surface);
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.im-input::placeholder { color: var(--muted); }
+.im-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(91,91,214,.12); }
+.im-label { font: 600 12px var(--font-ui); color: var(--text-3); margin-bottom: 8px; display: block; }
+
+/* ---------- Пилюля-переключатель ---------- */
+.im-pills {
+  display: inline-flex; gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 4px;
+}
+.im-pill {
+  font: 600 13px var(--font-ui);
+  padding: 8px 16px;
+  border: none; border-radius: var(--r-pill);
+  background: transparent; color: var(--text-3);
+  cursor: pointer; transition: background .15s ease, color .15s ease;
+}
+.im-pill[aria-selected="true"], .im-pill.is-on { background: var(--ink); color: #fff; }
+
+/* таб-бар (Работа: вакансии/подработки/фриланс) */
+.im-tabs { display: flex; gap: 3px; background: var(--surface-sunk); border: 1px solid var(--line); border-radius: 12px; padding: 3px; }
+.im-tab  { flex: 1; font: 600 13px var(--font-ui); padding: 9px 4px; border: none; border-radius: 9px; background: transparent; color: var(--text-3); cursor: pointer; transition: background .15s ease, color .15s ease; }
+.im-tab.is-on { background: var(--surface); color: var(--ink); box-shadow: var(--sh-card); }
+
+/* ---------- Прогресс ---------- */
+.im-progress { flex: 1; height: 6px; background: var(--line); border-radius: var(--r-pill); overflow: hidden; }
+.im-progress > i { display: block; height: 100%; background: var(--teal); border-radius: var(--r-pill); }
+
+/* ---------- Чипы ---------- */
+.im-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font: 600 13px var(--font-ui); color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 8px 12px; border-radius: var(--r-chip);
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+.im-chip--on { border-color: var(--teal-border); background: var(--surface-tint); color: var(--teal); }
+.im-chip--off { color: var(--muted); }
+.im-chip .tick { color: var(--teal); font-weight: 700; font-size: 12px; }
+
+.im-filter { font: 600 13px var(--font-ui); white-space: nowrap; padding: 8px 15px; border-radius: var(--r-pill); border: 1px solid var(--line); background: var(--surface); color: var(--text-2); cursor: pointer; transition: background .15s ease, color .15s ease, border-color .15s ease; }
+.im-filter.is-on { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+/* ---------- Карточки ---------- */
+.im-card {
+  background: var(--surface);
+  border: 1px solid var(--line-card);
+  border-radius: var(--r-card);
+  padding: 15px;
+  box-shadow: var(--sh-card);
+}
+.im-card--tint { background: var(--surface-tint); border-color: var(--teal-border); box-shadow: none; }
+.im-card--warm { background: var(--surface-warm); border-color: var(--teal-border); box-shadow: none; }
+.im-card--sunk { background: var(--surface-sunk); border-color: var(--line); box-shadow: none; }
+
+/* карточка возможности */
+.im-opp { display: flex; gap: 12px; align-items: flex-start; }
+.im-opp .icon { width: 42px; height: 42px; border-radius: 11px; background: var(--surface-tint); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.im-opp .cat  { font: 700 11px var(--font-ui); letter-spacing: .04em; text-transform: uppercase; color: var(--teal); }
+.im-opp .days { font: 600 12px var(--font-ui); color: var(--terra); white-space: nowrap; }
+
+/* опция-выбор с бейджем-галочкой */
+.im-option {
+  position: relative; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+  padding: 15px 14px; border-radius: 13px; cursor: pointer; text-align: left;
+  border: 1px solid var(--line-input); background: var(--surface);
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.im-option.is-on { border-color: var(--teal); background: var(--surface-tint); box-shadow: 0 0 0 3px rgba(91,91,214,.10); }
+.im-option .badge {
+  position: absolute; top: 11px; right: 11px; width: 20px; height: 20px; border-radius: var(--r-pill);
+  background: var(--teal); color: #fff; display: flex; align-items: center; justify-content: center;
+  font: 700 12px var(--font-ui); opacity: 0; transition: opacity .15s ease;
+}
+.im-option.is-on .badge { opacity: 1; }
+
+/* ---------- Узел «Мой путь» ---------- */
+.im-node {
+  width: 48px; height: 48px; border-radius: var(--r-pill);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  border: 2px solid var(--line-input); background: var(--surface-sunk); color: var(--muted-2);
+}
+.im-node--done    { background: var(--gold);  border-color: var(--gold);  color: #fff; box-shadow: var(--sh-card); }
+.im-node--current { background: var(--teal);  border-color: var(--teal);  color: #fff; box-shadow: var(--sh-node); width: 60px; height: 60px; animation: imkonPulse 2s infinite; }
+.im-node--goal    { background: var(--terra); border-color: var(--terra); color: #fff; box-shadow: var(--sh-card); width: 56px; height: 56px; }
+.im-seg { width: 3px; height: 30px; background: var(--line-input); border-radius: 2px; }
+.im-seg--gold { background: var(--gold); }
+.im-here { display: inline-block; font: 700 8.5px var(--font-ui); letter-spacing: .09em; text-transform: uppercase; color: #fff; background: var(--teal); padding: 3px 9px; border-radius: var(--r-pill); }
+
+/* ---------- Статус заявки ---------- */
+.im-status { font: 700 11px var(--font-ui); color: #fff; padding: 4px 11px; border-radius: var(--r-pill); white-space: nowrap; }
+.im-status[data-st="sent"]     { background: var(--st-sent); }
+.im-status[data-st="seen"]     { background: var(--st-seen); }
+.im-status[data-st="short"]    { background: var(--st-short); }
+.im-status[data-st="accepted"] { background: var(--st-accepted); }
+.im-status[data-st="rejected"] { background: var(--st-rejected); }
+
+/* ---------- Нижняя навигация ---------- */
+.im-nav {
+  display: flex; justify-content: space-around; align-items: center;
+  padding: 10px 8px 12px; background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.im-nav a { display: flex; flex-direction: column; align-items: center; gap: 3px; text-decoration: none; color: var(--muted); font: 600 10px var(--font-ui); transition: color .15s ease; }
+.im-nav a.is-on { color: var(--teal); }
+.im-nav svg { width: 22px; height: 22px; }
+
+/* ---------- Разное ---------- */
+.im-divider { height: 1px; background: var(--line); border: 0; }
+.im-row { display: flex; align-items: center; gap: 12px; }
+.im-spread { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.im-stack { display: flex; flex-direction: column; }
+.im-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* Trust Score — крупное число индиго */
+.im-trust { font: 800 46px/1 var(--font-head); color: var(--teal); letter-spacing: -.03em; }
+.im-trust-cap { font: 600 11px var(--font-ui); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }

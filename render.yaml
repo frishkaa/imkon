@@ -1,0 +1,34 @@
+# Render.com Blueprint for the IMKON backend (FastAPI) + Postgres.
+# In Render: New → Blueprint → pick this repo. Then set the two `sync: false` secrets.
+services:
+  - type: web
+    name: imkon-api
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: LLM_PROVIDER
+        value: deepseek
+      - key: DEEPSEEK_API_KEY        # paste your DeepSeek key (from api.txt) in the Render UI
+        sync: false
+      - key: ENCRYPTION_KEY          # 32-byte base64 — generate it (see DEPLOY.md)
+        sync: false
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: imkon-db
+          property: connectionString
+      - key: PUBLIC_BASE_URL         # your Netlify URL, e.g. https://imkon.netlify.app
+        sync: false
+      - key: CORS_ORIGINS            # same Netlify URL
+        sync: false
+
+databases:
+  - name: imkon-db
+    plan: free

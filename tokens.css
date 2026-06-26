@@ -1,0 +1,119 @@
+/* ============================================================
+   ИМКОН · Design Tokens — v2 «Clean Minimal-Tech»
+   Светлый, чистый, инвесторский язык (референс: Linear / Stripe / Notion).
+   Акцент — индиго #5B5BD6. Шрифт — Inter. Один акцент на экран, много воздуха.
+   Подключай первым: <link rel="stylesheet" href="tokens.css">
+   ============================================================ */
+
+/* ---- Шрифт ----
+   Единый современный гротеск Inter (и заголовки, и интерфейс).
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+*/
+
+:root {
+  /* === Фон и поверхности === */
+  --bg:            #F7F8FA;   /* холодный светлый холст */
+  --surface:       #FFFFFF;   /* карточки, поля */
+  --surface-tint:  #EEEEFB;   /* индиго-тинт — выбранное состояние */
+  --surface-warm:  #EEF1FB;   /* мягкий акцентный фон (goal / cta-блок) */
+  --surface-sunk:  #F1F2F5;   /* «утопленный» / вторичный */
+
+  /* === Чернила / тёмный === */
+  --ink:           #0B0B0F;   /* почти-чёрный графит: текст, тёмные кнопки, рамка */
+  --ink-2:         #16161D;   /* чуть мягче */
+
+  /* === Акценты === */
+  --teal:          #5B5BD6;   /* ГЛАВНЫЙ акцент = индиго (действие, активное, ссылки) */
+  --teal-border:   #D7D8F7;   /* индиго-бордюр выбранных карточек */
+  --gold:          #CA8A04;   /* «сделано» / прогресс = янтарный */
+  --terra:         #E5484D;   /* срочное / цель / отказ = чистый красный */
+
+  /* === Текст (по убыванию контраста) === */
+  --text:          #16161D;
+  --text-2:        #56565F;
+  --text-3:        #6E6E78;
+  --muted:         #9A9AA6;
+  --muted-2:       #B6B6C0;
+
+  /* === Линии и бордюры (холодный серый, тонкие) === */
+  --line:          #E7E8EC;
+  --line-input:    #DBDCE2;
+  --line-card:     #ECEDF1;
+
+  /* === Семантика статусов (воронка заявок) === */
+  --st-sent:       #9A9AA6;   /* отправлено — серый */
+  --st-seen:       #CA8A04;   /* просмотрено — янтарь */
+  --st-short:      #5B5BD6;   /* шортлист — индиго */
+  --st-accepted:   #16A34A;   /* принято — зелёный */
+  --st-rejected:   #E5484D;   /* отклонено — красный */
+
+  /* === Шрифтовые семьи (единый гротеск) === */
+  --font-head: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-ui:   'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  /* === Радиусы — чистые, чуть меньше (минимал-тех) === */
+  --r-pill:   999px;
+  --r-chip:   9px;
+  --r-btn:    11px;
+  --r-card:   16px;
+  --r-phone:  44px;
+
+  /* === Толщины бордюров (тонкие) === */
+  --bw-hair:  1px;
+  --bw-soft:  1px;
+  --bw-frame: 8px;
+
+  /* === Отступы (шаг 4) === */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 11px;
+  --sp-4: 14px;
+  --sp-5: 18px;
+  --sp-6: 22px;
+  --sp-7: 26px;   /* горизонт. паддинг контента */
+  --sp-8: 30px;   /* нижний паддинг экрана */
+
+  /* === Тени — нейтральные, мягкие (не тёплые) === */
+  --sh-phone: 0 30px 70px -24px rgba(11,11,15,.40);
+  --sh-card:  0 1px 2px rgba(11,11,15,.04), 0 8px 20px -10px rgba(11,11,15,.10);
+  --sh-node:  0 6px 18px -6px rgba(91,91,214,.45);
+
+  /* === Геометрия телефона-фрейма === */
+  --phone-w: 320px;
+  --phone-h: 660px;
+}
+
+/* ============================================================
+   Анимации
+   ============================================================ */
+
+/* Пульсация активного узла «Мой путь» и важных CTA (индиго) */
+@keyframes imkonPulse {
+  0%, 100% { box-shadow: 0 0 0 0   rgba(91,91,214,.45); }
+  50%      { box-shadow: 0 0 0 12px rgba(91,91,214,0);   }
+}
+
+/* Лёгкое парение (иконки, бейджи) */
+@keyframes imkonFloat {
+  0%, 100% { transform: translateY(0);    }
+  50%      { transform: translateY(-4px); }
+}
+
+/* Появление снизу со спрингом (вход карточек) */
+@keyframes imkonRise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Утилиты-классы анимаций */
+.imkon-pulse  { animation: imkonPulse 2s infinite; }
+.imkon-float  { animation: imkonFloat 3s ease-in-out infinite; }
+.imkon-rise   { animation: imkonRise .42s cubic-bezier(.2,.8,.2,1) both; }
+
+.imkon-stagger > * { animation: imkonRise .42s cubic-bezier(.2,.8,.2,1) both; }
+.imkon-stagger > *:nth-child(1) { animation-delay: .00s; }
+.imkon-stagger > *:nth-child(2) { animation-delay: .06s; }
+.imkon-stagger > *:nth-child(3) { animation-delay: .12s; }
+.imkon-stagger > *:nth-child(4) { animation-delay: .18s; }
+.imkon-stagger > *:nth-child(5) { animation-delay: .24s; }
+.imkon-stagger > *:nth-child(6) { animation-delay: .30s; }

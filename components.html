@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Имкон · библиотека компонентов</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="components.css">
+<style>
+  body { padding: 48px clamp(20px,5vw,80px); }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  .lede { max-width: 640px; margin: 0 0 48px; }
+  h2.sec { font: 600 13px var(--font-ui); letter-spacing:.04em; color: var(--terra); text-transform: uppercase; margin: 48px 0 18px; }
+  .demo { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start; }
+  .swatch { width: 96px; }
+  .swatch .chip { height: 56px; border-radius: 12px; border: 1px solid var(--line); }
+  .swatch .name { font: 600 11px var(--font-ui); color: var(--text); margin-top: 6px; }
+  .swatch .hex  { font: 500 11px var(--font-ui); color: var(--muted); }
+  .box { background: var(--surface); border: 1px solid var(--line-card); border-radius: 16px; padding: 20px; width: 320px; }
+</style>
+</head>
+<body class="im-canvas">
+<div class="wrap">
+
+  <div class="lede">
+    <div class="im-section">Имкон · Imkon</div>
+    <div class="im-display" style="margin-top:8px">Дизайн-кит</div>
+    <p class="im-body" style="margin-top:10px">Палитра гор Таджикистана — тёплое золото, бирюза, глубокий тёмный.
+    Все блоки ниже используют только <code>tokens.css</code> + <code>components.css</code>.</p>
+  </div>
+
+  <!-- ЦВЕТА -->
+  <h2 class="sec">Палитра</h2>
+  <div class="demo">
+    <div class="swatch"><div class="chip" style="background:var(--bg)"></div><div class="name">Фон</div><div class="hex">#F7F2E9</div></div>
+    <div class="swatch"><div class="chip" style="background:var(--ink)"></div><div class="name">Чернила</div><div class="hex">#14211F</div></div>
+    <div class="swatch"><div class="chip" style="background:var(--teal)"></div><div class="name">Бирюза</div><div class="hex">#2A8C7E</div></div>
+    <div class="swatch"><div class="chip" style="background:var(--gold)"></div><div class="name">Золото</div><div class="hex">#C9A24B</div></div>
+    <div class="swatch"><div class="chip" style="background:var(--terra)"></div><div class="name">Терракота</div><div class="hex">#b5563b</div></div>
+    <div class="swatch"><div class="chip" style="background:var(--surface-tint)"></div><div class="name">Тинт</div><div class="hex">#e7f1ed</div></div>
+  </div>
+
+  <!-- ТИПОГРАФИКА -->
+  <h2 class="sec">Типографика — Spectral + Onest</h2>
+  <div class="box" style="width:auto;max-width:560px">
+    <div class="im-display">Платформа возможностей</div>
+    <div class="im-q" style="margin-top:14px">Сколько тебе лет?</div>
+    <div class="im-step" style="margin-top:14px">Шаг 2 / 6</div>
+    <p class="im-body" style="margin-top:10px">Возможности находят тебя. Тёплый serif Spectral для заголовков, чистый Onest — для интерфейса.</p>
+  </div>
+
+  <!-- КНОПКИ -->
+  <h2 class="sec">Кнопки</h2>
+  <div class="box">
+    <div class="im-stack" style="gap:11px">
+      <button class="im-btn im-btn--primary">Войти</button>
+      <button class="im-btn im-btn--outline">Зарегистрироваться</button>
+      <button class="im-btn im-btn--dark">Тёмная кнопка</button>
+      <div class="im-btn-row">
+        <button class="im-btn im-btn--ghost">Назад</button>
+        <button class="im-btn im-btn--primary im-btn--grow">Далее</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПОЛЯ + ПИЛЮЛИ -->
+  <h2 class="sec">Поля, пилюли, табы</h2>
+  <div class="demo">
+    <div class="box">
+      <label class="im-label">Твоё имя</label>
+      <input class="im-input" placeholder="Например, Шухрат">
+      <div style="margin-top:16px"><div class="im-pills">
+        <button class="im-pill is-on">Тоҷикӣ</button>
+        <button class="im-pill">Русский</button>
+      </div></div>
+      <div class="im-tabs" style="margin-top:16px">
+        <button class="im-tab is-on">Вакансии</button>
+        <button class="im-tab">Подработки</button>
+        <button class="im-tab">Фриланс</button>
+      </div>
+    </div>
+    <div class="box">
+      <label class="im-label">Прогресс регистрации</label>
+      <div class="im-progress"><i style="width:50%"></i></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+        <button class="im-filter is-on">Все</button>
+        <button class="im-filter">Стипендии</button>
+        <button class="im-filter">Курсы</button>
+        <button class="im-filter">Работа</button>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+        <span class="im-chip im-chip--on">Веб-разработка <span class="tick">✓</span></span>
+        <span class="im-chip im-chip--off">Figma</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- КАРТОЧКИ -->
+  <h2 class="sec">Карточки</h2>
+  <div class="demo">
+    <div class="box" style="padding:0;border:none;background:transparent">
+      <!-- карточка возможности -->
+      <div class="im-card im-opp">
+        <div class="icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M5 5.5C5 4.7 5.7 4 6.5 4H18v13H6.5C5.7 17 5 17.7 5 18.5V5.5z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="cat">Стипендия</div>
+          <div class="im-title" style="font-size:16px;margin-top:3px">Стипендия Президента РТ</div>
+          <div class="im-meta" style="margin-top:3px">Минобрнауки</div>
+        </div>
+        <div class="days">12 дн.</div>
+      </div>
+    </div>
+    <div class="box" style="padding:0;border:none;background:transparent">
+      <!-- опция выбора -->
+      <div class="im-option is-on" style="width:150px;display:inline-flex">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2" stroke-linecap="round"><path d="M5 5.5C5 4.7 5.7 4 6.5 4H18v13H6.5C5.7 17 5 17.7 5 18.5V5.5z"/></svg>
+        <span style="font:600 14px var(--font-ui)">Учёба и стипендии</span>
+        <span class="badge">✓</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ПУТЬ -->
+  <h2 class="sec">«Мой путь» — узлы</h2>
+  <div class="box" style="width:auto">
+    <div class="im-row" style="gap:18px">
+      <div class="im-node im-node--done">✓</div>
+      <div class="im-seg im-seg--gold" style="height:3px;width:30px"></div>
+      <div class="im-node im-node--current">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"><path d="M9 8l-4 4 4 4M15 8l4 4-4 4"/></svg>
+      </div>
+      <div class="im-seg" style="height:3px;width:30px"></div>
+      <div class="im-node">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--muted-2)" stroke-width="2" stroke-linecap="round"><path d="M6 11h12v8H6zM9 11V8a3 3 0 016 0v3"/></svg>
+      </div>
+      <div class="im-seg" style="height:3px;width:30px"></div>
+      <div class="im-node im-node--goal">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M6 4v16M6 5h11l-2 3 2 3H6"/></svg>
+      </div>
+    </div>
+    <div style="margin-top:12px"><span class="im-here">ты здесь</span></div>
+  </div>
+
+  <!-- ПАСПОРТ ДОВЕРИЯ + СТАТУСЫ -->
+  <h2 class="sec">Паспорти Эътимод · статусы заявок</h2>
+  <div class="demo">
+    <div class="box" style="text-align:center">
+      <div class="im-trust-cap">Trust Score</div>
+      <div class="im-trust" style="margin-top:4px">82</div>
+      <div class="im-meta" style="margin-top:4px">растёт с каждым подтверждением</div>
+    </div>
+    <div class="box">
+      <div class="im-stack" style="gap:10px">
+        <div class="im-spread"><span class="im-meta">Контент-менеджер</span><span class="im-status" data-st="short">В шортлисте</span></div>
+        <div class="im-spread"><span class="im-meta">Frontend-разработчик</span><span class="im-status" data-st="seen">Просмотрено</span></div>
+        <div class="im-spread"><span class="im-meta">Грант · Sitora Fund</span><span class="im-status" data-st="sent">Отправлено</span></div>
+        <div class="im-spread"><span class="im-meta">Дизайнер</span><span class="im-status" data-st="rejected">Отклонено</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- НАВИГАЦИЯ -->
+  <h2 class="sec">Нижняя навигация</h2>
+  <div class="box" style="padding:0;overflow:hidden">
+    <nav class="im-nav">
+      <a class="is-on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>Главная</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h16M12 4v16"/></svg>Мой путь</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg>Работа</a>
+      <a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 4-6 8-6s8 2 8 6"/></svg>Профиль</a>
+    </nav>
+  </div>
+
+  <div style="height:60px"></div>
+</div>
+</body>
+</html>

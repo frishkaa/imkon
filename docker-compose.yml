@@ -1,0 +1,19 @@
+# Local Postgres for IMKON dev. Prod migrates to Postgres on Babilon (Tajikistan).
+# Port 5433 on host to avoid clashing with any local 5432 install.
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: imkon-db
+    environment:
+      POSTGRES_USER: imkon
+      POSTGRES_PASSWORD: imkon
+      POSTGRES_DB: imkon
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U imkon -d imkon"]
+      interval: 3s
+      timeout: 3s
+      retries: 20

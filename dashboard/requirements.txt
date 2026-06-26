@@ -1,0 +1,6 @@
+# Dashboard runs separately from the API. Reuses DATABASE_URL from ../.env.
+streamlit>=1.40
+pandas>=2.2
+SQLAlchemy>=2.0.36
+psycopg[binary]>=3.2
+python-dotenv>=1.0

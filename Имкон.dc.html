@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  @keyframes imkonPulse{0%,100%{box-shadow:0 0 0 0 rgba(201,162,75,.55)}50%{box-shadow:0 0 0 12px rgba(201,162,75,0)}}
+  @keyframes imkonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  ::-webkit-scrollbar{width:0;height:0}
+</style>
+</helmet>
+
+<div style="position:absolute;left:80px;top:0;width:1000px;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;font-family:Onest,system-ui,sans-serif">
+  <div>
+    <div style="font:700 13px Onest;letter-spacing:.22em;color:#2A8C7E;text-transform:uppercase">Имкон · Imkon</div>
+    <div style="font:600 42px/1.04 Spectral;color:#14211F;margin-top:8px">Платформа возможностей</div>
+    <div style="font:400 15px/1.5 Onest;color:#6b6457;margin-top:10px;max-width:640px">UI-макеты для демо. Палитра гор Таджикистана — тёплое золото, бирюза, глубокий тёмный. Нажми язык справа — весь интерфейс переключится вживую.</div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:9px;align-items:flex-end">
+    <div style="font:500 12px Onest;color:#8a8475">Забон / Язык</div>
+    <div style="display:flex;background:#fff;border:1px solid #e6ddc9;border-radius:999px;padding:5px;box-shadow:0 4px 14px rgba(20,33,31,.07)">
+      <button onClick="{{ setTg }}" style="{{ tgPill }}">Тоҷикӣ</button>
+      <button onClick="{{ setRu }}" style="{{ ruPill }}">Русский</button>
+    </div>
+  </div>
+</div>
+
+<div data-drags-parent="1" style="position:absolute;left:80px;top:128px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">01 · ВХОД И РЕГИСТРАЦИЯ — по одному вопросу на экран</div>
+
+<!-- ===== WELCOME ===== -->
+<div style="position:absolute;left:80px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Приветствие / вход</div>
+  <div data-screen-label="Welcome" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 30px;text-align:center">
+      <svg width="58" height="58" viewBox="0 0 58 58" fill="none"><circle cx="40" cy="17" r="8" fill="#C9A24B"/><path d="M4 50 L20 22 L33 42 Z" fill="#14211F"/><path d="M24 50 L38 26 L54 50 Z" fill="#2A8C7E"/></svg>
+      <div style="font:700 34px Spectral;margin-top:18px;color:#14211F">Имкон</div>
+      <div style="font:400 16px/1.45 Onest;color:#5f5848;margin-top:10px">{{ t.w.slogan }}</div>
+      <div style="display:flex;gap:8px;margin-top:26px;background:#fff;border:1px solid #e6ddc9;border-radius:999px;padding:5px">
+        <button onClick="{{ setTg }}" style="{{ tgPill }}">Тоҷикӣ</button>
+        <button onClick="{{ setRu }}" style="{{ ruPill }}">Русский</button>
+      </div>
+    </div>
+    <div style="padding:0 26px 30px;display:flex;flex-direction:column;gap:11px">
+      <button style="width:100%;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.w.login }}</button>
+      <button style="width:100%;font:600 16px Onest;padding:15px;border:1.5px solid #14211F;border-radius:14px;background:transparent;color:#14211F;cursor:pointer">{{ t.w.register }}</button>
+      <div style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:6px;font:500 13px Onest;color:#6b6457">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#2A8C7E"><path d="M21 4 2.5 11l5.5 2 2 6 3-4 5 4 3-15Z"/></svg>{{ t.w.tg_login }}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: NAME ===== -->
+<div style="position:absolute;left:480px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Регистрация · шаг 1</div>
+  <div data-screen-label="Reg-Name" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:16%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:30px 26px 0;flex:1">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 1 / 6</div>
+      <div style="font:600 28px/1.15 Spectral;color:#14211F;margin-top:14px">{{ t.r.name_q }}</div>
+      <input placeholder="{{ t.r.name_ph }}" style="width:100%;margin-top:26px;font:500 17px Onest;padding:16px;border:1.5px solid #d9cfb8;border-radius:14px;background:#fff;color:#14211F;outline:none">
+    </div>
+    <div style="padding:0 26px 30px;display:flex;gap:11px">
+      <button style="font:600 16px Onest;padding:15px 22px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: AGE ===== -->
+<div style="position:absolute;left:880px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Регистрация · шаг 2 — возраст</div>
+  <div data-screen-label="Reg-Age" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:33%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:30px 26px 0;flex:1">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 2 / 6</div>
+      <div style="font:600 28px/1.15 Spectral;color:#14211F;margin-top:14px">{{ t.r.age_q }}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:26px">
+        <sc-for list="{{ ages }}" as="a" hint-placeholder-count="4">
+          <button style="font:600 19px Onest;padding:22px 0;border:1.5px solid #d9cfb8;border-radius:16px;background:#fff;color:#14211F;cursor:pointer">{{ a }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:0 26px 30px;display:flex;gap:11px">
+      <button style="font:600 16px Onest;padding:15px 22px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: CITY ===== -->
+<div style="position:absolute;left:1280px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Регистрация · шаг 3 — город</div>
+  <div data-screen-label="Reg-City" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:50%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:30px 26px 0;flex:1">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 3 / 6</div>
+      <div style="font:600 28px/1.15 Spectral;color:#14211F;margin-top:14px">{{ t.r.city_q }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px">
+        <sc-for list="{{ cities }}" as="city" hint-placeholder-count="6">
+          <button style="font:600 15px Onest;padding:13px 18px;border:1.5px solid #d9cfb8;border-radius:999px;background:#fff;color:#14211F;cursor:pointer">{{ city }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:0 26px 30px;display:flex;gap:11px">
+      <button style="font:600 16px Onest;padding:15px 22px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: NEED — TEEN ===== -->
+<div style="position:absolute;left:1680px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">«Что нужно?» — подростки 14–17 (без работы)</div>
+  <div data-screen-label="Reg-Need-Teen" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:66%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:22px 24px 0">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 4 / 6</div>
+      <div style="font:600 26px/1.15 Spectral;color:#14211F;margin-top:10px">{{ t.r.need_q }}</div>
+      <div style="font:400 13px Onest;color:#8a8475;margin-top:6px">{{ t.r.need_hint }}</div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:16px 24px 0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+        <sc-for list="{{ needsTeen }}" as="n" hint-placeholder-count="6">
+          <button style="{{ n.cardStyle }}">
+            <span style="{{ n.badgeStyle }}">✓</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ n.icCol }}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ n.d }}"/></svg>
+            <span style="font:600 14px Onest;color:#14211F;line-height:1.25">{{ n.t }}</span>
+          </button>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:14px 24px 26px;display:flex;gap:11px;border-top:1px solid #ece4d2">
+      <button style="font:600 16px Onest;padding:14px 20px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:14px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: NEED — ADULT ===== -->
+<div style="position:absolute;left:2080px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">«Что нужно?» — взрослые 18+ (добавлены работа, подработки, фриланс)</div>
+  <div data-screen-label="Reg-Need-Adult" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:66%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:22px 24px 0">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 4 / 6</div>
+      <div style="font:600 26px/1.15 Spectral;color:#14211F;margin-top:10px">{{ t.r.need_q }}</div>
+      <div style="font:400 13px Onest;color:#8a8475;margin-top:6px">{{ t.r.need_hint }}</div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:16px 24px 0">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+        <sc-for list="{{ needsAll }}" as="n" hint-placeholder-count="9">
+          <button style="{{ n.cardStyle }}">
+            <span style="{{ n.badgeStyle }}">✓</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="{{ n.icCol }}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ n.d }}"/></svg>
+            <span style="font:600 14px Onest;color:#14211F;line-height:1.25">{{ n.t }}</span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="height:8px"></div>
+    </div>
+    <div style="padding:14px 24px 26px;display:flex;gap:11px;border-top:1px solid #ece4d2">
+      <button style="font:600 16px Onest;padding:14px 20px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:14px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: PARENTS ===== -->
+<div style="position:absolute;left:2480px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Регистрация · шаг 5 — родители за рубежом</div>
+  <div data-screen-label="Reg-Parents" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:83%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:30px 26px 0;flex:1">
+      <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 5 / 6</div>
+      <div style="font:600 27px/1.18 Spectral;color:#14211F;margin-top:14px">{{ t.r.parents_q }}</div>
+      <div style="font:400 14px/1.5 Onest;color:#8a8475;margin-top:10px">{{ t.r.parents_sub }}</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-top:30px">
+        <button style="display:flex;align-items:center;gap:12px;font:600 17px Onest;padding:18px;border:1.5px solid #2A8C7E;border-radius:16px;background:#e7f1ed;color:#14211F;cursor:pointer">
+          <span style="width:22px;height:22px;border-radius:999px;background:#2A8C7E;color:#fff;display:flex;align-items:center;justify-content:center;font:700 12px Onest">✓</span>{{ t.c.yes }}
+        </button>
+        <button style="display:flex;align-items:center;gap:12px;font:600 17px Onest;padding:18px;border:1.5px solid #d9cfb8;border-radius:16px;background:#fff;color:#14211F;cursor:pointer">
+          <span style="width:22px;height:22px;border-radius:999px;border:1.5px solid #cfc6b2"></span>{{ t.c.no }}
+        </button>
+      </div>
+    </div>
+    <div style="padding:0 26px 30px;display:flex;gap:11px">
+      <button style="font:600 16px Onest;padding:15px 22px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== REG: SKILLS ===== -->
+<div style="position:absolute;left:2880px;top:170px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Регистрация · шаг 6 — навыки и языки (можно пропустить)</div>
+  <div data-screen-label="Reg-Skills" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:18px 24px 0;display:flex;align-items:center;gap:14px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="flex:1;height:6px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:100%;height:100%;background:#C9A24B"></div></div>
+    </div>
+    <div style="padding:22px 26px 0;flex:1;overflow:auto">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div style="font:600 12px Onest;letter-spacing:.1em;text-transform:uppercase;color:#2A8C7E">{{ t.r.step }} 6 / 6</div>
+        <button style="font:600 13px Onest;color:#8a8475;background:none;border:none;cursor:pointer;text-decoration:underline">{{ t.c.skip }}</button>
+      </div>
+      <div style="font:600 26px/1.15 Spectral;color:#14211F;margin-top:10px">{{ t.r.skills_q }}</div>
+      <div style="font:400 13px Onest;color:#8a8475;margin-top:6px">{{ t.r.skills_hint }}</div>
+      <div style="font:600 13px Onest;color:#5f5848;margin-top:22px">{{ t.r.langs_l }}</div>
+      <div style="display:flex;flex-direction:column;gap:9px;margin-top:10px">
+        <sc-for list="{{ langsList }}" as="lg" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:#fff;border:1px solid #e6ddc9;border-radius:12px">
+            <span style="font:600 14px Onest;color:#14211F">{{ lg.n }}</span>
+            <span style="font:500 12px Onest;color:#2A8C7E;background:#e7f1ed;padding:3px 10px;border-radius:999px">{{ lg.l }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="font:600 13px Onest;color:#5f5848;margin-top:20px">{{ t.r.skills_l }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
+        <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="4">
+          <span style="font:600 13px Onest;color:#14211F;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">{{ sk.n }}</span>
+        </sc-for>
+        <span style="font:600 13px Onest;color:#2A8C7E;background:#e7f1ed;border:1px dashed #9fcfc4;padding:8px 13px;border-radius:999px">+ {{ t.r.add }}</span>
+      </div>
+    </div>
+    <div style="padding:14px 26px 26px;display:flex;gap:11px;border-top:1px solid #ece4d2">
+      <button style="font:600 16px Onest;padding:14px 20px;border:1.5px solid #d9cfb8;border-radius:14px;background:transparent;color:#6b6457;cursor:pointer">{{ t.c.back }}</button>
+      <button style="flex:1;font:600 16px Onest;padding:14px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.c.next }}</button>
+    </div>
+  </div>
+</div>
+<div data-drags-parent="1" style="position:absolute;left:80px;top:858px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">02 · ОСНОВНЫЕ ЭКРАНЫ — лента, карточка, AI-помощник</div>
+
+<!-- ===== HOME FEED ===== -->
+<div style="position:absolute;left:80px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Главная · подобранные возможности</div>
+  <div data-screen-label="Home" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:14px 22px 0;display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font:400 13px Onest;color:#8a8475">{{ t.h.hello }},</div>
+        <div style="font:600 23px Spectral;color:#14211F">{{ name }}!</div>
+      </div>
+      <button style="display:flex;align-items:center;gap:6px;font:700 13px Onest;color:#fff;background:#14211F;border:none;border-radius:999px;padding:9px 14px;cursor:pointer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="#C9A24B"><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9z"/></svg>AI
+      </button>
+    </div>
+    <div style="flex:1;overflow:auto;padding:14px 18px 0">
+      <button style="width:100%;display:flex;align-items:center;gap:13px;text-align:left;background:#0E1A1A;border:none;border-radius:18px;padding:16px;cursor:pointer">
+        <div style="width:42px;height:42px;border-radius:12px;background:rgba(201,162,75,.18);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#C9A24B"><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div style="font:600 14.5px Onest;color:#fff">{{ t.h.ai_banner }}</div>
+          <div style="font:400 12px Onest;color:#b9c4c0;margin-top:2px">{{ t.h.ai_sub }}</div>
+        </div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div style="display:flex;gap:8px;overflow:auto;padding:16px 0 4px">
+        <sc-for list="{{ filters }}" as="fl" hint-placeholder-count="4">
+          <button style="{{ fl.st }}">{{ fl.f }}</button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;padding-bottom:12px">
+        <sc-for list="{{ opps }}" as="c" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #ece4d2;border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:11px">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="width:44px;height:44px;border-radius:12px;background:#e7f1ed;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ c.d }}"/></svg>
+              </div>
+              <div style="flex:1;min-width:0">
+                <div style="font:600 15px/1.25 Onest;color:#14211F">{{ c.title }}</div>
+                <div style="font:400 12.5px Onest;color:#8a8475;margin-top:3px">{{ c.org }}</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font:600 11px Onest;color:#2A8C7E;background:#e7f1ed;padding:5px 11px;border-radius:999px">{{ c.cat }}</span>
+              <span style="display:flex;align-items:center;gap:5px;font:600 11px Onest;color:#b5563b;background:#f6e7e1;padding:5px 10px;border-radius:999px">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b5563b" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7.5v5l3 2" stroke-linecap="round"/></svg>{{ c.days }} {{ t.h.unit }}
+              </span>
+            </div>
+            <button style="width:100%;font:600 14px Onest;padding:11px;border:1.5px solid #2A8C7E;border-radius:11px;background:transparent;color:#2A8C7E;cursor:pointer">{{ t.c.more }}</button>
+          </div>
+        </sc-for>
+        <button style="width:100%;font:600 14px Onest;padding:12px;border:none;border-radius:11px;background:#efe9da;color:#5f5848;cursor:pointer">{{ t.h.show_more }}</button>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:9px 6px 13px;background:#fff;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#2A8C7E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg><span style="font:600 9.5px Onest">{{ t.nav.home }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span style="font:500 9.5px Onest">{{ t.nav.path }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></svg><span style="font:500 9.5px Onest">{{ t.nav.profile }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg><span style="font:500 9.5px Onest">{{ t.nav.work }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l9 4-9 4-9-4 9-4zM7 11v4c0 1.8 10 1.8 10 0v-4"/></svg><span style="font:500 9.5px Onest">{{ t.nav.uni }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== OPPORTUNITY DETAIL ===== -->
+<div style="position:absolute;left:480px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Карточка возможности · детально</div>
+  <div data-screen-label="Opportunity-Detail" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <span style="font:600 13px Onest;color:#8a8475">{{ t.od.title }}</span>
+    </div>
+    <div style="flex:1;overflow:auto;padding:18px 22px 0">
+      <div style="display:flex;gap:13px;align-items:center">
+        <div style="width:52px;height:52px;border-radius:14px;background:#e7f1ed;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="{{ iconDetail }}"/></svg></div>
+        <div><div style="font:600 19px/1.2 Spectral;color:#14211F">{{ t.od.title }}</div><div style="font:400 13px Onest;color:#8a8475;margin-top:3px">{{ t.od.org }}</div></div>
+      </div>
+      <div style="font:600 12px Onest;letter-spacing:.08em;text-transform:uppercase;color:#2A8C7E;margin-top:22px">{{ t.od.desc }}</div>
+      <div style="font:400 14px/1.6 Onest;color:#3d4441;margin-top:8px">{{ t.od.body }}</div>
+      <div style="font:600 12px Onest;letter-spacing:.08em;text-transform:uppercase;color:#2A8C7E;margin-top:20px">{{ t.od.who }}</div>
+      <div style="font:500 14px/1.5 Onest;color:#3d4441;margin-top:8px">{{ t.od.req }}</div>
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <div style="flex:1;background:#fff;border:1px solid #ece4d2;border-radius:13px;padding:12px"><div style="font:500 11px Onest;color:#8a8475">{{ t.od.deadline }}</div><div style="font:600 13px Onest;color:#b5563b;margin-top:4px">{{ t.od.dlv }}</div></div>
+      </div>
+      <div style="background:#fff;border:1px solid #ece4d2;border-radius:13px;padding:12px;margin-top:10px"><div style="font:500 11px Onest;color:#8a8475">{{ t.od.contact }}</div><div style="font:600 13px Onest;color:#14211F;margin-top:4px">{{ t.od.contv }}</div></div>
+      <div style="height:12px"></div>
+    </div>
+    <div style="padding:12px 22px 24px;border-top:1px solid #ece4d2;background:#F7F2E9">
+      <button style="width:100%;font:600 16px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.od.apply }}</button>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;font:600 14px Onest;padding:12px;border:1.5px solid #d9cfb8;border-radius:13px;background:#fff;color:#14211F;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4h12v16l-6-4-6 4z"/></svg>{{ t.od.save }}</button>
+        <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;font:600 14px Onest;padding:12px;border:1.5px solid #d9cfb8;border-radius:13px;background:#fff;color:#14211F;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8 11l8-5M8 13l8 5"/></svg>{{ t.c.share }}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AI CHAT ===== -->
+<div style="position:absolute;left:880px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">AI-помощник · чат</div>
+  <div data-screen-label="AI-Chat" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:14px 22px 14px;display:flex;align-items:center;gap:11px;border-bottom:1px solid #ece4d2">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+      <div style="width:34px;height:34px;border-radius:999px;background:#0E1A1A;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#C9A24B"><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9z"/></svg></div>
+      <div style="font:600 16px Onest;color:#14211F">{{ t.ai.title }}</div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:18px 18px 0;display:flex;flex-direction:column;gap:12px">
+      <div style="max-width:84%;background:#fff;border:1px solid #ece4d2;border-radius:4px 16px 16px 16px;padding:13px 15px;font:400 14px/1.5 Onest;color:#3d4441">{{ t.ai.q1 }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;max-width:90%">
+        <span style="font:600 13px Onest;color:#2A8C7E;background:#e7f1ed;border:1px solid #bfe0d8;padding:8px 13px;border-radius:999px">{{ t.ai.o1 }}</span>
+        <span style="font:600 13px Onest;color:#2A8C7E;background:#e7f1ed;border:1px solid #bfe0d8;padding:8px 13px;border-radius:999px">{{ t.ai.o2 }}</span>
+        <span style="font:600 13px Onest;color:#fff;background:#2A8C7E;padding:8px 13px;border-radius:999px">{{ t.ai.o3 }}</span>
+      </div>
+      <div style="align-self:flex-end;max-width:84%;background:#2A8C7E;border-radius:16px 16px 4px 16px;padding:13px 15px;font:500 14px/1.5 Onest;color:#fff">{{ t.ai.u1 }}</div>
+      <div style="max-width:84%;background:#fff;border:1px solid #ece4d2;border-radius:4px 16px 16px 16px;padding:13px 15px;font:400 14px/1.5 Onest;color:#3d4441">{{ t.ai.q2 }}</div>
+    </div>
+    <div style="padding:12px 18px 14px;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:11px">
+        <button style="font:600 12.5px Onest;color:#14211F;background:#C9A24B;border:none;padding:9px 13px;border-radius:999px;cursor:pointer">{{ t.ai.a2 }}</button>
+        <button style="font:600 12.5px Onest;color:#14211F;background:#efe9da;border:none;padding:9px 13px;border-radius:999px;cursor:pointer">{{ t.ai.a1 }}</button>
+        <button style="font:600 12.5px Onest;color:#14211F;background:#efe9da;border:none;padding:9px 13px;border-radius:999px;cursor:pointer">{{ t.ai.a3 }}</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid #e6ddc9;border-radius:999px;padding:6px 6px 6px 16px">
+        <span style="flex:1;font:400 14px Onest;color:#b3ac9c">…</span>
+        <button style="width:38px;height:38px;border-radius:999px;background:#2A8C7E;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div data-drags-parent="1" style="position:absolute;left:1280px;top:858px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">03 · РОҲИ МАН — карьерная карта-путь · ГЛАВНАЯ ФИШКА</div>
+<div style="position:absolute;left:2900px;top:902px;width:230px;background:#fef4a8;padding:13px 15px;font:500 12.5px/1.5 Onest;color:#4a4636;box-shadow:0 2px 10px rgba(20,33,31,.12);transform:rotate(-1.5deg)">3 стиля карты на выбор — все вертикальные, сверху вниз (твой выбор). А — светлая «прямая» (рекомендую), Б — тёмная «карта гор», В — лента-таймлайн для веба.</div>
+
+<!-- ===== ROHI MAN — EMPTY ===== -->
+<div style="position:absolute;left:1280px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Роҳи Ман · пустое состояние</div>
+  <div data-screen-label="Path-Empty" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;font:700 19px Spectral;color:#14211F">Роҳи Ман</div>
+    <div style="flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 26px;text-align:center">
+      <div style="margin:0 auto 22px;width:64px;height:64px;border-radius:999px;background:#0E1A1A;display:flex;align-items:center;justify-content:center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg></div>
+      <div style="font:600 27px/1.18 Spectral;color:#14211F">{{ t.p.empty_t }}</div>
+      <div style="font:400 14px/1.55 Onest;color:#7a7363;margin-top:12px">{{ t.p.empty_s }}</div>
+      <div style="margin-top:24px;background:#fff;border:1.5px solid #d9cfb8;border-radius:14px;padding:15px;text-align:left;font:400 15px Onest;color:#b3ac9c">{{ t.p.empty_ph }}</div>
+      <button style="margin-top:13px;width:100%;display:flex;align-items:center;justify-content:center;gap:9px;font:700 16px Onest;padding:16px;border:none;border-radius:14px;background:#C9A24B;color:#14211F;cursor:pointer">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="#14211F"><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9z"/></svg>{{ t.p.build }}
+      </button>
+    </div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:9px 6px 13px;background:#fff;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg><span style="font:500 9.5px Onest">{{ t.nav.home }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#2A8C7E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span style="font:600 9.5px Onest">{{ t.nav.path }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></svg><span style="font:500 9.5px Onest">{{ t.nav.profile }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg><span style="font:500 9.5px Onest">{{ t.nav.work }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l9 4-9 4-9-4 9-4zM7 11v4c0 1.8 10 1.8 10 0v-4"/></svg><span style="font:500 9.5px Onest">{{ t.nav.uni }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROHI MAN — VARIANT A (light, straight) ===== -->
+<div style="position:absolute;left:1680px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#2A8C7E">Вариант А · «Прямая» (рекомендую)</div>
+  <div data-screen-label="Path-Built-A" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:13px 22px 0;display:flex;justify-content:space-between;align-items:center">
+      <div style="font:700 19px Spectral;color:#14211F">Роҳи Ман</div>
+      <span style="display:flex;align-items:center;gap:5px;font:600 11px Onest;color:#b5563b;background:#f6e7e1;padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b5563b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M6 5h11l-2 3 2 3H6"/></svg>{{ t.p.goal }}</span>
+    </div>
+    <div style="padding:11px 22px 0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span style="font:700 12px Onest;color:#5f5848">{{ t.p.passed }} 3 / 5</span>
+        <span style="font:500 11px Onest;color:#8a8475">{{ t.p.to_work }}</span>
+      </div>
+      <div style="height:8px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,#C9A24B,#2A8C7E)"></div></div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:14px 0 10px;display:flex;flex-direction:column;align-items:center">
+      <sc-for list="{{ pathSteps }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="{{ s.segStyle }}"></div>
+          <div style="{{ s.nodeStyle }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ s.iconColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.dShow }}"/></svg></div>
+          <div style="{{ s.titleStyle }}">{{ s.title }}</div>
+          <span style="{{ s.herePill }}">{{ t.p.here }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="background:#fff;border-top:1px solid #ece4d2;border-radius:20px 20px 0 0;box-shadow:0 -9px 24px -12px rgba(20,33,31,.2);padding:13px 18px 14px">
+      <div style="width:38px;height:4px;background:#e0d7c2;border-radius:9px;margin:0 auto 11px"></div>
+      <div style="font:600 11px Onest;letter-spacing:.06em;text-transform:uppercase;color:#2A8C7E">{{ t.p.here }} · {{ t.p.course_l }}</div>
+      <div style="font:600 16px/1.25 Spectral;color:#14211F;margin-top:5px">{{ curStep.title }}</div>
+      <div style="font:400 12.5px Onest;color:#8a8475;margin-top:4px">{{ curStep.course }} · {{ curStep.time }}</div>
+      <div style="display:flex;gap:9px;margin-top:11px">
+        <button style="flex:1;font:700 14px Onest;padding:13px;border:none;border-radius:12px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.p.take }}</button>
+        <button style="width:46px;border:1.5px solid #d9cfb8;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8 11l8-5M8 13l8 5"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROHI MAN — VARIANT B (dark map) ===== -->
+<div style="position:absolute;left:2080px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Вариант Б · «Карта гор» (тёмная)</div>
+  <div data-screen-label="Path-Built-B" style="position:relative;width:320px;height:660px;background:#0E1A1A;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#f2ede0">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#f2ede0"><span>9:41</span><span style="letter-spacing:2px;color:#5a6b68">●●●</span></div>
+    <div style="position:relative;padding:13px 22px 0">
+      <svg viewBox="0 0 320 60" preserveAspectRatio="none" style="position:absolute;top:6px;left:0;width:100%;height:64px;opacity:.5"><path d="M0 60 L70 22 L120 46 L180 14 L240 40 L320 10 L320 60 Z" fill="#16302c"/><path d="M120 46 L180 14 L240 40 L320 18 L320 60 L120 60 Z" fill="#1d3a35"/></svg>
+      <div style="position:relative;display:flex;justify-content:space-between;align-items:center">
+        <div style="font:700 19px Spectral;color:#f2ede0">Роҳи Ман</div>
+        <span style="display:flex;align-items:center;gap:5px;font:600 11px Onest;color:#e8b96a;background:rgba(201,162,75,.16);padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#e8b96a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M6 5h11l-2 3 2 3H6"/></svg>{{ t.p.goal }}</span>
+      </div>
+    </div>
+    <div style="padding:14px 22px 0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+        <span style="font:700 12px Onest;color:#cfc6b2">{{ t.p.passed }} 3 / 5</span>
+        <span style="font:500 11px Onest;color:#8fa39e">{{ t.p.to_work }}</span>
+      </div>
+      <div style="height:8px;background:#16302c;border-radius:999px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,#C9A24B,#2A8C7E)"></div></div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:18px 0 12px;display:flex;flex-direction:column;align-items:center">
+      <sc-for list="{{ pathSteps }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="{{ s.segStyleD }}"></div>
+          <div style="{{ s.nodeStyleD }}"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="{{ s.iconColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.dShow }}"/></svg></div>
+          <div style="{{ s.titleStyleD }}">{{ s.title }}</div>
+          <span style="{{ s.herePill }}">{{ t.p.here }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding:12px 18px 16px;border-top:1px solid #1d3a35">
+      <button style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font:700 15px Onest;padding:14px;border:1.5px solid #2A8C7E;border-radius:13px;background:transparent;color:#7fd3c4;cursor:pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#7fd3c4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8 11l8-5M8 13l8 5"/></svg>{{ t.p.share }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROHI MAN — VARIANT C (timeline) ===== -->
+<div style="position:absolute;left:2480px;top:902px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Вариант В · Лента-таймлайн (для веба)</div>
+  <div data-screen-label="Path-Built-C" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:13px 22px 0;display:flex;justify-content:space-between;align-items:center">
+      <div style="font:700 19px Spectral;color:#14211F">Роҳи Ман</div>
+      <span style="display:flex;align-items:center;gap:5px;font:600 11px Onest;color:#b5563b;background:#f6e7e1;padding:5px 11px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#b5563b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 4v16M6 5h11l-2 3 2 3H6"/></svg>{{ t.p.goal }}</span>
+    </div>
+    <div style="padding:11px 22px 0">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font:700 12px Onest;color:#5f5848">{{ t.p.passed }} 3 / 5</span><span style="font:500 11px Onest;color:#8a8475">{{ t.p.to_work }}</span></div>
+      <div style="height:8px;background:#e6ddc9;border-radius:999px;overflow:hidden"><div style="width:55%;height:100%;background:linear-gradient(90deg,#C9A24B,#2A8C7E)"></div></div>
+    </div>
+    <div style="flex:1;overflow:auto;padding:16px 20px 12px">
+      <sc-for list="{{ pathSteps }}" as="s" hint-placeholder-count="5">
+        <div style="display:flex;gap:13px">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="{{ s.railNode }}"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="{{ s.iconColor }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.dShow }}"/></svg></div>
+            <div style="width:3px;flex:1;min-height:14px;background:{{ s.lineDown }};margin:3px 0"></div>
+          </div>
+          <div style="{{ s.cardStyleC }}">
+            <div style="font:600 14.5px/1.25 Onest;color:{{ s.titleColor }}">{{ s.title }}</div>
+            <div style="font:400 12px Onest;color:#8a8475;margin-top:4px">{{ s.course }}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="padding:12px 20px 16px;border-top:1px solid #ece4d2;display:flex;gap:9px">
+      <button style="flex:1;font:700 14px Onest;padding:13px;border:none;border-radius:12px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.p.take }}</button>
+      <button style="flex:1;font:600 14px Onest;padding:13px;border:1.5px solid #d9cfb8;border-radius:12px;background:#fff;color:#14211F;cursor:pointer">{{ t.p.share }}</button>
+    </div>
+  </div>
+</div>
+<div data-drags-parent="1" style="position:absolute;left:80px;top:1620px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">04 · ПАСПОРТИ ЭЪТИМОД — профиль доверия · ВТОРАЯ ФИШКА</div>
+
+<!-- ===== PROFILE ===== -->
+<div style="position:absolute;left:80px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Профиль · Паспорти Эътимод</div>
+  <div data-screen-label="Profile" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="flex:1;overflow:auto">
+      <div style="padding:16px 20px 0;display:flex;align-items:center;gap:13px">
+        <div style="width:58px;height:58px;border-radius:999px;background:#2A8C7E;color:#fff;display:flex;align-items:center;justify-content:center;font:600 26px Spectral;flex-shrink:0">З</div>
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px"><span style="font:600 19px Spectral;color:#14211F">Зокиров Шухрат</span><svg width="16" height="16" viewBox="0 0 24 24" fill="#2A8C7E"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-.8 2.9.8 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l.8-2.9L3 10.4l2.6-1.5 1-2.8 3 .3z"/><path d="M8.5 12.5l2.2 2.2 4.3-4.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div style="font:400 13px Onest;color:#8a8475;margin-top:2px">Душанбе · 21 год</div>
+        </div>
+        <button style="width:36px;height:36px;border-radius:11px;border:1.5px solid #d9cfb8;background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16zM14 6l4 4"/></svg></button>
+      </div>
+      <div style="display:flex;gap:9px;padding:14px 20px 0">
+        <button style="flex:1;font:600 13px Onest;padding:11px;border:none;border-radius:11px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.pr.share }}</button>
+        <button style="flex:1;font:600 13px Onest;padding:11px;border:1.5px solid #d9cfb8;border-radius:11px;background:#fff;color:#14211F;cursor:pointer">{{ t.pr.pdf }}</button>
+      </div>
+      <div style="margin:16px 20px 0;background:#0E1A1A;border-radius:18px;padding:16px 17px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end">
+          <div>
+            <div style="font:500 11px Onest;letter-spacing:.06em;text-transform:uppercase;color:#8fa39e">{{ t.pr.trust }}</div>
+            <div style="display:flex;align-items:baseline;gap:5px;margin-top:3px"><span style="font:700 38px Spectral;color:#C9A24B">82</span><span style="font:500 14px Onest;color:#8fa39e">/ 100</span></div>
+          </div>
+          <span style="display:flex;align-items:center;gap:4px;font:700 12px Onest;color:#7fd3c4;background:rgba(42,140,126,.18);padding:5px 10px;border-radius:999px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#7fd3c4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 12l6-6 6 6"/></svg>+6</span>
+        </div>
+        <div style="height:7px;background:#16302c;border-radius:999px;overflow:hidden;margin-top:13px"><div style="width:82%;height:100%;background:linear-gradient(90deg,#C9A24B,#7fd3c4)"></div></div>
+        <div style="font:400 11.5px Onest;color:#8fa39e;margin-top:9px">{{ t.pr.trust_sub }}</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:20px 20px 0"><span style="font:600 15px Spectral;color:#14211F">{{ t.pr.verified }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:9px;padding:11px 20px 0">
+        <sc-for list="{{ ach }}" as="a" hint-placeholder-count="4">
+          <div style="{{ a.rowStyle }}">
+            <div style="width:24px;height:24px;border-radius:999px;background:{{ a.dotBg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.dShow }}"/></svg></div>
+            <div style="flex:1;min-width:0"><div style="font:600 13.5px/1.3 Onest;color:#14211F">{{ a.t }}</div><div style="font:500 11.5px Onest;color:{{ a.byColor }};margin-top:3px">{{ a.byLine }}</div></div>
+          </div>
+        </sc-for>
+        <button style="display:flex;align-items:center;justify-content:center;gap:7px;font:600 13px Onest;color:#2A8C7E;background:#e7f1ed;border:1px dashed #9fcfc4;border-radius:13px;padding:12px;cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>{{ t.pr.add_ach }}</button>
+      </div>
+      <div style="padding:20px 20px 0;font:600 15px Spectral;color:#14211F">{{ t.pr.skills }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;padding:11px 20px 0">
+        <sc-for list="{{ skills }}" as="sk" hint-placeholder-count="5">
+          <span style="{{ sk.chipStyle }}"><span style="{{ sk.checkStyle }}">✓</span>{{ sk.n }}</span>
+        </sc-for>
+      </div>
+      <div style="padding:20px 20px 0;font:600 15px Spectral;color:#14211F">{{ t.pr.langs }}</div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:11px 20px 0">
+        <sc-for list="{{ langsList }}" as="lg" hint-placeholder-count="3">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:11px 14px;background:#fff;border:1px solid #ece4d2;border-radius:12px"><span style="font:600 13.5px Onest;color:#14211F">{{ lg.n }}</span><span style="font:500 12px Onest;color:#2A8C7E">{{ lg.l }}</span></div>
+        </sc-for>
+      </div>
+      <div style="padding:20px 20px 0;font:600 15px Spectral;color:#14211F">{{ t.pr.portfolio }}</div>
+      <div style="display:flex;gap:10px;padding:11px 20px 0">
+        <div style="flex:1;height:84px;border-radius:13px;background:repeating-linear-gradient(45deg,#efe9da,#efe9da 7px,#e8e0cd 7px,#e8e0cd 14px);border:1px solid #e0d7c2;display:flex;align-items:flex-end;padding:8px"><span style="font:500 9px ui-monospace,monospace;color:#9a8f78">проект · скрин</span></div>
+        <div style="flex:1;height:84px;border-radius:13px;background:repeating-linear-gradient(45deg,#efe9da,#efe9da 7px,#e8e0cd 7px,#e8e0cd 14px);border:1px solid #e0d7c2;display:flex;align-items:flex-end;padding:8px"><span style="font:500 9px ui-monospace,monospace;color:#9a8f78">работа · фото</span></div>
+      </div>
+      <div style="margin:20px 20px 0;background:#fff;border:1px solid #ece4d2;border-radius:15px;padding:14px">
+        <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 13px Onest;color:#14211F">{{ t.pr.mini_path }}</span><span style="font:700 11px Onest;color:#b5563b">3 / 5</span></div>
+        <div style="display:flex;align-items:center;gap:5px;margin-top:12px">
+          <span style="width:18px;height:18px;border-radius:999px;background:#C9A24B;flex-shrink:0"></span><span style="flex:1;height:3px;background:#C9A24B"></span>
+          <span style="width:18px;height:18px;border-radius:999px;background:#C9A24B;flex-shrink:0"></span><span style="flex:1;height:3px;background:#C9A24B"></span>
+          <span style="width:22px;height:22px;border-radius:999px;background:#2A8C7E;flex-shrink:0;box-shadow:0 0 0 3px rgba(42,140,126,.2)"></span><span style="flex:1;height:3px;background:#d8cfba"></span>
+          <span style="width:18px;height:18px;border-radius:999px;background:#efe9da;border:2px solid #d4cbb6;flex-shrink:0"></span><span style="flex:1;height:3px;background:#d8cfba"></span>
+          <span style="width:20px;height:20px;border-radius:999px;background:#b5563b;flex-shrink:0"></span>
+        </div>
+      </div>
+      <div style="height:14px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:9px 6px 13px;background:#fff;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg><span style="font:500 9.5px Onest">{{ t.nav.home }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span style="font:500 9.5px Onest">{{ t.nav.path }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#2A8C7E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></svg><span style="font:600 9.5px Onest">{{ t.nav.profile }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg><span style="font:500 9.5px Onest">{{ t.nav.work }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l9 4-9 4-9-4 9-4zM7 11v4c0 1.8 10 1.8 10 0v-4"/></svg><span style="font:500 9.5px Onest">{{ t.nav.uni }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SHARE PROFILE ===== -->
+<div style="position:absolute;left:480px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Поделиться профилем</div>
+  <div data-screen-label="Share" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span style="font:700 18px Spectral;color:#14211F">{{ t.sh.title }}</span></div>
+    <div style="flex:1;overflow:auto;padding:22px 22px 0">
+      <div style="margin:0 auto;width:130px;height:130px;border-radius:18px;background:#0E1A1A;display:flex;align-items:center;justify-content:center;padding:16px">
+        <div style="width:100%;height:100%;background:conic-gradient(#C9A24B 0 25%,#fff 0 50%,#fff 0 75%,#C9A24B 0);background-size:18px 18px;border-radius:6px;opacity:.92"></div>
+      </div>
+      <div style="font:600 12px Onest;letter-spacing:.06em;text-transform:uppercase;color:#2A8C7E;margin-top:22px">{{ t.sh.link_l }}</div>
+      <div style="display:flex;align-items:center;gap:9px;margin-top:9px;background:#fff;border:1.5px solid #e6ddc9;border-radius:13px;padding:13px 14px">
+        <span style="flex:1;font:500 13px ui-monospace,monospace;color:#3d4441;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">imkon.tj/p/shuhrat-z</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h8"/></svg>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:18px;background:#fff;border:1px solid #ece4d2;border-radius:13px;padding:13px 14px">
+        <div><div style="font:600 13.5px Onest;color:#14211F">{{ t.sh.vis }}</div><div style="font:400 11.5px Onest;color:#8a8475;margin-top:2px;max-width:190px">{{ t.sh.vis_sub }}</div></div>
+        <div style="width:46px;height:27px;border-radius:999px;background:#2A8C7E;position:relative;flex-shrink:0"><div style="position:absolute;top:3px;right:3px;width:21px;height:21px;border-radius:999px;background:#fff"></div></div>
+      </div>
+    </div>
+    <div style="padding:12px 22px 24px;border-top:1px solid #ece4d2">
+      <button style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font:700 15px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 012-2h8"/></svg>{{ t.sh.copy }}</button>
+      <div style="display:flex;gap:10px;margin-top:10px">
+        <button style="flex:1;font:600 13.5px Onest;padding:13px;border:1.5px solid #d9cfb8;border-radius:13px;background:#fff;color:#14211F;cursor:pointer">{{ t.sh.send }}</button>
+        <button style="flex:1;font:600 13.5px Onest;padding:13px;border:1.5px solid #d9cfb8;border-radius:13px;background:#fff;color:#14211F;cursor:pointer">{{ t.sh.pdf }}</button>
+      </div>
+      <button style="width:100%;font:600 13px Onest;padding:11px;border:none;border-radius:12px;background:transparent;color:#b5563b;cursor:pointer;margin-top:8px">{{ t.sh.revoke }}</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PUBLIC PROFILE ===== -->
+<div style="position:absolute;left:880px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Публичный профиль · как видит работодатель</div>
+  <div data-screen-label="Public-Profile" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="margin:12px 16px 0;display:flex;align-items:center;gap:8px;background:#e7f1ed;border:1px solid #bfe0d8;border-radius:11px;padding:9px 12px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12l2 2 4-4"/></svg><span style="font:600 11.5px Onest;color:#2A6e63">{{ t.pub.badge }}</span></div>
+    <div style="flex:1;overflow:auto;padding:16px 20px 0">
+      <div style="display:flex;align-items:center;gap:13px">
+        <div style="width:56px;height:56px;border-radius:999px;background:#2A8C7E;color:#fff;display:flex;align-items:center;justify-content:center;font:600 25px Spectral;flex-shrink:0">З</div>
+        <div><div style="display:flex;align-items:center;gap:6px"><span style="font:600 18px Spectral;color:#14211F">Зокиров Шухрат</span><svg width="15" height="15" viewBox="0 0 24 24" fill="#2A8C7E"><path d="M12 2l2.4 1.8 3-.3 1 2.8 2.6 1.5-.8 2.9.8 2.9-2.6 1.5-1 2.8-3-.3L12 22l-2.4-1.8-3 .3-1-2.8L3 16.2l.8-2.9L3 10.4l2.6-1.5 1-2.8 3 .3z"/><path d="M8.5 12.5l2.2 2.2 4.3-4.5" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div style="font:400 12.5px Onest;color:#8a8475;margin-top:2px">Frontend · Душанбе</div></div>
+      </div>
+      <div style="display:flex;gap:11px;margin-top:16px">
+        <div style="flex:1;background:#0E1A1A;border-radius:15px;padding:13px 14px"><div style="font:500 10px Onest;letter-spacing:.05em;text-transform:uppercase;color:#8fa39e">{{ t.pr.trust }}</div><div style="display:flex;align-items:baseline;gap:4px;margin-top:3px"><span style="font:700 28px Spectral;color:#C9A24B">82</span><span style="font:500 12px Onest;color:#8fa39e">/100</span></div></div>
+        <div style="flex:1;background:#fff;border:1px solid #ece4d2;border-radius:15px;padding:13px 14px;display:flex;flex-direction:column;justify-content:center"><div style="font:700 22px Spectral;color:#2A8C7E">4</div><div style="font:500 11px Onest;color:#8a8475;margin-top:2px">{{ t.pub.trust }}</div></div>
+      </div>
+      <div style="padding:18px 0 0;font:600 14px Spectral;color:#14211F">{{ t.pr.verified }}</div>
+      <div style="display:flex;flex-direction:column;gap:8px;padding:10px 0 0">
+        <sc-for list="{{ ach }}" as="a" hint-placeholder-count="4">
+          <div style="{{ a.rowStyle }}"><div style="width:22px;height:22px;border-radius:999px;background:{{ a.dotBg }};display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="{{ a.dShow }}"/></svg></div><div style="flex:1;min-width:0"><div style="font:600 13px/1.3 Onest;color:#14211F">{{ a.t }}</div><div style="font:500 11px Onest;color:{{ a.byColor }};margin-top:2px">{{ a.byLine }}</div></div></div>
+        </sc-for>
+      </div>
+      <div style="padding:18px 0 0;font:600 14px Spectral;color:#14211F">{{ t.pub.path }}</div>
+      <div style="margin-top:10px;background:#fff;border:1px solid #ece4d2;border-radius:14px;padding:14px">
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="width:16px;height:16px;border-radius:999px;background:#C9A24B;flex-shrink:0"></span><span style="flex:1;height:3px;background:#C9A24B"></span>
+          <span style="width:16px;height:16px;border-radius:999px;background:#C9A24B;flex-shrink:0"></span><span style="flex:1;height:3px;background:#C9A24B"></span>
+          <span style="width:20px;height:20px;border-radius:999px;background:#2A8C7E;flex-shrink:0"></span><span style="flex:1;height:3px;background:#d8cfba"></span>
+          <span style="width:16px;height:16px;border-radius:999px;background:#efe9da;border:2px solid #d4cbb6;flex-shrink:0"></span><span style="flex:1;height:3px;background:#d8cfba"></span>
+          <span style="width:18px;height:18px;border-radius:999px;background:#b5563b;flex-shrink:0"></span>
+        </div>
+        <div style="font:500 11.5px Onest;color:#8a8475;margin-top:10px">{{ t.p.goal }} · {{ t.p.passed }} 3 / 5</div>
+      </div>
+      <div style="height:14px"></div>
+    </div>
+    <div style="padding:12px 20px 22px;border-top:1px solid #ece4d2">
+      <button style="width:100%;font:700 15px Onest;padding:15px;border:none;border-radius:14px;background:#C9A24B;color:#14211F;cursor:pointer">{{ t.pub.invite }}</button>
+      <button style="width:100%;font:600 13.5px Onest;padding:12px;border:1.5px solid #d9cfb8;border-radius:13px;background:#fff;color:#14211F;cursor:pointer;margin-top:9px">{{ t.pub.contact }}</button>
+    </div>
+  </div>
+</div>
+<div data-drags-parent="1" style="position:absolute;left:1280px;top:1620px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">05 · РАБОТА (только 18+) — вакансии · подработки · фриланс</div>
+
+<!-- ===== WORK (tabbed, interactive) ===== -->
+<div style="position:absolute;left:1280px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#2A8C7E">Работа · вкладки кликабельны ↓</div>
+  <div data-screen-label="Work" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:14px 20px 0;font:700 19px Spectral;color:#14211F">{{ t.nav.work }}</div>
+    <div style="display:flex;gap:5px;margin:13px 18px 0;background:#efe9da;border-radius:12px;padding:5px">
+      <button onClick="{{ setWorkTab0 }}" style="{{ wtab0 }}">{{ t.wk.tab_jobs }}</button>
+      <button onClick="{{ setWorkTab1 }}" style="{{ wtab1 }}">{{ t.wk.tab_gigs }}</button>
+      <button onClick="{{ setWorkTab2 }}" style="{{ wtab2 }}">{{ t.wk.tab_free }}</button>
+    </div>
+    <div style="flex:1;overflow:auto;padding:14px 18px 0">
+      <div style="display:flex;flex-direction:column;gap:11px">
+        <sc-for list="{{ workList }}" as="j" hint-placeholder-count="2">
+          <div style="background:#fff;border:1px solid #ece4d2;border-radius:16px;padding:14px">
+            <div style="font:600 15px/1.25 Onest;color:#14211F">{{ j.title }}</div>
+            <div style="font:400 12.5px Onest;color:#8a8475;margin-top:4px">{{ j.org }}</div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:11px">
+              <span style="font:700 13px Onest;color:#2A8C7E">{{ j.pay }}</span>
+              <button style="font:600 13px Onest;padding:9px 16px;border:none;border-radius:10px;background:#2A8C7E;color:#fff;cursor:pointer">{{ workCta }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <button style="width:100%;display:flex;align-items:center;justify-content:center;gap:7px;font:600 13.5px Onest;color:#2A8C7E;background:#e7f1ed;border:1px dashed #9fcfc4;border-radius:13px;padding:13px;cursor:pointer;margin-top:11px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2A8C7E" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>{{ t.wk.create }}</button>
+      <div style="height:10px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:9px 6px 13px;background:#fff;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg><span style="font:500 9.5px Onest">{{ t.nav.home }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span style="font:500 9.5px Onest">{{ t.nav.path }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></svg><span style="font:500 9.5px Onest">{{ t.nav.profile }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#2A8C7E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg><span style="font:600 9.5px Onest">{{ t.nav.work }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l9 4-9 4-9-4 9-4zM7 11v4c0 1.8 10 1.8 10 0v-4"/></svg><span style="font:500 9.5px Onest">{{ t.nav.uni }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MY APPLICATIONS ===== -->
+<div style="position:absolute;left:1680px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Мои заявки · прозрачный статус</div>
+  <div data-screen-label="My-Applications" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span style="font:700 18px Spectral;color:#14211F">{{ t.wk.my_apps }}</span></div>
+    <div style="flex:1;overflow:auto;padding:18px 20px 0">
+      <div style="display:flex;flex-direction:column;gap:13px">
+        <sc-for list="{{ myApps }}" as="m" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #ece4d2;border-radius:16px;padding:14px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+              <span style="font:600 14px/1.3 Onest;color:#14211F;flex:1">{{ m.title }}</span>
+              <span style="{{ m.chipStyle }}">{{ m.stLabel }}</span>
+            </div>
+            <div style="height:6px;background:#efe9da;border-radius:999px;overflow:hidden;margin-top:13px"><div style="width:{{ m.prog }};height:100%;background:{{ m.stColor }}"></div></div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font:500 8.5px Onest;color:#a59f8e">
+              <span>{{ t.wk.st_sent }}</span><span>{{ t.wk.st_seen }}</span><span>{{ t.wk.st_short }}</span><span>{{ t.wk.st_acc }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CREATE GIG ===== -->
+<div style="position:absolute;left:2080px;top:1664px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Создание гига (исполнитель, 18+)</div>
+  <div data-screen-label="Create-Gig" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span style="font:700 18px Spectral;color:#14211F">{{ t.gig.title }}</span></div>
+    <div style="flex:1;overflow:auto;padding:20px 22px 0">
+      <div style="font:600 12px Onest;color:#5f5848">{{ t.gig.name_l }}</div>
+      <div style="margin-top:7px;background:#fff;border:1.5px solid #d9cfb8;border-radius:12px;padding:13px;font:500 14px Onest;color:#b3ac9c">{{ t.gig.name_ph }}</div>
+      <div style="display:flex;gap:11px;margin-top:16px">
+        <div style="flex:1"><div style="font:600 12px Onest;color:#5f5848">{{ t.gig.price_l }}</div><div style="margin-top:7px;background:#fff;border:1.5px solid #d9cfb8;border-radius:12px;padding:13px;font:600 14px Onest;color:#14211F">200 сом</div></div>
+        <div style="flex:1"><div style="font:600 12px Onest;color:#5f5848">{{ t.gig.term_l }}</div><div style="margin-top:7px;background:#fff;border:1.5px solid #d9cfb8;border-radius:12px;padding:13px;font:600 14px Onest;color:#14211F">2 дня</div></div>
+      </div>
+      <div style="font:600 12px Onest;color:#5f5848;margin-top:16px">{{ t.gig.cat_l }}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px">
+        <span style="font:600 12.5px Onest;color:#fff;background:#2A8C7E;padding:8px 13px;border-radius:999px">Дизайн</span>
+        <span style="font:600 12.5px Onest;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">Маркетинг</span>
+        <span style="font:600 12.5px Onest;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">IT</span>
+        <span style="font:600 12.5px Onest;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">Перевод</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px"><span style="font:600 12px Onest;color:#5f5848">{{ t.gig.desc_l }}</span></div>
+      <div style="margin-top:7px;background:#fff;border:1.5px solid #d9cfb8;border-radius:12px;padding:13px;height:78px;font:400 13px/1.5 Onest;color:#b3ac9c">…</div>
+      <button style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;font:600 13.5px Onest;color:#14211F;background:#C9A24B;border:none;border-radius:12px;padding:12px;cursor:pointer;margin-top:11px"><svg width="16" height="16" viewBox="0 0 24 24" fill="#14211F"><path d="M12 3l1.7 5.1L19 10l-5.3 1.9L12 17l-1.7-5.1L5 10l5.3-1.9z"/></svg>{{ t.gig.ai }}</button>
+      <div style="height:12px"></div>
+    </div>
+    <div style="padding:12px 22px 24px;border-top:1px solid #ece4d2"><button style="width:100%;font:700 15px Onest;padding:15px;border:none;border-radius:14px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.gig.publish }}</button></div>
+  </div>
+</div>
+<div data-drags-parent="1" style="position:absolute;left:80px;top:2440px;font:600 13px Onest;letter-spacing:.04em;color:#b5563b">06 · ВУЗЫ · КАБИНЕТ ОРГАНИЗАЦИИ · УВЕДОМЛЕНИЯ</div>
+
+<!-- ===== UNIVERSITIES ===== -->
+<div style="position:absolute;left:80px;top:2484px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Вузы · каталог университетов</div>
+  <div data-screen-label="Universities" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:14px 20px 0;font:700 19px Spectral;color:#14211F">{{ t.uni.title }}</div>
+    <div style="display:flex;gap:8px;overflow:auto;padding:12px 20px 4px">
+      <span style="font:600 12.5px Onest;white-space:nowrap;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">{{ t.uni.filt_dir }}</span>
+      <span style="font:600 12.5px Onest;white-space:nowrap;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">{{ t.uni.filt_city }}</span>
+      <span style="font:600 12.5px Onest;white-space:nowrap;color:#5f5848;background:#fff;border:1px solid #e6ddc9;padding:8px 13px;border-radius:999px">{{ t.uni.filt_budget }}</span>
+      <span style="font:600 12.5px Onest;white-space:nowrap;color:#2A8C7E;background:#e7f1ed;border:1px solid #bfe0d8;padding:8px 13px;border-radius:999px">{{ t.uni.has_sch }}</span>
+    </div>
+    <div style="flex:1;overflow:auto;padding:12px 20px 0">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ unis }}" as="u" hint-placeholder-count="2">
+          <div style="background:#fff;border:1px solid #ece4d2;border-radius:16px;padding:15px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+              <div style="font:600 15px/1.25 Spectral;color:#14211F;flex:1">{{ u.name }}</div>
+            </div>
+            <div style="font:400 12px Onest;color:#8a8475;margin-top:5px">{{ u.city }} · {{ u.dir }}</div>
+            <div style="display:flex;gap:8px;margin-top:11px">
+              <div style="flex:1;background:#f7f2e9;border-radius:10px;padding:8px 10px"><div style="font:500 9.5px Onest;color:#a59f8e">{{ t.uni.score }}</div><div style="font:700 14px Onest;color:#14211F;margin-top:2px">{{ u.score }}</div></div>
+              <div style="flex:1;background:#f7f2e9;border-radius:10px;padding:8px 10px"><div style="font:500 9.5px Onest;color:#a59f8e">{{ t.uni.cost }}</div><div style="font:700 12px Onest;color:#14211F;margin-top:2px">{{ u.cost }}</div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:11px">
+              <span style="display:flex;align-items:center;gap:4px;font:600 10.5px Onest;color:#2A8C7E;background:#e7f1ed;padding:4px 9px;border-radius:999px"><svg width="11" height="11" viewBox="0 0 24 24" fill="#2A8C7E"><circle cx="12" cy="12" r="10"/></svg>{{ t.uni.sch }}</span>
+              <span style="font:600 10.5px Onest;color:#b5563b;background:#f6e7e1;padding:4px 9px;border-radius:999px">{{ t.uni.deadline }}: {{ u.deadline }}</span>
+            </div>
+            <div style="display:flex;gap:9px;margin-top:13px">
+              <button style="flex:1;font:600 13px Onest;padding:11px;border:1.5px solid #2A8C7E;border-radius:11px;background:transparent;color:#2A8C7E;cursor:pointer">{{ t.c.more }}</button>
+              <button style="flex:1;font:600 13px Onest;padding:11px;border:none;border-radius:11px;background:#2A8C7E;color:#fff;cursor:pointer">{{ t.uni.add }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:10px"></div>
+    </div>
+    <div style="display:flex;justify-content:space-around;align-items:center;padding:9px 6px 13px;background:#fff;border-top:1px solid #ece4d2">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11l8-7 8 7M6 10v9h12v-9"/></svg><span style="font:500 9.5px Onest">{{ t.nav.home }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6 7-11a7 7 0 10-14 0c0 5 7 11 7 11z"/><circle cx="12" cy="10" r="2.3"/></svg><span style="font:500 9.5px Onest">{{ t.nav.path }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M5 20a7 7 0 0114 0"/></svg><span style="font:500 9.5px Onest">{{ t.nav.profile }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#9a948a"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2"/></svg><span style="font:500 9.5px Onest">{{ t.nav.work }}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;color:#2A8C7E"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l9 4-9 4-9-4 9-4zM7 11v4c0 1.8 10 1.8 10 0v-4"/></svg><span style="font:600 9.5px Onest">{{ t.nav.uni }}</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ORGANIZATION CABINET ===== -->
+<div style="position:absolute;left:480px;top:2484px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#2A8C7E">Кабинет организации · экран для демо верификации</div>
+  <div data-screen-label="Org-Cabinet" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="margin:14px 16px 0;background:#0E1A1A;border-radius:16px;padding:15px 16px">
+      <div style="display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;border-radius:10px;background:rgba(201,162,75,.18);display:flex;align-items:center;justify-content:center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#C9A24B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5"/></svg></div><div><div style="font:600 14px Spectral;color:#fff">{{ t.org.title }}</div><div style="font:400 11px Onest;color:#8fa39e;margin-top:1px">{{ t.org.who }}</div></div></div>
+    </div>
+    <div style="padding:16px 20px 8px;font:600 12px Onest;letter-spacing:.04em;text-transform:uppercase;color:#2A8C7E">{{ t.org.sub }}</div>
+    <div style="flex:1;overflow:auto;padding:4px 20px 0">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <sc-for list="{{ verifyReq }}" as="v" hint-placeholder-count="3">
+          <div style="background:#fff;border:1px solid #ece4d2;border-radius:16px;padding:15px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:999px;background:#efe9da;color:#5f5848;display:flex;align-items:center;justify-content:center;font:600 15px Spectral;flex-shrink:0">{{ v.ini }}</div>
+              <div style="flex:1;min-width:0"><div style="font:600 14px Onest;color:#14211F">{{ v.name }}</div><div style="font:400 10.5px Onest;color:#a59f8e">{{ v.when }}</div></div>
+            </div>
+            <div style="font:400 12.5px/1.45 Onest;color:#3d4441;margin-top:10px"><span style="color:#8a8475">{{ t.org.req }}:</span> {{ v.course }}</div>
+            <div style="display:flex;gap:9px;margin-top:12px">
+              <button style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font:700 13px Onest;padding:11px;border:none;border-radius:11px;background:#2A8C7E;color:#fff;cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4 10-10"/></svg>{{ t.org.confirm }}</button>
+              <button style="flex:1;font:600 13px Onest;padding:11px;border:1.5px solid #e0b4a6;border-radius:11px;background:#fff;color:#b5563b;cursor:pointer">{{ t.org.reject }}</button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NOTIFICATIONS ===== -->
+<div style="position:absolute;left:880px;top:2484px;width:320px">
+  <div data-drags-parent="1" style="position:absolute;top:-26px;font:600 12px Onest;color:#6b6457">Уведомления</div>
+  <div data-screen-label="Notifications" style="position:relative;width:320px;height:660px;background:#F7F2E9;border:7px solid #14211F;border-radius:34px;overflow:hidden;box-shadow:0 22px 46px -14px rgba(20,33,31,.5);display:flex;flex-direction:column;font-family:Onest,sans-serif;color:#1E2422">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 22px 0;font:600 12px Onest;color:#14211F"><span>9:41</span><span style="letter-spacing:2px">●●●</span></div>
+    <div style="padding:16px 22px 0;display:flex;align-items:center;gap:12px"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14211F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg><span style="font:700 18px Spectral;color:#14211F">{{ t.nt.title }}</span></div>
+    <div style="flex:1;overflow:auto;padding:18px 18px 0">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="3">
+          <div style="display:flex;gap:12px;align-items:flex-start;background:#fff;border:1px solid #ece4d2;border-radius:15px;padding:14px">
+            <div style="width:38px;height:38px;border-radius:11px;background:{{ n.iconBg }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="{{ n.d }}"/></svg></div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;justify-content:space-between;gap:8px"><span style="font:600 13.5px/1.3 Onest;color:#14211F;flex:1">{{ n.title }}</span><span style="font:500 10px Onest;color:#a59f8e;white-space:nowrap">{{ n.when }}</span></div>
+              <div style="font:400 12px/1.4 Onest;color:#8a8475;margin-top:3px">{{ n.sub }}</div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lang: 'ru', workTab: 0 };
+  renderVals() {
+    const lang = this.state.lang, ru = lang === 'ru';
+    const t = TR[lang];
+    const pill = (on) => ({ font: '600 13px Onest', padding: '8px 16px', border: 'none', borderRadius: '999px', cursor: 'pointer', background: on ? '#14211F' : 'transparent', color: on ? '#F7F2E9' : '#6b6457' });
+    const wt = this.state.workTab;
+    const wtab = (i) => ({ flex: 1, font: '600 12px Onest', padding: '9px 4px', border: 'none', borderRadius: '9px', cursor: 'pointer', background: wt === i ? '#2A8C7E' : 'transparent', color: wt === i ? '#fff' : '#6b6457' });
+    const stL = [t.wk.st_sent, t.wk.st_seen, t.wk.st_short, t.wk.st_acc, t.wk.st_rej];
+    const stC = ['#9a948a', '#C9A24B', '#2A8C7E', '#2A8C7E', '#b5563b'];
+    const ic = (id) => ICONS[id] || '';
+    const mkNeeds = (arr, sel) => arr.map((o, i) => {
+      const s = sel.includes(i);
+      return { ...o, d: ic(o.ic), icCol: s ? '#2A8C7E' : '#14211F',
+        cardStyle: { position: 'relative', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-start', padding: '15px 13px', border: '1.5px solid ' + (s ? '#2A8C7E' : '#e6ddc9'), borderRadius: '15px', background: s ? '#e7f1ed' : '#fff', cursor: 'pointer', textAlign: 'left' },
+        badgeStyle: { position: 'absolute', top: '9px', right: '9px', width: '20px', height: '20px', borderRadius: '999px', background: '#2A8C7E', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', font: '700 12px Onest', opacity: s ? 1 : 0 } };
+    });
+    const nodeViz = (st) => {
+      if (st === 'done') return { ring: '#C9A24B', fill: '#C9A24B', icon: '#fff', anim: 'none', label: '#5f5848' };
+      if (st === 'current') return { ring: '#2A8C7E', fill: '#2A8C7E', icon: '#fff', anim: 'imkonPulse 2s infinite', label: '#14211F' };
+      if (st === 'goal') return { ring: '#b5563b', fill: '#b5563b', icon: '#fff', anim: 'none', label: '#14211F' };
+      return { ring: '#cfc6b2', fill: '#efe9da', icon: '#9a948a', anim: 'none', label: '#9a948a' };
+    };
+    const ps = DATA.path[lang].map((o, i, arr) => {
+      const st = o.state, cur = st === 'current';
+      const base = st === 'done' ? { ring: '#C9A24B', fill: '#C9A24B', icon: '#fff' }
+        : cur ? { ring: '#2A8C7E', fill: '#2A8C7E', icon: '#fff' }
+        : st === 'goal' ? { ring: '#b5563b', fill: '#b5563b', icon: '#fff' }
+        : { ring: '#d4cbb6', fill: '#efe9da', icon: '#a59f8e' };
+      const size = cur ? 60 : st === 'goal' ? 56 : 48;
+      const dShow = st === 'done' ? 'M5 13l4 4 10-10'
+        : st === 'locked' ? 'M6 11h12v8H6zM9 11V8a3 3 0 016 0v3'
+        : st === 'goal' ? ICONS.flag : ic(o.ic);
+      const goldSeg = i > 0 && arr[i - 1].state === 'done';
+      const nodeStyle = { width: size + 'px', height: size + 'px', borderRadius: '999px', background: base.fill, border: '3px solid ' + base.ring, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, animation: cur ? 'imkonPulse 2s infinite' : 'none', boxShadow: (st === 'done' || cur || st === 'goal') ? '0 7px 16px -5px rgba(20,33,31,.35)' : 'none' };
+      const segStyle = { width: '3px', height: i === 0 ? '0' : '30px', background: i === 0 ? 'transparent' : (goldSeg ? '#C9A24B' : '#d8cfba'), borderRadius: '2px' };
+      const nodeStyleD = { ...nodeStyle, background: st === 'locked' ? '#16302c' : base.fill, border: '3px solid ' + (st === 'locked' ? '#365853' : base.ring) };
+      const segStyleD = { ...segStyle, background: i === 0 ? 'transparent' : (goldSeg ? '#C9A24B' : '#365853') };
+      const herePill = { display: 'inline-block', marginTop: '5px', font: '700 8.5px Onest', letterSpacing: '.09em', textTransform: 'uppercase', color: '#fff', background: '#2A8C7E', padding: '3px 9px', borderRadius: '999px', opacity: cur ? 1 : 0 };
+      const titleStyle = { font: (cur ? '700' : '600') + ' 13px Onest', color: st === 'locked' ? '#a59f8e' : '#14211F', textAlign: 'center', marginTop: '7px', maxWidth: '180px', lineHeight: 1.25 };
+      const titleStyleD = { ...titleStyle, color: st === 'locked' ? '#6f8c87' : '#f2ede0' };
+      const lineDown = st === 'done' ? '#C9A24B' : '#d8cfba';
+      const railNode = { width: '40px', height: '40px', borderRadius: '999px', background: base.fill, border: '3px solid ' + base.ring, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: cur ? '0 0 0 4px rgba(42,140,126,.15)' : 'none' };
+      const cardStyleC = { flex: 1, background: st === 'goal' ? '#fbf0eb' : '#fff', border: '1px solid ' + (st === 'goal' ? '#e6c3b5' : cur ? '#bfe0d8' : '#ece4d2'), borderRadius: '14px', padding: '12px 14px', marginBottom: '4px' };
+      return { ...o, n: i + 1, dShow, cur, iconColor: base.icon, nodeStyle, segStyle, nodeStyleD, segStyleD, herePill, titleStyle, titleStyleD, lineDown, railNode, cardStyleC,
+        titleColor: st === 'locked' ? '#a59f8e' : '#14211F', titleColorD: st === 'locked' ? '#6f8c87' : '#f2ede0' };
+    });
+    return {
+      lang, t,
+      curStep: ps.find(s => s.cur), goalStep: ps.find(s => s.state === 'goal'),
+      setRu: () => this.setState({ lang: 'ru' }),
+      setTg: () => this.setState({ lang: 'tg' }),
+      tgPill: pill(!ru), ruPill: pill(ru),
+      ages: ['14–17', '18–22', '23–27', '28–35'],
+      cities: DATA.cities[lang],
+      needsTeen: mkNeeds(DATA.needs[lang].slice(0, 6), [0, 1]),
+      needsAll: mkNeeds(DATA.needs[lang], [1, 6]),
+      opps: DATA.opps[lang].map(o => ({ ...o, d: ic(o.ic) })),
+      pathSteps: ps,
+      ach: DATA.ach[lang].map(a => ({ ...a, dShow: a.v ? 'M5 13l4 4 10-10' : 'M12 7v5l3 2', dotBg: a.v ? '#2A8C7E' : '#cfc6b2', byLine: a.v ? (t.pr.by + ' ' + a.by) : t.pr.pending, byColor: a.v ? '#2A8C7E' : '#a59f8e', rowStyle: { display: 'flex', gap: '11px', alignItems: 'flex-start', background: a.v ? '#fff' : '#f3efe4', border: '1px solid ' + (a.v ? '#ece4d2' : '#e6ddc9'), borderRadius: '13px', padding: '12px 13px' } })),
+      skills: DATA.skills[lang].map(s => ({ ...s, chipStyle: { display: 'flex', alignItems: 'center', gap: '6px', font: '600 13px Onest', color: s.v ? '#14211F' : '#8a8475', background: '#fff', border: '1px solid ' + (s.v ? '#bfe0d8' : '#e6ddc9'), padding: '8px 13px', borderRadius: '999px' }, checkStyle: { color: '#2A8C7E', font: '700 12px Onest', display: s.v ? 'inline' : 'none' } })),
+      langsList: DATA.langs[lang],
+      unis: DATA.unis[lang],
+      verifyReq: DATA.verify[lang].map(v => ({ ...v, ini: v.name[0] })),
+      notifs: DATA.notifs[lang].map((o, i) => ({ ...o, d: ic(o.ic), title: t.nt[o.tk], sub: t.nt[o.tk + 's'], when: (ru ? ['5 мин', '1 ч', 'вчера'] : ['5 дақ', '1 соат', 'дирӯз'])[i], iconBg: o.ic === 'check' ? '#2A8C7E' : o.ic === 'up' ? '#C9A24B' : '#b5563b' })),
+      workTab: wt,
+      setWorkTab: (i) => this.setState({ workTab: i }),
+      setWorkTab0: () => this.setState({ workTab: 0 }),
+      setWorkTab1: () => this.setState({ workTab: 1 }),
+      setWorkTab2: () => this.setState({ workTab: 2 }),
+      wtab0: wtab(0), wtab1: wtab(1), wtab2: wtab(2),
+      workTitle: wt === 0 ? t.wk.tab_jobs : wt === 1 ? t.wk.tab_gigs : t.wk.tab_free,
+      workList: (wt === 0 ? DATA.jobs[lang] : wt === 1 ? DATA.gigs[lang] : DATA.services[lang]),
+      workCta: wt === 0 ? t.wk.apply : wt === 1 ? t.wk.take : t.c.more,
+      myApps: DATA.myApps[lang].map(a => ({ ...a, stLabel: stL[a.status], stColor: stC[a.status], prog: ((a.status + 1) / 5 * 100) + '%', chipStyle: { font: '700 11px Onest', color: '#fff', background: stC[a.status], padding: '4px 11px', borderRadius: '999px', whiteSpace: 'nowrap' } })),
+      name: 'Шухрат',
+      filters: (ru ? ['Все', 'Стипендии', 'Курсы', 'Работа'] : ['Ҳама', 'Стипендияҳо', 'Курсҳо', 'Кор']).map((f, i) => ({ f, st: { font: '600 13px Onest', whiteSpace: 'nowrap', padding: '8px 15px', borderRadius: '999px', border: '1px solid ' + (i === 0 ? '#14211F' : '#e6ddc9'), background: i === 0 ? '#14211F' : '#fff', color: i === 0 ? '#F7F2E9' : '#5f5848', cursor: 'pointer' } })),
+      iconDetail: ic('book'),
+    };
+  }
+}
+
+const TR = {
+  ru: {
+    c: { back: 'Назад', next: 'Далее', skip: 'Пропустить', more: 'Подробнее', save: 'Сохранить', share: 'Поделиться', yes: 'Да', no: 'Нет' },
+    w: { slogan: 'Возможности находят тебя', login: 'Войти', register: 'Зарегистрироваться', tg_login: 'Войти через Telegram' },
+    r: { step: 'Шаг', name_q: 'Как тебя зовут?', name_ph: 'Твоё имя', age_q: 'Сколько тебе лет?', city_q: 'Откуда ты?', need_q: 'Что тебе нужно?', need_hint: 'Можно выбрать несколько', parents_q: 'Родители работают за рубежом?', parents_sub: 'Это поможет подобрать поддержку и стипендии', skills_q: 'Навыки и языки', skills_hint: 'Можно пропустить и заполнить позже', langs_l: 'Языки', skills_l: 'Навыки и программы', add: 'Добавить' },
+    nav: { home: 'Главная', path: 'Мой путь', profile: 'Профиль', work: 'Работа', dev: 'Развитие', uni: 'Вузы' },
+    h: { hello: 'Салом', ai_banner: 'Не знаешь, что выбрать?', ai_sub: 'Спроси AI — подберём под тебя', filter_all: 'Все', show_more: 'Показать ещё', unit: 'дн.' },
+    od: { who: 'Кто может участвовать', deadline: 'Дедлайн', contact: 'Контакт', desc: 'Описание', apply: 'Подать заявку', notify: 'Уведомить о похожем', save: 'Сохранить', title: 'Стипендия Президента РТ', org: 'Министерство образования и науки', body: 'Полная стипендия на год обучения для талантливых студентов: покрывает обучение и проживание. Заявка онлайн, решение — за 3 недели.', req: '18–25 лет · средний балл от 4.5 · гражданство РТ', dlv: 'осталось 12 дней · до 15 июля', contv: 'stipendiya@maorif.tj' },
+    ai: { title: 'AI-помощник', q1: 'Салом! Задам пару вопросов и подберу путь. Что тебе сейчас интереснее?', o1: 'Учёба', o2: 'Заработок', o3: 'Новая профессия', u1: 'Хочу новую профессию, в IT', q2: 'Отлично! Сколько времени можешь уделять в неделю?', a1: 'Показать возможности', a2: 'Построить мой путь', a3: 'Создать резюме' },
+    p: { empty_t: 'Кем ты хочешь стать?', empty_s: 'Напиши цель словами — построим путь шаг за шагом, до реальной работы', empty_ph: 'например: фулл-стак разработчик', build: 'Построить мой путь', goal_l: 'Цель', goal: 'Фулл-стак разработчик', passed: 'Пройдено', to_work: 'шагов до первой работы', here: 'ты здесь', course_l: 'Рекомендованный курс', take: 'Пройти курс', apply_job: 'Откликнуться на вакансию', locked: 'Откроется после прошлого шага', free: 'бесплатно', share: 'Поделиться путём', finish: 'Реальная работа' },
+    pr: { passport: 'Паспорти Эътимод', trust: 'Trust Score', trust_sub: 'растёт с каждым подтверждением', verified: 'Подтверждённые достижения', skills: 'Навыки', langs: 'Языки', portfolio: 'Портфолио', add_ach: 'Добавить достижение', pending: 'ожидает подтверждения', by: 'подтвердил', mini_path: 'Мой путь · Роҳи Ман', share: 'Поделиться', pdf: 'Резюме PDF', edit: 'Редактировать' },
+    sh: { title: 'Поделиться профилем', link_l: 'Ссылка на твой живой профиль', copy: 'Копировать ссылку', send: 'Отправить', pdf: 'Скачать PDF-резюме', vis: 'Профиль открыт', vis_sub: 'Работодатели могут найти тебя по ссылке', revoke: 'Отозвать ссылку', on: 'Открыт' },
+    pub: { badge: 'Так видит профиль работодатель', contact: 'Связаться', invite: 'Пригласить на собеседование', trust: 'Подтверждённый профиль', path: 'Карьерный путь' },
+    wk: { tab_jobs: 'Вакансии', tab_gigs: 'Подработки', tab_free: 'Фриланс', apply: 'Откликнуться', take: 'Взять', create: 'Создать свой гиг', my_apps: 'Мои заявки', st_sent: 'Отправлено', st_seen: 'Просмотрено', st_short: 'В шортлисте', st_acc: 'Принято', st_rej: 'Отклонено' },
+    gig: { title: 'Создание гига', name_l: 'Название — «Я сделаю…»', name_ph: 'Я сделаю логотип за 2 дня', cat_l: 'Категория', price_l: 'Цена', term_l: 'Срок', desc_l: 'Описание', ai: 'AI поможет с описанием', publish: 'Опубликовать' },
+    uni: { title: 'Вузы', score: 'проходной балл', cost: 'стоимость', sch: 'стипендия', deadline: 'дедлайн', add: 'В мой путь', filt_dir: 'Направление', filt_city: 'Город', filt_budget: 'Бюджет', has_sch: 'есть стипендия' },
+    org: { title: 'Кабинет организации', sub: 'Запросы на подтверждение достижений', who: 'Илмхона · образовательный центр', req: 'указал(а), что прошёл у вас', confirm: 'Подтвердить', reject: 'Отклонить', done: 'Подтверждено сегодня' },
+    nt: { title: 'Уведомления', n1: 'Появилась работа под тебя', n1s: 'Frontend-стажировка · Alif Tech', n2: 'Илмхона подтвердила твоё достижение', n2s: '«Веб-разработка, 120 ч» ✅', n3: 'Та же профессия, но зарплата выше', n3s: 'Junior Frontend · +1500 сомони' }
+  },
+  tg: {
+    c: { back: 'Бозгашт', next: 'Идома', skip: 'Гузаронидан', more: 'Муфассал', save: 'Захира', share: 'Мубодила', yes: 'Ҳа', no: 'Не' },
+    w: { slogan: 'Имконҳо туро меёбанд', login: 'Ворид шудан', register: 'Бақайдгирӣ', tg_login: 'Тавассути Telegram ворид шавед' },
+    r: { step: 'Қадам', name_q: 'Номат чист?', name_ph: 'Номи ту', age_q: 'Чанд сола ҳастӣ?', city_q: 'Аз куҷоӣ?', need_q: 'Ба ту чӣ лозим аст?', need_hint: 'Якчандтоашро интихоб кардан мумкин', parents_q: 'Волидайн дар хориҷа кор мекунанд?', parents_sub: 'Ин барои интихоби дастгирӣ ва стипендия кӯмак мекунад', skills_q: 'Малакаҳо ва забонҳо', skills_hint: 'Метавонед гузаронед ва баъдтар пур кунед', langs_l: 'Забонҳо', skills_l: 'Малакаҳо ва барномаҳо', add: 'Илова' },
+    nav: { home: 'Асосӣ', path: 'Роҳи ман', profile: 'Профил', work: 'Кор', dev: 'Рушд', uni: 'Донишгоҳ' },
+    h: { hello: 'Салом', ai_banner: 'Намедонӣ чиро интихоб кунӣ?', ai_sub: 'Аз AI пурс — барои ту меёбем', filter_all: 'Ҳама', show_more: 'Бештар нишон диҳед', unit: 'рӯз' },
+    od: { who: 'Кӣ метавонад иштирок кунад', deadline: 'Мӯҳлат', contact: 'Тамос', desc: 'Тавсиф', apply: 'Дархост фиристодан', notify: 'Дар бораи монанд хабар диҳед', save: 'Захира', title: 'Стипендияи Президенти ҶТ', org: 'Вазорати маориф ва илм', body: 'Стипендияи пурра барои як соли таҳсил ба донишҷӯёни лаёқатманд: пардохти таҳсил ва истиқоматро дар бар мегирад. Дархост онлайн, қарор — дар 3 ҳафта.', req: '18–25 сола · бали миёна аз 4.5 · шаҳрвандии ҶТ', dlv: '12 рӯз монд · то 15 июл', contv: 'stipendiya@maorif.tj' },
+    ai: { title: 'Ёрдамчии AI', q1: 'Салом! Чанд савол медиҳам ва роҳ интихоб мекунам. Ҳозир ба ту чӣ ҷолибтар аст?', o1: 'Таҳсил', o2: 'Даромад', o3: 'Касби нав', u1: 'Касби нав мехоҳам, дар IT', q2: 'Олӣ! Дар як ҳафта чанд вақт ҷудо карда метавонӣ?', a1: 'Имконҳоро нишон диҳед', a2: 'Роҳамро бисоз', a3: 'Резюме созед' },
+    p: { empty_t: 'Мехоҳӣ кӣ шавӣ?', empty_s: 'Ҳадафро бо калима навис — мо роҳро қадам ба қадам то кори воқеӣ месозем', empty_ph: 'мисол: барномасози full-stack', build: 'Роҳамро бисоз', goal_l: 'Ҳадаф', goal: 'Барномасози Full-stack', passed: 'Гузашта', to_work: 'қадам то кори аввал', here: 'ту инҷоӣ', course_l: 'Курси тавсияшуда', take: 'Курсро гузаред', apply_job: 'Ба вакансия дархост', locked: 'Баъди қадами қаблӣ кушода мешавад', free: 'ройгон', share: 'Роҳро мубодила кунед', finish: 'Кори воқеӣ' },
+    pr: { passport: 'Паспорти Эътимод', trust: 'Балли эътимод', trust_sub: 'бо ҳар тасдиқ боло меравад', verified: 'Дастовардҳои тасдиқшуда', skills: 'Малакаҳо', langs: 'Забонҳо', portfolio: 'Портфолио', add_ach: 'Дастоварди нав', pending: 'интизори тасдиқ', by: 'тасдиқ кард', mini_path: 'Роҳи ман', share: 'Мубодила', pdf: 'Резюмеи PDF', edit: 'Таҳрир' },
+    sh: { title: 'Мубодилаи профил', link_l: 'Истиноди профили зиндаи ту', copy: 'Истинодро нусха кунед', send: 'Фиристодан', pdf: 'Резюмеи PDF боргирӣ', vis: 'Профил кушода аст', vis_sub: 'Корфармоён метавонанд туро бо истинод ёбанд', revoke: 'Истинодро бекор кунед', on: 'Кушода' },
+    pub: { badge: 'Профилро корфармо чунин мебинад', contact: 'Тамос гирифтан', invite: 'Даъват ба мусоҳиба', trust: 'Профили тасдиқшуда', path: 'Роҳи касбӣ' },
+    wk: { tab_jobs: 'Вакансияҳо', tab_gigs: 'Корҳои иловагӣ', tab_free: 'Фриланс', apply: 'Дархост', take: 'Гирифтан', create: 'Хидмати худро созед', my_apps: 'Дархостҳои ман', st_sent: 'Фиристода шуд', st_seen: 'Дида шуд', st_short: 'Дар рӯйхати кӯтоҳ', st_acc: 'Қабул шуд', st_rej: 'Рад шуд' },
+    gig: { title: 'Эҷоди хидмат', name_l: 'Ном — «Ман мекунам…»', name_ph: 'Ман дар 2 рӯз логотип месозам', cat_l: 'Категория', price_l: 'Нарх', term_l: 'Мӯҳлат', desc_l: 'Тавсиф', ai: 'AI бо тавсиф кӯмак мекунад', publish: 'Нашр кардан' },
+    uni: { title: 'Донишгоҳҳо', score: 'балли қабул', cost: 'арзиш', sch: 'стипендия', deadline: 'мӯҳлат', add: 'Ба роҳи ман', filt_dir: 'Самт', filt_city: 'Шаҳр', filt_budget: 'Буҷет', has_sch: 'стипендия ҳаст' },
+    org: { title: 'Кабинети ташкилот', sub: 'Дархостҳои тасдиқи дастовардҳо', who: 'Илмхона · маркази таълимӣ', req: 'қайд кард, ки дар назди шумо гузашт', confirm: 'Тасдиқ', reject: 'Рад', done: 'Имрӯз тасдиқшуда' },
+    nt: { title: 'Огоҳиҳо', n1: 'Кори мувофиқи ту пайдо шуд', n1s: 'Frontend-таҷриба · Alif Tech', n2: 'Илмхона дастоварди туро тасдиқ кард', n2s: '«Веб-сайтсозӣ, 120 соат» ✅', n3: 'Ҳамон касб, аммо музди баландтар', n3s: 'Junior Frontend · +1500 сомонӣ' }
+  }
+};
+
+const DATA = {
+  cities: {
+    ru: ['Душанбе', 'Худжанд', 'Бохтар', 'Куляб', 'ГБАО', 'Другой'],
+    tg: ['Душанбе', 'Хуҷанд', 'Бохтар', 'Кӯлоб', 'ВМКБ', 'Дигар']
+  },
+  needs: {
+    ru: [
+      { ic: 'book', t: 'Учёба и стипендии' }, { ic: 'code', t: 'Курсы' }, { ic: 'scale', t: 'Юрпомощь' },
+      { ic: 'cross', t: 'Медпомощь' }, { ic: 'hands', t: 'Волонтёрство' }, { ic: 'coin', t: 'Гранты' },
+      { ic: 'work', t: 'Работа' }, { ic: 'puzzle', t: 'Подработки' }, { ic: 'globe', t: 'Фриланс' }
+    ],
+    tg: [
+      { ic: 'book', t: 'Таҳсил ва стипендия' }, { ic: 'code', t: 'Курсҳо' }, { ic: 'scale', t: 'Кумаки ҳуқуқӣ' },
+      { ic: 'cross', t: 'Кумаки тиббӣ' }, { ic: 'hands', t: 'Волонтёрӣ' }, { ic: 'coin', t: 'Грантҳо' },
+      { ic: 'work', t: 'Кор' }, { ic: 'puzzle', t: 'Корҳои иловагӣ' }, { ic: 'globe', t: 'Фриланс' }
+    ]
+  },
+  opps: {
+    ru: [
+      { ic: 'book', cat: 'Стипендия', title: 'Стипендия Президента РТ', org: 'Минобрнауки', days: 12 },
+      { ic: 'code', cat: 'Курс', title: 'Бесплатный курс Python', org: 'Илмхона', days: 5 },
+      { ic: 'work', cat: 'Стажировка', title: 'Контент-менеджер', org: 'Alif Academy', days: 3 },
+      { ic: 'coin', cat: 'Грант', title: 'Грант молодым предпринимателям', org: 'Sitora Fund', days: 21 }
+    ],
+    tg: [
+      { ic: 'book', cat: 'Стипендия', title: 'Стипендияи Президенти ҶТ', org: 'Вазорати маориф', days: 12 },
+      { ic: 'code', cat: 'Курс', title: 'Курси ройгони Python', org: 'Илмхона', days: 5 },
+      { ic: 'work', cat: 'Таҷриба', title: 'Менеҷери контент', org: 'Alif Academy', days: 3 },
+      { ic: 'coin', cat: 'Грант', title: 'Гранти ҷавонони соҳибкор', org: 'Sitora Fund', days: 21 }
+    ]
+  },
+  path: {
+    ru: [
+      { ic: 'code', title: 'Основы HTML и CSS', state: 'done', course: 'Илмхона · бесплатно', time: '3 недели' },
+      { ic: 'code', title: 'JavaScript с нуля', state: 'done', course: 'Codecademy · бесплатно', time: '4 недели' },
+      { ic: 'react', title: 'React и интерфейсы', state: 'current', course: 'Bootcamp TJ · бесплатно', time: '5 недель' },
+      { ic: 'server', title: 'Backend: Node.js и базы', state: 'locked', course: 'Будет рекомендован', time: '6 недель' },
+      { ic: 'flag', title: 'Junior Full-Stack — работа', state: 'goal', course: 'Alif · Zypl.ai', time: '' }
+    ],
+    tg: [
+      { ic: 'code', title: 'Асосҳои HTML ва CSS', state: 'done', course: 'Илмхона · ройгон', time: '3 ҳафта' },
+      { ic: 'code', title: 'JavaScript аз сифр', state: 'done', course: 'Codecademy · ройгон', time: '4 ҳафта' },
+      { ic: 'react', title: 'React ва интерфейс', state: 'current', course: 'Bootcamp TJ · ройгон', time: '5 ҳафта' },
+      { ic: 'server', title: 'Backend: Node.js ва базаҳо', state: 'locked', course: 'Тавсия мешавад', time: '6 ҳафта' },
+      { ic: 'flag', title: 'Junior Full-Stack — кор', state: 'goal', course: 'Alif · Zypl.ai', time: '' }
+    ]
+  },
+  ach: {
+    ru: [
+      { t: 'Веб-разработка · 120 ч · проект 8/10', by: 'Илмхона', v: true },
+      { t: 'Английский язык · уровень B2', by: 'IELTS Center', v: true },
+      { t: 'Графический дизайн · 30 ч', by: '', v: false },
+      { t: 'Волонтёрство · 40 ч', by: '', v: false }
+    ],
+    tg: [
+      { t: 'Веб-сайтсозӣ · 120 соат · лоиҳа 8/10', by: 'Илмхона', v: true },
+      { t: 'Забони англисӣ · сатҳи B2', by: 'IELTS Center', v: true },
+      { t: 'Тарроҳии графикӣ · 30 соат', by: '', v: false },
+      { t: 'Волонтёрӣ · 40 соат', by: '', v: false }
+    ]
+  },
+  skills: {
+    ru: [{ n: 'Веб-разработка', v: true }, { n: 'JavaScript', v: true }, { n: 'Figma', v: false }, { n: 'Английский B2', v: true }, { n: 'Тайм-менеджмент', v: false }],
+    tg: [{ n: 'Веб-сайтсозӣ', v: true }, { n: 'JavaScript', v: true }, { n: 'Figma', v: false }, { n: 'Англисӣ B2', v: true }, { n: 'Идораи вақт', v: false }]
+  },
+  langs: {
+    ru: [{ n: 'Таджикский', l: 'родной' }, { n: 'Русский', l: 'свободно' }, { n: 'Английский', l: 'B2' }],
+    tg: [{ n: 'Тоҷикӣ', l: 'модарӣ' }, { n: 'Русӣ', l: 'озод' }, { n: 'Англисӣ', l: 'B2' }]
+  },
+  jobs: {
+    ru: [
+      { title: 'Junior Frontend-разработчик', org: 'Alif Tech', pay: '4000–6000 сомони', tag: 'Душанбе · офис' },
+      { title: 'Оператор call-центра', org: 'Babilon-T', pay: 'от 2500 сомони', tag: 'Душанбе · сменами' }
+    ],
+    tg: [
+      { title: 'Junior Frontend-барномасоз', org: 'Alif Tech', pay: '4000–6000 сомонӣ', tag: 'Душанбе · офис' },
+      { title: 'Оператори call-марказ', org: 'Babilon-T', pay: 'аз 2500 сомонӣ', tag: 'Душанбе · навбатӣ' }
+    ]
+  },
+  gigs: {
+    ru: [
+      { title: 'Репетитор по математике', org: '2 ч · вечером', pay: '80 сомони/ч' },
+      { title: 'Перевод текста RU → TJ', org: 'до завтра', pay: '150 сомони' }
+    ],
+    tg: [
+      { title: 'Муаллими математика', org: '2 соат · бегоҳӣ', pay: '80 сомонӣ/соат' },
+      { title: 'Тарҷумаи матн RU → TJ', org: 'то фардо', pay: '150 сомонӣ' }
+    ]
+  },
+  services: {
+    ru: [
+      { title: 'Я сделаю логотип за 2 дня', org: 'Дизайн · 12 заказов', pay: 'от 200 сомони' },
+      { title: 'Я настрою рекламу в Instagram', org: 'Маркетинг · 8 заказов', pay: 'от 350 сомони' }
+    ],
+    tg: [
+      { title: 'Ман дар 2 рӯз логотип месозам', org: 'Дизайн · 12 фармоиш', pay: 'аз 200 сомонӣ' },
+      { title: 'Ман рекламаи Instagram танзим мекунам', org: 'Маркетинг · 8 фармоиш', pay: 'аз 350 сомонӣ' }
+    ]
+  },
+  myApps: {
+    ru: [
+      { title: 'Контент-менеджер · Alif Academy', status: 2 },
+      { title: 'Frontend-разработчик · Alif Tech', status: 1 },
+      { title: 'Грант · Sitora Fund', status: 0 }
+    ],
+    tg: [
+      { title: 'Менеҷери контент · Alif Academy', status: 2 },
+      { title: 'Frontend-барномасоз · Alif Tech', status: 1 },
+      { title: 'Грант · Sitora Fund', status: 0 }
+    ]
+  },
+  unis: {
+    ru: [
+      { name: 'Таджикский технический университет', city: 'Душанбе', dir: 'IT · инженерия', score: '140', cost: '8 500 сом/год', deadline: '15 июля', sch: true },
+      { name: 'Российско-Таджикский (Славянский) ун-т', city: 'Душанбе', dir: 'Экономика · право', score: '155', cost: '12 000 сом/год', deadline: '1 авг', sch: true }
+    ],
+    tg: [
+      { name: 'Донишгоҳи техникии Тоҷикистон', city: 'Душанбе', dir: 'IT · муҳандисӣ', score: '140', cost: '8 500 сом/сол', deadline: '15 июл', sch: true },
+      { name: 'Донишгоҳи (Славянии) Русияву Тоҷикистон', city: 'Душанбе', dir: 'Иқтисод · ҳуқуқ', score: '155', cost: '12 000 сом/сол', deadline: '1 авг', sch: true }
+    ]
+  },
+  verify: {
+    ru: [
+      { name: 'Фарзона Раҳимова', course: 'Курс «Веб-разработка», 120 ч', when: '2 дня назад' },
+      { name: 'Бахтиёр Сафаров', course: 'Курс «Python для начинающих»', when: '5 дней назад' },
+      { name: 'Нилуфар Каримова', course: 'Стажировка, 3 мес', when: 'неделю назад' }
+    ],
+    tg: [
+      { name: 'Фарзона Раҳимова', course: 'Курси «Веб-сайтсозӣ», 120 соат', when: '2 рӯз пеш' },
+      { name: 'Бахтиёр Сафаров', course: 'Курси «Python барои навомӯзон»', when: '5 рӯз пеш' },
+      { name: 'Нилуфар Каримова', course: 'Таҷриба, 3 моҳ', when: 'як ҳафта пеш' }
+    ]
+  },
+  notifs: {
+    ru: [
+      { ic: 'work', tk: 'n1' }, { ic: 'check', tk: 'n2' }, { ic: 'up', tk: 'n3' }
+    ],
+    tg: [
+      { ic: 'work', tk: 'n1' }, { ic: 'check', tk: 'n2' }, { ic: 'up', tk: 'n3' }
+    ]
+  }
+};
+
+
+const ICONS = {
+  book: 'M5 5.5C5 4.7 5.7 4 6.5 4H18v13H6.5C5.7 17 5 17.7 5 18.5V5.5zM5 18.5C5 19.3 5.7 20 6.5 20H18',
+  code: 'M9 8l-4 4 4 4M15 8l4 4-4 4',
+  scale: 'M12 4v16M7 20h10M4 9h16M8 9l-3 6h6zM16 9l3 6h-6z',
+  cross: 'M12 6v12M6 12h12',
+  hands: 'M12 20s-6.5-4.2-6.5-8.5A3.5 3.5 0 0 1 12 9a3.5 3.5 0 0 1 6.5 2.5C18.5 15.8 12 20 12 20z',
+  coin: 'M12 4a8 8 0 100 16 8 8 0 000-16zM14 9.5a3 3 0 00-4 2.5 3 3 0 004 2.5',
+  work: 'M4 8h16v11H4zM9 8V6a2 2 0 012-2h2a2 2 0 012 2v2',
+  puzzle: 'M5 6h5v4H5zM14 14h5v4h-5zM10 8h4M12 10v4',
+  globe: 'M12 4a8 8 0 100 16 8 8 0 000-16zM4 12h16M12 4c3 4 3 12 0 16M12 4c-3 4-3 12 0 16',
+  react: 'M12 4a8 8 0 100 16 8 8 0 000-16zM12 9v6M9 12h6',
+  server: 'M4 5h16v6H4zM4 13h16v6H4zM7.5 8h.5M7.5 16h.5',
+  flag: 'M6 4v16M6 5h11l-2 3 2 3H6',
+  check: 'M5 13l4 4 10-10',
+  up: 'M12 19V6M6 12l6-6 6 6'
+};</script>
+</body>
+</html>

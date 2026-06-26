@@ -1,0 +1,79 @@
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body {
+  font-family: "Onest", system-ui, sans-serif;
+  background: #2A2017;
+  color: #1E2422;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+a { color: inherit; text-decoration: none; }
+
+@keyframes imkonPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,162,75,.55); }
+  50% { box-shadow: 0 0 0 12px rgba(201,162,75,0); }
+}
+@keyframes imkonFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes imkonFade { from { opacity: 0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+
+/* center a phone-width column on desktop; full-bleed on mobile */
+.imkon-stage {
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background:
+    radial-gradient(1200px 500px at 50% -10%, #3a2c1c 0%, #2A2017 55%);
+}
+.imkon-phone {
+  width: 100%;
+  max-width: 430px;
+  background: #F7F2E9;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-shadow: 0 22px 60px -14px rgba(0,0,0,.55);
+}
+.imkon-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.imkon-scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+.imkon-fade { animation: imkonFade .25s ease both; }
+
+.btn {
+  width: 100%; border: none; border-radius: 14px; cursor: pointer;
+  font: 600 16px "Onest"; padding: 15px; transition: filter .15s, transform .05s;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-primary { background: #2A8C7E; color: #fff; }
+.btn-primary:hover:not(:disabled) { filter: brightness(1.06); }
+.btn-outline { background: transparent; color: #14211F; border: 1.5px solid #14211F; }
+.btn-ghost { background: transparent; color: #6b6457; border: 1.5px solid #d9cfb8; }
+.btn-gold { background: #C9A24B; color: #14211F; }
+
+.input {
+  width: 100%; font: 500 16px "Onest"; padding: 15px; border: 1.5px solid #d9cfb8;
+  border-radius: 14px; background: #fff; color: #14211F; outline: none;
+}
+.input:focus { border-color: #2A8C7E; }
+
+.card {
+  background: #fff; border: 1px solid #e6ddc9; border-radius: 18px; padding: 16px;
+  box-shadow: 0 6px 18px -10px rgba(20,33,31,.18);
+}
+.chip {
+  border: 1.5px solid #d9cfb8; border-radius: 999px; padding: 9px 14px; background: #fff;
+  font: 600 14px "Onest"; color: #14211F; cursor: pointer; display: inline-flex; gap: 6px; align-items: center;
+}
+.chip.active { background: #2A8C7E; color: #fff; border-color: #2A8C7E; }
+
+.toast {
+  position: fixed; left: 50%; transform: translateX(-50%); bottom: 90px; z-index: 100;
+  background: #14211F; color: #fff; padding: 12px 18px; border-radius: 12px;
+  font: 600 14px "Onest"; box-shadow: 0 10px 30px rgba(0,0,0,.3); animation: imkonFade .2s ease both;
+}
