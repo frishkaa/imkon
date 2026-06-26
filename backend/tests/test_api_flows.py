@@ -44,7 +44,7 @@ def test_verification_confirm_lights_step_and_trust(client):
     assert res["status"] == "confirmed"
     assert res["trust_score"] >= 10
     assert res["roadmap_step_done"] is True
-    steps = client.get(f"/roadmaps/{rm['id']}/steps").json()
+    steps = client.get(f"/roadmaps/{rm['id']}/steps", headers=auth(tok)).json()
     assert steps["steps"][0]["status"] == "done"
 
 

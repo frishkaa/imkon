@@ -22,21 +22,21 @@ router = APIRouter(prefix="/ai", tags=["ai"])
 
 
 @router.post("/dialog")
-def dialog(body: DialogBody, db: Session = Depends(get_db)):
+def dialog(body: DialogBody, db: Session = Depends(get_db),
+           viewer: UserProfile = Depends(current_user)):
     result = ai_dialog.run_dialog(body.history)
-    # if completed and a user is supplied, persist needs/interests
-    if result.get("done") and body.user_id:
-        user = db.get(UserProfile, uuid.UUID(body.user_id))
-        if user:
-            needs = [n for n in result.get("needs", [])]
-            if user.age < 18:
-                needs = [n for n in needs if n not in WORK_CATEGORIES]
-            if needs:
-                user.needs = list(dict.fromkeys((user.needs or []) + needs))
-            if result.get("interests") and user.age < 18:
-                user.interests = list(dict.fromkeys((user.interests or []) + result["interests"]))
-            db.add(user)
-            db.commit()
+    # persist needs/interests ONLY to the authenticated user (never an arbitrary body.user_id)
+    if result.get("done"):
+        user = viewer
+        needs = [n for n in result.get("needs", [])]
+        if user.age < 18:
+            needs = [n for n in needs if n not in WORK_CATEGORIES]
+        if needs:
+            user.needs = list(dict.fromkeys((user.needs or []) + needs))
+        if result.get("interests") and user.age < 18:
+            user.interests = list(dict.fromkeys((user.interests or []) + result["interests"]))
+        db.add(user)
+        db.commit()
     return result
 
 

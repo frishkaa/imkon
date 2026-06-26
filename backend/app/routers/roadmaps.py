@@ -15,10 +15,13 @@ router = APIRouter(tags=["roadmaps"])
 
 
 @router.get("/roadmaps/{roadmap_id}/steps")
-def get_steps(roadmap_id: str, db: Session = Depends(get_db)):
+def get_steps(roadmap_id: str, db: Session = Depends(get_db),
+              viewer: UserProfile = Depends(current_user)):
     rm = db.get(Roadmap, uuid.UUID(roadmap_id))
     if not rm:
         raise HTTPException(404, "Маршрут не найден")
+    if rm.user_id != viewer.id:
+        raise HTTPException(403, "Нет доступа")  # roadmaps are shown publicly only via /p/{token}
     return roadmap_steps(rm)
 
 

@@ -77,5 +77,6 @@ def public_resume_pdf(token: str, db: Session = Depends(get_db)):
     profile = user_public(user, achs)
     url = f"{settings.public_base_url.rstrip('/')}/p/{token}"
     pdf = resume_pdf(profile, [achievement_dict(a) for a in achs], public_url=url)
+    share_service.mark_used(db, st)  # consume one-time links here too (no PDF-route bypass)
     return Response(content=pdf, media_type="application/pdf",
                     headers={"Content-Disposition": f'inline; filename="imkon_{token}.pdf"'})
