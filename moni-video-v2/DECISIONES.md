@@ -144,14 +144,17 @@ in any order.
 
 ## 4. Time
 
-| | |
-|---|---|
-| Start (brief received) | 20:56 UTC |
-| Score written, synthesized and mixed (3 versions) | about 7 min |
-| Composition built and debugged (2 snapshot passes, 9 fixes) | about 17 min |
-| Renders (draft + 2 finals) and AV-sync QA | about 9 min, including 9 min of render compute |
-| This document, README, commit | about 5 min |
-| **Total wall-clock** | **about 38 min (20:56 → ~21:34 UTC)** |
+Measured from the shell clock (`date -u`) at the start and at the push:
+
+| phase | UTC | duration |
+|---|---|---|
+| Brief received, project scaffolded, variable fonts fetched | 20:56 → 20:57 | ~1 min |
+| Score written, synthesized and mixed (3 versions, spectrogram check) | 20:57 → 21:01 | ~4 min |
+| Composition built + 2 snapshot passes (9 fixes) | 21:01 → 21:13 | ~12 min |
+| 60 fps draft render (2 min 09 s) + AV-sync and drop QA, glow fix | 21:13 → 21:17 | ~4 min |
+| Final render (3 min 22 s), contact sheet, kerning fix, re-render (3 min 34 s) | 21:17 → 21:25 | ~8 min |
+| DECISIONES.md, README, commit, push | 21:25 → 21:27 | ~2 min |
+| **Total wall-clock** | **20:56:00 → 21:26:32** | **≈ 31 min** (of which ~9 min is render compute) |
 
 The v1 4K master was still rendering in the background for the first ~10 minutes and shared the same
 4 CPU cores.
