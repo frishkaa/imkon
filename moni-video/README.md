@@ -13,7 +13,10 @@ rendered frame-by-frame in headless Chrome), so there is no licence fee for comm
 | file | use |
 |---|---|
 | `renders/moni-aiconf2026-4k.mp4` | **play this on the TV** — 3840×2160, 30 fps, H.264, stereo AAC |
-| `renders/moni-aiconf2026-1080p.mp4` | lighter copy for laptops / social |
+| `renders/moni-aiconf2026-1080p.mp4` | lighter copy for laptops / social (~90 MB, 8 Mbps) |
+
+The MP4s are build outputs and are not committed (`renders/` is git-ignored); re-create them
+with the render commands at the bottom of this file.
 
 Set the player to **loop**. The last two seconds dissolve back into the opening frame, and the
 music's pickup bar is mixed into the tail, so the loop point is invisible and inaudible.
