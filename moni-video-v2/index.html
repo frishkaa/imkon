@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Moní — showreel</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="assets/css/reel.css" />
+    <script src="assets/js/gsap.min.js"></script>
+  </head>
+  <body>
+    <!--
+      Moní · tajiklaw.ai — 24 s showreel (v2). 128 BPM: bar = 1.875 s, every cut sits on the grid.
+      Score: tools/synth.py (pure synthesis, no samples) → assets/audio/score.wav + assets/data/audio-env.js
+      (beat map + per-frame loudness that drives the audio-reactive visuals).
+    -->
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="24" data-fps="60">
+
+      <div class="layer" id="stage">
+      <!-- 1 · cold open (dark kinetic type) -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="3.75" data-track-index="1">
+        <div class="bg-night"></div>
+        <div class="world" id="s1w"></div>
+      </section>
+
+      <!-- 2 · drop: iris + logo -->
+      <section id="s2" class="clip scene" data-start="3.75" data-duration="1.9" data-track-index="2">
+        <div class="bg-night"></div>
+        <div class="iris" id="s2iris"><div class="bg-light"></div><div class="world" id="s2w"></div></div>
+      </section>
+
+      <!-- 3 · ask: logo O morphs into the input; answer + Labour Code, Art. 28 -->
+      <section id="s3" class="clip scene" data-start="5.15" data-duration="4.3" data-track-index="3">
+        <div class="bg-light" id="s3bg"></div>
+        <div class="world" id="s3w"></div>
+      </section>
+
+      <!-- 4 · languages + audio-reactive voice wave -->
+      <section id="s4" class="clip scene" data-start="9.375" data-duration="1.9" data-track-index="4">
+        <div class="bg-light"></div>
+        <div class="world" id="s4w"></div>
+      </section>
+
+      <!-- 5 · review: scan, flags, citations, tracked fixes -->
+      <section id="s5" class="clip scene" data-start="10.95" data-duration="3.95" data-track-index="5">
+        <div class="layer" id="s5clip"><div class="bg-light"></div><div class="world" id="s5w"></div></div>
+      </section>
+
+      <!-- 6 · drafting: page flips, contract writes itself, pulls back to a grid -->
+      <section id="s6" class="clip scene" data-start="14.85" data-duration="2.05" data-track-index="6">
+        <div class="bg-light"></div>
+        <div class="world" id="s6w"></div>
+      </section>
+
+      <!-- 7 · four stat cuts on the beat -->
+      <section id="s7" class="clip scene" data-start="16.875" data-duration="1.875" data-track-index="7">
+        <div class="world" id="s7w"></div>
+      </section>
+
+      <!-- 8 · breakdown -->
+      <section id="s8" class="clip scene" data-start="18.75" data-duration="1.9" data-track-index="8">
+        <div class="bg-night"></div>
+        <div class="world" id="s8w"></div>
+      </section>
+
+      <!-- 9 · finale -->
+      <section id="s9" class="clip scene" data-start="20.625" data-duration="3.375" data-track-index="9">
+        <div class="bg-night"></div>
+        <div class="iris" id="s9iris"><div class="bg-light"></div><div class="world" id="s9w"></div></div>
+      </section>
+
+      </div>
+      <canvas id="fx" width="1920" height="1080"></canvas>
+      <div class="hud" id="hud">
+        <i class="corner c-tl"></i><i class="corner c-tr"></i><i class="corner c-bl"></i><i class="corner c-br"></i>
+        <div class="t tl" id="hudTL">Mon<b>í</b> · tajiklaw.ai</div>
+        <div class="t tr" id="hudTR">AI Conf 2026 · Dushanbe</div>
+        <div class="t bl" id="hudBL"><span class="n" id="hudN">00</span><span id="hudS">Moní</span></div>
+        <div class="t br" id="hudTC">00:00:00</div>
+        <div class="prog"><i id="hudP"></i></div>
+      </div>
+      <div class="dither"></div>
+
+      <audio id="score" src="assets/audio/score.wav" data-start="0" data-duration="24" data-track-index="20" data-volume="1"></audio>
+    </div>
+
+    <script src="assets/brand/logo-paths.js"></script>
+    <script src="assets/data/audio-env.js"></script>
+    <script src="assets/js/reel.js"></script>
+    <script>
+      window.__buildReel().then(function (built) {
+        window.__timelines["main"] = built.timeline;
+        if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
+      });
+    </script>
+  </body>
+</html>
