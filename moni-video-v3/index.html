@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Moní — Tajik law, understood</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="assets/css/film.css" />
+    <script src="assets/js/gsap.min.js"></script>
+  </head>
+  <body>
+    <!--
+      Moní · tajiklaw.ai — v3, 56 s. Timing lives in assets/data/cues.js and is shared with the score
+      (tools/score.py: felt piano + strings, synthesized, no samples). Every line is held long enough to read.
+    -->
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="56" data-fps="60">
+
+      <!-- 1 · thesis -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="8" data-track-index="1">
+        <div class="world" id="s1w">
+          <div class="display" style="top: 330px">
+            <span class="ln" id="s1a">The law is written</span>
+            <span class="ln" id="s1b">for everyone.</span>
+            <span class="ln it" id="s1c">Understood by few.</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2 · the mark -->
+      <section id="s2" class="clip scene" data-start="8" data-duration="6" data-track-index="2">
+        <div class="world" id="s2w">
+          <div class="tagline" id="s2tag" style="top: 630px">An AI lawyer for the laws of Tajikistan.</div>
+        </div>
+      </section>
+
+      <!-- 3 · ask -->
+      <section id="s3" class="clip scene" data-start="14" data-duration="14" data-track-index="3">
+        <div class="world" id="s3w">
+          <div class="col-l" style="top: 340px">
+            <div class="rule" id="s3rule"></div>
+            <div class="eyebrow" id="s3eb">Ask</div>
+            <div class="h2" id="s3h"><span class="ln">Ask in plain</span><span class="ln">language.</span></div>
+            <p class="lede" id="s3p">Answers cite the article they rely on.</p>
+          </div>
+          <div class="col-r" style="top: 340px">
+            <div class="field" id="s3field">
+              <span class="q" id="s3q"></span><i class="caret" id="s3caret"></i>
+              <b class="send" id="s3send"><svg viewBox="0 0 24 24" fill="none" stroke="#0f0e0d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></b>
+            </div>
+            <div class="answer" id="s3ans">
+              <div class="who" id="s3who"><svg viewBox="270 0 50 64" id="s3mark"></svg>Moní</div>
+              <p class="lead" id="s3lead"><span class="ln">Yes, but only on the grounds set out</span><span class="ln">in Article 28 of the Labour Code.</span></p>
+              <div class="cite" id="s3cite"><span class="k">Source</span>Labour Code of the Republic of Tajikistan, Art. 28(8)</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 · review -->
+      <section id="s4" class="clip scene" data-start="28" data-duration="12" data-track-index="4">
+        <div class="world" id="s4w">
+          <div class="col-l" style="top: 340px">
+            <div class="rule" id="s4rule"></div>
+            <div class="eyebrow" id="s4eb">Review</div>
+            <div class="h2" id="s4h"><span class="ln">Every clause,</span><span class="ln">checked against</span><span class="ln">the law.</span></div>
+          </div>
+          <div class="page" id="s4page">
+            <div class="ttl">Commercial Lease Agreement No. 14/26</div>
+            <div class="sub">Dushanbe, Republic of Tajikistan · 1 October 2026</div>
+            <p>Somon City Plaza LLC (the “Landlord”) and Pamir Trade LLC (the “Tenant”) have entered into this Agreement as follows.</p>
+            <p>1.2. The lease term is 5 (five) years from the date of signing this Agreement.</p>
+            <p id="s4clause"><span class="mark" id="s4mark"><span class="del" id="s4del">2.2. The Landlord may unilaterally change the rent at any time without the Tenant’s consent by giving 3 (three) days’ notice.</span></span>
+              <span class="ins" id="s4ins">2.2. The rent may be changed by agreement of the Parties, no more than once a year.</span></p>
+            <p>2.3. The Tenant shall pay a security deposit equal to 3 (three) months’ rent.</p>
+            <p>3.1. The Tenant shall carry out, at its own expense, all capital repairs of the Premises, including the roof and utility networks.</p>
+            <p>4.1. For late payment of rent, the Tenant shall pay a penalty of 5% of the overdue amount for each day of delay.</p>
+            <p>5.1. The Landlord may terminate this Agreement unilaterally at any time without giving reasons.</p>
+            <p>6.1. This Agreement enters into force upon signing and is not subject to state registration.</p>
+          </div>
+          <div class="note" id="s4note">
+            <div class="row"><span class="eyebrow">Finding 1 of 5</span><span class="sev">High risk</span></div>
+            <div class="nt">Rent cannot be changed unilaterally.</div>
+            <div class="nb">Only by agreement of the parties, and no more than once a year.</div>
+            <div class="nc">Civil Code, Art. 680(5)</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 · draft -->
+      <section id="s5" class="clip scene" data-start="40" data-duration="8" data-track-index="5">
+        <div class="world" id="s5w">
+          <div class="col-l" style="top: 340px">
+            <div class="rule" id="s5rule"></div>
+            <div class="eyebrow" id="s5eb">Draft</div>
+            <div class="h2" id="s5h"><span class="ln">A complete first</span><span class="ln">draft, ready to edit.</span></div>
+            <p class="lede" id="s5p">Missing details are marked for you. Export to Word.</p>
+          </div>
+          <div class="page" id="s5page">
+            <div class="ttl">Services Agreement No. <span class="ph">[specify]</span></div>
+            <div class="sub">Dushanbe · <span class="ph">[specify: date]</span> 2026</div>
+            <p>Pamir Trade LLC, TIN <span class="ph">[specify: TIN]</span>, the “Client”, and Somon Digital LLC, TIN <span class="ph">[specify: TIN]</span>, the “Contractor”, have concluded this Agreement as follows.</p>
+            <div class="hd">1. Subject of the Agreement</div>
+            <p>1.1. The Contractor undertakes to develop the Client’s new corporate website (the “Site”), and the Client undertakes to accept and pay for the services.</p>
+            <div class="hd">2. Term</div>
+            <p>2.1. The term of services is 60 (sixty) calendar days from receipt of the advance payment.</p>
+            <div class="hd">3. Price and payment</div>
+            <p>3.1. The total cost of services is 25,000 (twenty-five thousand) somoni <span class="ph">[specify: VAT]</span>.</p>
+            <p>3.2. 50% in advance within 5 business days of signing; 50% within 5 business days of signing the Acceptance Certificate.</p>
+          </div>
+          <div class="file" id="s5file">
+            <svg viewBox="0 0 36 44" fill="none" stroke="rgba(250,250,249,.72)" stroke-width="1.5" stroke-linejoin="round"><path d="M2 2h22l10 10v30H2z"/><path d="M24 2v10h10"/><path d="M9 22h18M9 28h18M9 34h11"/></svg>
+            <div><div class="fn">Services Agreement.docx</div><div class="fm">Word document, ready to edit</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 · end card -->
+      <section id="s6" class="clip scene" data-start="48" data-duration="8" data-track-index="6">
+        <div class="world" id="s6w">
+          <div class="tagline" id="s6tag" style="top: 600px">Tajik law, understood.</div>
+          <div class="url" id="s6url" style="top: 694px">tajiklaw.ai</div>
+          <div class="foot" id="s6foot">
+            <div class="rule" id="s6rule"></div>
+            <div class="row"><span class="eyebrow" id="s6l">English · Russian · Tajik</span><span class="eyebrow" id="s6r">AI Conf 2026 · Dushanbe</span></div>
+          </div>
+        </div>
+      </section>
+
+      <audio id="score" src="assets/audio/score.wav" data-start="0" data-duration="56" data-track-index="20" data-volume="1"></audio>
+    </div>
+
+    <script src="assets/brand/logo-paths.js"></script>
+    <script src="assets/data/cues.js"></script>
+    <script src="assets/js/film.js"></script>
+    <script>
+      window.__timelines = window.__timelines || {};
+      window.__buildFilm().then(function (built) {
+        window.__timelines["main"] = built.timeline;
+        if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
+      });
+    </script>
+  </body>
+</html>

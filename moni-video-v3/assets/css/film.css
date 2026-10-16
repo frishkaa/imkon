@@ -1,0 +1,114 @@
+/* Moní v3. One warm near-black ground, ivory type, one accent (the brand bronze, used only in
+   the logo). Display: Source Serif 4 at its Display optical size, weight 300. Text: Public Sans.
+   Radii 8 (panels) and 4 (controls); 1px hairlines; no gradients, glows, pills or shadows. */
+:root {
+  --bg: #0f0e0d;
+  --surface: #1a1918;
+  --raised: #242220;
+  --ivory: #fafaf9;
+  --t2: rgba(250, 250, 249, .74);
+  --t3: rgba(250, 250, 249, .54);
+  --t4: rgba(250, 250, 249, .34);
+  --line: rgba(255, 255, 255, .12);
+  --line-2: rgba(255, 255, 255, .22);
+  --bronze: #bf9a66;
+  --warn: #d8be93;
+  --paper: #f2efe8;
+  --paper-ink: #23201c;
+  --paper-ink-2: #6c655b;
+  --del: #9c4a3e;
+  --ins: #3e6a4b;
+  --serif: 'Source Serif 4', Georgia, serif;
+  --sans: 'Public Sans', system-ui, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--bg); }
+body { font-family: var(--sans); color: var(--ivory); -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+.scene { position: absolute; inset: 0; width: 100%; height: 100%; overflow: hidden; }
+.world { position: absolute; inset: 0; }
+
+/* ---------- type ---------- */
+.display { position: absolute; left: 160px; font-family: var(--serif); font-weight: 300; font-variation-settings: 'opsz' 60;
+  font-size: 120px; line-height: 1.04; letter-spacing: -.024em; }
+.display .ln { display: block; white-space: nowrap; }
+.it { font-style: italic; color: var(--t3); }
+.h2 { font-family: var(--serif); font-weight: 300; font-variation-settings: 'opsz' 60; font-size: 76px; line-height: 1.05;
+  letter-spacing: -.02em; color: var(--ivory); }
+.h2 .ln { display: block; white-space: nowrap; }
+.eyebrow { font-family: var(--sans); font-weight: 500; font-size: 19px; letter-spacing: .16em; text-transform: uppercase; color: var(--t3); }
+.lede { font-family: var(--sans); font-weight: 400; font-size: 28px; line-height: 1.45; color: var(--t2); }
+.rule { height: 1px; background: var(--line-2); transform-origin: 0 50%; }
+
+/* left editorial column, shared by ask / review / draft */
+.col-l { position: absolute; left: 160px; top: 0; width: 600px; }
+.col-l .rule { width: 600px; }
+.col-l .eyebrow { margin-top: 26px; }
+.col-l .h2 { margin-top: 30px; }
+.col-l .lede { margin-top: 34px; width: 540px; }
+
+/* ---------- logo ---------- */
+.logo-svg { position: absolute; overflow: visible; }
+.logo-svg svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.tagline { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--serif); font-style: italic; font-weight: 300;
+  font-variation-settings: 'opsz' 40; font-size: 46px; letter-spacing: -.01em; color: var(--t2); }
+
+/* ---------- ask ---------- */
+.col-r { position: absolute; left: 860px; width: 900px; }
+.field { position: relative; height: 104px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 0 110px 0 36px; display: flex; align-items: center; }
+.field .q { font-family: var(--sans); font-size: 32px; font-weight: 400; color: var(--ivory); white-space: nowrap; }
+.field .caret { display: inline-block; width: 2px; height: 38px; background: var(--ivory); margin-left: 3px; }
+.field .send { position: absolute; right: 28px; top: 28px; width: 48px; height: 48px; border-radius: 4px; background: var(--ivory);
+  display: flex; align-items: center; justify-content: center; }
+.field .send svg { width: 22px; height: 22px; }
+.answer { position: relative; margin-top: 46px; }
+.who { display: flex; align-items: center; gap: 12px; font-family: var(--sans); font-size: 20px; font-weight: 500; letter-spacing: .02em; color: var(--t3); }
+.who svg { width: 30px; height: 30px; }
+.lead { margin-top: 20px; font-family: var(--serif); font-weight: 350; font-variation-settings: 'opsz' 36; font-size: 44px; line-height: 1.2;
+  letter-spacing: -.012em; color: var(--ivory); }
+.lead .ln { display: block; white-space: nowrap; }
+.conds { list-style: none; margin-top: 30px; border-top: 1px solid var(--line); }
+.conds li { display: flex; align-items: baseline; padding: 15px 0; border-bottom: 1px solid var(--line); font-family: var(--sans);
+  font-size: 27px; line-height: 1.35; color: var(--t2); }
+.conds .num { width: 64px; flex: none; font-family: var(--serif); font-style: italic; font-weight: 300; font-size: 27px; color: var(--t3); }
+.cite { margin-top: 24px; font-family: var(--sans); font-size: 21px; color: var(--t3); display: flex; gap: 18px; align-items: baseline; }
+.cite .k { font-weight: 500; font-size: 16px; letter-spacing: .16em; text-transform: uppercase; color: var(--t4); }
+
+/* ---------- paper (review + draft) ---------- */
+.page { position: absolute; left: 820px; top: 150px; width: 580px; height: 1000px; background: var(--paper); border-radius: 2px;
+  padding: 68px 78px 68px 64px; color: var(--paper-ink); font-family: var(--serif); font-variation-settings: 'opsz' 14; font-weight: 400;
+  font-size: 19px; line-height: 1.62; overflow: hidden; }
+.page .ttl { text-align: center; font-family: var(--serif); font-variation-settings: 'opsz' 20; font-weight: 500; font-size: 17px;
+  letter-spacing: .14em; text-transform: uppercase; }
+.page .sub { text-align: center; font-style: italic; color: var(--paper-ink-2); margin-top: 6px; font-size: 17px; }
+.page p { margin-top: 14px; }
+.page .hd { margin-top: 22px; font-weight: 600; font-size: 16px; letter-spacing: .1em; text-transform: uppercase; }
+.page .mark { background-image: linear-gradient(rgba(216, 190, 147, .62), rgba(216, 190, 147, .62)); background-repeat: no-repeat;
+  background-size: 0% 100%; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 1px 0; }
+.page .del { text-decoration-line: line-through; text-decoration-thickness: 1.5px; text-decoration-color: rgba(156, 74, 62, 0); }
+.page .ins { display: block; overflow: hidden; color: var(--ins); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.page .ph { color: #8a6a36; border-bottom: 1.5px solid #c9a76b; }
+
+.note { position: absolute; left: 1340px; width: 420px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 8px;
+  padding: 28px 30px 26px; }
+.note .row { display: flex; justify-content: space-between; align-items: baseline; }
+.note .row .eyebrow { font-size: 16px; }
+.note .sev { font-family: var(--sans); font-size: 16px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--warn); }
+.note .nt { margin-top: 18px; font-family: var(--serif); font-weight: 350; font-variation-settings: 'opsz' 36; font-size: 34px; line-height: 1.18;
+  letter-spacing: -.01em; color: var(--ivory); }
+.note .nb { margin-top: 14px; font-family: var(--sans); font-size: 24px; line-height: 1.45; color: var(--t2); }
+.note .nc { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); font-family: var(--sans); font-size: 20px; color: var(--t3); }
+
+/* ---------- end card ---------- */
+.url { position: absolute; left: 0; right: 0; text-align: center; font-family: var(--sans); font-size: 28px; font-weight: 400;
+  letter-spacing: .04em; color: var(--ivory); }
+.foot { position: absolute; left: 160px; right: 160px; top: 930px; }
+.foot .rule { width: 100%; }
+.foot .row { display: flex; justify-content: space-between; margin-top: 26px; }
+
+.file { position: absolute; left: 1340px; width: 420px; background: var(--surface); border: 1px solid var(--line-2); border-radius: 8px;
+  padding: 22px 26px; display: flex; gap: 20px; align-items: center; }
+.file svg { width: 36px; height: 44px; flex: none; }
+.file .fn { font-family: var(--sans); font-size: 23px; color: var(--ivory); }
+.file .fm { margin-top: 4px; font-family: var(--sans); font-size: 18px; color: var(--t3); }
