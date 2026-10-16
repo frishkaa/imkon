@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Moní — AI Conf 2026 film</title>
+    <link rel="stylesheet" href="assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="assets/css/moni-site.css" />
+    <link rel="stylesheet" href="assets/css/moni-overrides.css" />
+    <link rel="stylesheet" href="assets/css/film.css" />
+    <script src="assets/js/gsap.min.js"></script>
+  </head>
+  <body>
+    <!--
+      Moní · tajiklaw.ai — 90 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct).
+      Music is 120 BPM, so every scene boundary sits on a 2 s bar. The site UI is rebuilt from
+      tajiklaw.ai's own stylesheet (assets/css/moni-site.css, scoped under .moni) and real DOM
+      captured from the Pro version (assets/data/fragments.js). All motion lives in
+      assets/js/film.js on one paused GSAP timeline.
+    -->
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="90" data-fps="30">
+      <div class="bg" id="bg"><div class="bg-glow"></div><div class="bg-night" id="bgNight"></div></div>
+
+      <!-- 1 · hook: "Laws are written for everyone…" -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="8.2" data-track-index="1">
+        <div class="s1-space"><div class="s1-world" id="s1World"></div></div>
+        <div class="hook-veil" id="hookVeil"></div>
+        <div class="hook" id="hook">
+          <div class="hook-line display" id="hookL1">Laws are written for everyone.</div>
+          <div class="hook-line second display" id="hookL2">But they read as if written for <em>no one.</em></div>
+        </div>
+      </section>
+
+      <!-- 2 · logo reveal → flies into the site header -->
+      <section id="s2" class="clip scene" data-start="8" data-duration="4.1" data-track-index="2">
+        <div class="logo-stage">
+          <div class="tagline-rule" id="tagRule"></div>
+          <div class="tagline lede" id="tagline">Tajik law, made simple with AI.</div>
+          <div class="logo-wrap" id="logoWrap"></div>
+        </div>
+      </section>
+
+      <!-- 3 · ask a question on tajiklaw.ai -->
+      <section id="s3" class="clip scene" data-start="12" data-duration="14.2" data-track-index="3">
+        <div class="cam" id="s3Cam"></div>
+        <div class="layer" id="s3Over"></div>
+      </section>
+
+      <!-- 4 · English · Русский · Тоҷикӣ -->
+      <section id="s4" class="clip scene" data-start="26" data-duration="8.2" data-track-index="4">
+        <div class="cam" id="s4Cam">
+          <div class="lang-head"><div class="display" id="langHead">Ask in English, <em>Русский</em> or <em>Тоҷикӣ</em>.</div></div>
+          <div class="lang-cards moni free" id="langCards"></div>
+          <div class="lang-foot" id="langFoot">Type it or <b>say it</b> — Moní answers in your language.</div>
+        </div>
+      </section>
+
+      <!-- 5 · contract review -->
+      <section id="s5" class="clip scene" data-start="34" data-duration="22.2" data-track-index="5">
+        <div class="cam" id="s5Cam"></div>
+        <div class="layer" id="s5Over"></div>
+      </section>
+
+      <!-- 6 · contract drafting -->
+      <section id="s6" class="clip scene" data-start="56" data-duration="14.2" data-track-index="6">
+        <div class="cam" id="s6Cam"></div>
+        <div class="layer" id="s6Over"></div>
+      </section>
+
+      <!-- 7 · capabilities (night) -->
+      <section id="s7" class="clip scene" data-start="70" data-duration="8.2" data-track-index="7">
+        <div class="cam" id="s7Cam">
+          <div class="caps-head">
+            <div class="kicker" id="capsKick">Moní Pro</div>
+            <div class="display" id="capsHead">All laws. Review. Drafting. <em>No limits.</em></div>
+          </div>
+          <div class="caps-grid" id="capsGrid"></div>
+        </div>
+      </section>
+
+      <!-- 8 · end card + loop back into the hook -->
+      <section id="s8" class="clip scene" data-start="78" data-duration="12" data-track-index="8">
+        <div class="s1-space"><div class="s1-world" id="s8World"></div></div>
+        <div class="cam" id="s8Cam">
+          <div class="end-logo" id="endLogo"></div>
+          <div class="end-copy">
+            <div class="display" id="endHead">Need a lawyer? <em>Ask Moní first.</em></div>
+            <div class="url" id="endUrl">tajiklaw.ai</div>
+          </div>
+          <div class="end-meta" id="endMeta">
+            <span><b>Moní Pro</b> — all laws · review · drafting</span><span class="sep"></span>
+            <span>info@tajiklaw.ai</span><span class="sep"></span>
+            <span>powered by <b>AAA Law Offices</b></span>
+          </div>
+          <div class="qr-card" id="qrCard"><div id="qrSlot"></div><div class="cap-txt">Scan · try Moní now</div></div>
+          <div class="conf-badge" id="confBadge"><i></i>AI Conf 2026 · Dushanbe</div>
+        </div>
+      </section>
+
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <audio id="soundtrack" src="assets/audio/soundtrack.wav" data-start="0" data-duration="90" data-track-index="20" data-volume="1"></audio>
+    </div>
+
+    <script src="assets/brand/logo-paths.js"></script>
+    <script src="assets/brand/qr.js"></script>
+    <script src="assets/data/fragments.js"></script>
+    <script src="assets/data/film-data.js"></script>
+    <script src="assets/js/fx.js"></script>
+    <script src="assets/js/film.js"></script>
+    <script>
+      window.__buildFilm().then(function (built) {
+        window.__timelines["main"] = built.timeline;
+        if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
+      });
+    </script>
+  </body>
+</html>

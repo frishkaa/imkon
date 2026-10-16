@@ -1,0 +1,20 @@
+/* The site's entrance animations are disabled (GSAP drives all motion), so restore the
+   end-state of every element the site CSS hides until its keyframe runs. */
+.moni { --vh: 7.2px; --vw: 12.8px; color: var(--text-primary); }
+.moni:not(.free) { position: relative; width: 1280px; height: 720px; overflow: hidden; transform: translateZ(0); background: var(--bg-primary); }
+.moni .welcome-title, .moni .welcome-sub, .moni .mode-bar, .moni .input-wrap.centered,
+.moni .msg, .moni .disclaimer-text, .moni .gen-indicator, .moni .input-form { opacity: 1; }
+.moni .logo-img.light-logo { display: block; height: 40px; width: auto; }
+.moni .logo-img.dark-logo { display: none; }
+/* free-floating site components (no 1280x720 viewport) */
+.moni.free { min-height: 0; display: block; overflow: visible; background: transparent; }
+.moni .dv-para *, .moni .dv-para { font-family: inherit; }
+.rv-paper .dv-para, .rv-paper .dv-para * { font-family: var(--paper) !important; }
+.moni .dv-panel .dv-para, .moni .dv-panel .dv-para * { font-family: var(--paper) !important; }
+.moni .msg { transform: none; }
+.moni .chat-area { overflow: visible; padding-bottom: 300px; }
+.moni .send-btn.on { background: var(--text-primary); color: var(--bg-primary); }
+.moni .input-form.focus { border-color: var(--input-border-focus); box-shadow: 0 0 0 4px rgba(193,141,72,.14); }
+.moni .dv-overlay.film { position: absolute; inset: 0; background: rgba(0,0,0,0); }
+.moni .w { font-family: inherit; }
+.chat-scroll .chat-area { margin: 0 auto; position: relative; }

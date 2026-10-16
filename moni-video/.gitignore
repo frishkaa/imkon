@@ -1,0 +1,5 @@
+.hyperframes/
+dev/
+node_modules/
+# render outputs and render scratch (large binaries are delivered separately)
+renders/
