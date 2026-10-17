@@ -26,23 +26,23 @@ The MP4s are build outputs and are not committed (`renders/` is git-ignored). Re
 with the commands at the bottom of this file.
 
 Set the player to **loop**. The last two seconds dissolve back into the opening frame, and the
-music's pickup bar is mixed into the tail, so the loop point is invisible and inaudible.
+music's end hit hands over to the opening break on the last beat, so the loop point is invisible and inaudible.
 The film also works without sound, because every beat has on-screen text.
 
 ## Storyboard (120 BPM: every cut lands on a 2 s bar)
 
 | time | scene | what happens |
 |---|---|---|
-| 0–8 | Hook | The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
-| 8–12 | Logo | The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
-| 12–26 | Ask | tajiklaw.ai assembles around the logo. The cursor types the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
+| 0–8 | Hook | Music: a sparse break. The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
+| 8–12 | Logo | The build kicks in with the logo. The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
+| 12–26 | Ask | tajiklaw.ai assembles around the logo. Drop 1 hits as the cursor starts typing the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
 | 26–34 | Your language | "Ask in your language." A sample of the languages Moní answers in cascades in ("and many more"; the film gives no total). A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
-| 34–52 | Review | A lease is uploaded and sent. On the music's drop (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
+| 34–52 | Review | A lease is uploaded and sent. Under the breakdown and riser the scan runs; on drop 2 (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
 | 52–64 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
 | 64–70 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
-| 70–78 | Your account | The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
-| 78–86 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · any language · drafting · current legislation (thousands of Tajik legal acts) |
-| 86–96 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The song reaches its own ending here, then the card dissolves into the opening frame |
+| 70–78 | Your account | Music: the second breakdown and riser. The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
+| 78–86 | Moní Pro | The final drop. Night scene with six tiles: Legal Q&A · contract review · calculators · any language · drafting · current legislation (thousands of Tajik legal acts) |
+| 86–96 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The final drop carries the card and the track's own end hit lands at 94 s, as the card dissolves into the opening frame |
 
 ## How it is made
 
@@ -71,6 +71,18 @@ The film also works without sound, because every beat has on-screen text.
   composition and reports any Cyrillic, and the count is zero.
 - **Sound.** `tools/mix-audio.py` mixes the music bed with SFX cues that the film registers at
   build time (`tools/export-cues.mjs` → `assets/audio/cues.json`). Credits: `assets/audio/CREDITS.md`.
+- **Music.** "Our Ups and Downs" (Michael Ramir C., Mixkit, free for commercial use) was chosen to fit the
+  usual launch-film pattern:
+  - modern future-house / synth-pop, instrumental, at 120 BPM;
+  - a quiet open, a build into the reveal, the product moments on the drops, and a clean ending on the end card.
+
+  It was picked from 43 Mixkit candidates by measuring tempo, structure and dynamics. The CLAP audio–text model
+  was used as a check for "modern launch music" versus "cheesy corporate" and for vocals.
+
+  Its downbeats sit exactly on the film's 2 s grid. `EDIT` in `tools/mix-audio.py` re-cuts the track bar for bar,
+  so its own build, drops, breakdowns and end hit land on the logo (8 s), the first question (14 s), the review
+  findings (38 s), "Moní Pro" (78 s) and the loop (94 s). There are only three in-section splices, with no
+  time-stretching.
 
 ## Provenance of the legal content
 

@@ -3,8 +3,9 @@
 All audio is royalty-free for commercial use without attribution; listed here for the record.
 
 ## Music
-- **"Better Times are Coming"** — Alejandro Magaña (A. M.) · Mixkit Stock Music Free License
-  https://assets.mixkit.co/music/173/173.mp3 · 120 BPM, first downbeat at 0.564 s
+- **"Our Ups and Downs"** — Michael Ramir C. · Mixkit Stock Music Free License
+  https://assets.mixkit.co/music/913/913.mp3 · 120.000 BPM, downbeats on a 2 s grid from 0 s.
+  Edited bar for bar to the film in `tools/mix-audio.py` (`EDIT`).
 
 ## Sound effects (Mixkit Sound Effects Free License)
 | file | Mixkit title | source |

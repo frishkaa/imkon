@@ -488,7 +488,7 @@
     tl.fromTo(spin, { rotation: 0 }, { rotation: 720, duration: 1.6, ease: 'none' }, 37.0);
     S('data-scan', 37.1, 0.45);
 
-    // phase B — the drop (music returns at 38.5): scan + findings
+    // phase B — the drop (music's drop 2 lands at 38.0): scan + findings
     tl.fromTo(rv, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, 37.98);
     tl.set(fnd, { opacity: 0 }, 0);
     clipSt.b = clipB(rSumm.b + 8); writeClip();
