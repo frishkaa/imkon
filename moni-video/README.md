@@ -49,7 +49,10 @@ The film also works without sound, because every beat has on-screen text.
 - **Exact site style.** `assets/css/moni-site.css` is tajiklaw.ai's own stylesheet, scoped under
   `.moni` (`tools/` has the extractor); `assets/data/fragments.js` is real DOM captured from the
   Pro version with Playwright (header, hero, chat input, answer markup, document viewer).
-  Fonts are the site's (Nunito, Roboto Serif) plus Tinos for the Times-style document sheet.
+  Inside the browser the site keeps its own fonts (Nunito, Roboto Serif), plus Tinos for the
+  Times-style document sheet. The film's own titles and captions use **General Sans** (Indian Type Foundry, via
+  Fontshare; the ITF Free Font License allows commercial use). It is set semibold with tight tracking and no
+  italics, the way startup launch decks are set. The emphasised words are in Moní's gold.
 - **Vector logo.** `assets/brand/moni-logo.svg` is traced from the site's 320 px PNG so it stays
   sharp at 4K and the swirl can be drawn on.
 - **Motion.**

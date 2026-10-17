@@ -934,7 +934,7 @@
     return { timeline: tl };   // wrapped: a GSAP timeline is a thenable and would stall the promise
   }
 
-  const faces = ['400 16px Nunito', '600 16px Nunito', '700 16px Nunito', '800 16px Nunito', 'italic 400 16px Nunito',
+  const faces = ['400 16px "General Sans"', '500 16px "General Sans"', '600 16px "General Sans"', '400 16px Nunito', '600 16px Nunito', '700 16px Nunito', '800 16px Nunito', 'italic 400 16px Nunito',
     '400 40px "Roboto Serif"', '500 40px "Roboto Serif"', 'italic 400 40px "Roboto Serif"', '400 16px Tinos', '700 16px Tinos'];
   /* index.html registers the timeline once this resolves (window.__timelines["main"]). */
   window.__buildFilm = function () {
