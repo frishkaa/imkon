@@ -37,7 +37,7 @@ window.FILM = {
     question: 'Can an employer dismiss an employee during the probation period under the Labor Code of Tajikistan?'
   },
 
-  /* tajiklaw.ai/llms.txt: "in 18 languages … Speak your question in any of the 18 supported languages." */
+  /* a sample of the languages Moní answers in (not the full list — the film names no total) */
   languages: ['English', 'Russian', 'Tajik', 'Chinese', 'Kazakh', 'Uzbek', 'Arabic', 'Turkish', 'Italian',
     'German', 'French', 'Spanish', 'Japanese', 'Hindi', 'Urdu', 'Persian', 'Korean', 'Kyrgyz'],
   /* Moní's answer to the limitation-period question (captured in Russian and Tajik; shown in English). */
@@ -144,8 +144,8 @@ window.FILM = {
     { h: 'Legal Q&A', p: 'Plain-language answers that cite the exact article.', ic: 'chat' },
     { h: 'Contract review', p: 'Risks, conflicts with the law, suggested fixes.', ic: 'search' },
     { h: 'Calculators', p: 'Taxes, duties, fees, salary and fines: 17 calculation types.', ic: 'calc' },
-    { h: '18 languages', p: 'Ask by text or by voice, in your own language.', ic: 'globe' },
+    { h: 'Any language', p: 'Ask by text or by voice, in your own language.', ic: 'globe' },
     { h: 'Contract drafting', p: 'A full first draft, ready to edit as .docx.', ic: 'doc' },
-    { h: 'Current legislation', p: 'About 220 Tajik legal acts, kept up to date.', ic: 'book' }
+    { h: 'Current legislation', p: 'Thousands of Tajik legal acts, kept up to date.', ic: 'book' }
   ]
 };

@@ -3,7 +3,7 @@
 A 96-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
 screen at **AI Conf 2026, Dushanbe (30–31 October)**. It shows Moní Pro doing real work:
 - answering a legal question with article citations;
-- answering in 18 languages, by text or voice;
+- answering in the user's own language, by text or voice;
 - reviewing a lease against the Civil Code;
 - running a tax calculation;
 - drafting a services agreement;
@@ -36,12 +36,12 @@ The film also works without sound, because every beat has on-screen text.
 | 0–8 | Hook | The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
 | 8–12 | Logo | The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
 | 12–26 | Ask | tajiklaw.ai assembles around the logo. The cursor types the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
-| 26–34 | 18 languages | The 18 languages Moní answers in cascade in. A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
+| 26–34 | Your language | "Ask in your language." A sample of the languages Moní answers in cascades in ("and many more"; the film gives no total). A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
 | 34–52 | Review | A lease is uploaded and sent. On the music's drop (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
 | 52–64 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
 | 64–70 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
 | 70–78 | Your account | The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
-| 78–86 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · 18 languages · drafting · current legislation |
+| 78–86 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · any language · drafting · current legislation (thousands of Tajik legal acts) |
 | 86–96 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The song reaches its own ending here, then the card dissolves into the opening frame |
 
 ## How it is made
@@ -80,11 +80,12 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
   Code of Tajikistan?"*.
   - It is trimmed to fit: sections 3–6 are omitted.
   - Citations are shown in English.
-- **18 languages.** The list comes from Moní's own llms.txt: Russian, Tajik, English, Chinese, Kazakh, Uzbek,
-  Arabic, Turkish, Italian, German, French, Spanish, Japanese, Hindi, Urdu, Persian, Korean and Kyrgyz.
-  The same file says voice input works in all 18.
+- **Languages.** The film names no total, per the Moní team. The chips are a sample: English, Russian, Tajik,
+  Chinese, Kazakh, Uzbek, Arabic, Turkish, Italian, German, French, Spanish, Japanese, Hindi, Urdu, Persian,
+  Korean and Kyrgyz, followed by "and many more".
   - The voice answer (three years, Civil Code Art. 214) is Moní's answer to the same question asked in
     Russian and in Tajik, shown in English.
+- **Legislation.** The film says "thousands of Tajik legal acts", per the Moní team, rather than a figure.
 - **Review.** The review endpoint was timing out during capture (see the notes below). Each finding on Moní's
   review card therefore comes from Moní's answers to clause-specific questions:
 
@@ -133,8 +134,8 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
   - Results come back in Russian, starting with the request bubble "Расчёт: Income Tax".
   - The field labels of *Vacation Pay*, *Final Settlement* and *Salary & Advance* are still in Russian.
 - **Chat sidebar on `/en/`.** The labels are still Russian ("Чаты", "Новый чат"); the film shows them in English.
-- **Languages.** llms.txt advertises 18 languages; the Pro header's language menu offers only the interface
-  languages.
+- **Languages.** tajiklaw.ai/llms.txt still says "18 languages" and "~220 legal acts". The team says both figures
+  are out of date, so the llms.txt may be worth updating.
 
 ## Edit / re-render
 

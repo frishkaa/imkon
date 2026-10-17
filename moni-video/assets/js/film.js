@@ -106,6 +106,26 @@
     });
   }
 
+  /* Smooth state changes: read the real computed colours of a UI element with and without a class, then tween
+     between them instead of flipping the class (a class flip is a one-frame jump). */
+  function stateOf(elm, cls, on) {
+    const had = elm.classList.contains(cls);
+    elm.classList.toggle(cls, on);
+    const cs = getComputedStyle(elm);
+    const r = { backgroundColor: cs.backgroundColor, color: cs.color, borderColor: cs.borderTopColor };
+    elm.classList.toggle(cls, had);
+    return r;
+  }
+  function tweenState(elm, cls, on, t, dur) {
+    tl.fromTo(elm, stateOf(elm, cls, !on), Object.assign(stateOf(elm, cls, on), { duration: dur || 0.3, ease: 'power2.out', immediateRender: false }), t);
+  }
+  const RING_ON = '0px 0px 0px 4px rgba(193, 141, 72, 0.16)', RING_OFF = '0px 0px 0px 0px rgba(193, 141, 72, 0)';
+  function focusRing(elm, t, on, dur) {
+    const base = getComputedStyle(elm).borderTopColor;
+    tl.fromTo(elm, { borderColor: on ? base : '#c18d48', boxShadow: on ? RING_OFF : RING_ON },
+      { borderColor: on ? '#c18d48' : base, boxShadow: on ? RING_ON : RING_OFF, duration: dur || 0.25, ease: 'power2.out', immediateRender: false }, t);
+  }
+
   /* boolean class/attr switch that survives seeking in both directions */
   function toggleAt(t, fnOn, fnOff) {
     const st = { v: 0 };
@@ -193,6 +213,7 @@
       const h = headerLogoFrame;
       const sc = h.w / 800;
       tl.to(wrap, { x: h.x - 560, y: h.y - 300, scale: sc, duration: 0.95, ease: 'power3.inOut' }, 11.05);
+      tl.to(wrap, { opacity: 0, duration: 0.08, ease: 'none' }, 12.02);                     // the header logo has taken over
       S('swoosh-quick', 11.15, 0.6);
     };
   }
@@ -213,7 +234,8 @@
     const dock = $('.dock', m), dForm = $('.dock .input-form', m);
     const chat = $('.chat-area', m), scroll = $('.chat-scroll', m);
     const hdrBits = $$('.site-nav .nav-link, .header-actions > *', m), sbT = $('.sb-toggle', m), hdrLogo = $('.logo-img.light-logo', m);
-    wSend.classList.remove('on'); wSend.setAttribute('disabled', '');
+    wSend.classList.remove('on'); wSend.removeAttribute('disabled');
+    tl.set(wSend, { opacity: 0.4 }, 0);                                                         // the site's disabled look, released smoothly below
     const fi = fakeInput(wForm); fakeInput(dForm);
 
     // chat content: question, thinking card, Moní's real answer (trimmed to fit the frame)
@@ -247,7 +269,8 @@
     camS.set(tl, 12.0, { fx: 640, fy: 400, s: 1.5 });
 
     // page assembles around the landed logo
-    tl.set(hdrLogo, { opacity: 0 }, 0); tl.set(hdrLogo, { opacity: 1 }, 12.0);
+    tl.fromTo('#s3Cam', { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' }, 11.55);   // the page fades up under the flying logo
+    tl.set(hdrLogo, { opacity: 0 }, 0); tl.fromTo(hdrLogo, { opacity: 0 }, { opacity: 1, duration: 0.06, ease: 'none', immediateRender: false }, 11.96);
     tl.fromTo(hdrBits, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.05 }, 12.0);
     tl.fromTo(sbT, { opacity: 0 }, { opacity: 1, duration: 0.4 }, 12.2);
     FX.waterfall(tl, FX.words(wTitle), 12.05, { stagger: 0.05, y: 34, blur: 8, dur: 0.7 });
@@ -263,12 +286,13 @@
     cur.move(tl, 13.7, 0.75, rForm.x + 230, rForm.cy + 6, 'power3.out');
     cur.ringAt(tl, 14.5, rForm.x + 230, rForm.cy + 6);
     cur.click(tl, 14.5);
-    toggleAt(14.55, function () { wForm.classList.add('focus'); }, function () { wForm.classList.remove('focus'); });
+    focusRing(wForm, 14.55, true, 0.3);
     tl.set(fi.ph, { opacity: 1 }, 0); tl.set(fi.ph, { opacity: 0 }, 14.62);
     tl.set(fi.caret, { opacity: 0 }, 0); tl.set(fi.caret, { opacity: 1 }, 14.6);
     cur.move(tl, 14.75, 0.6, rForm.x + 300, rForm.b + 70, 'power2.out');                         // drift aside while typing
     FX.type(tl, fi.typed, D.ask.question, 14.7, 2.45, fi);
-    toggleAt(14.75, function () { wSend.classList.add('on'); wSend.removeAttribute('disabled'); }, function () { wSend.classList.remove('on'); wSend.setAttribute('disabled', ''); });
+    tweenState(wSend, 'on', true, 14.75, 0.3);
+    tl.fromTo(wSend, { opacity: 0.4 }, { opacity: 1, duration: 0.3, ease: 'power2.out', immediateRender: false }, 14.75);
     S('typewriter-digital', 14.7, 0.35); S('typewriter-digital', 15.95, 0.3); S('ui-click-tone', 14.5, 0.6);
     cur.move(tl, 17.2, 0.45, rSend.cx, rSend.cy, 'power3.inOut');
     cur.ringAt(tl, 17.7, rSend.cx, rSend.cy);
@@ -277,12 +301,21 @@
     S('ui-click-tone', 17.7, 0.7); S('swoosh-quick', 17.85, 0.4);
 
     // send → welcome hero lifts away, input docks at the bottom, the question bubble lands
-    tl.to([wTitle, wSub, wModes].concat(wNotice), { opacity: 0, y: -40, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in', stagger: 0.03 }, 17.82);
-    tl.to(wInput, { y: rDForm.y - rForm.y, duration: 0.6, ease: 'power3.inOut' }, 17.85);
+    tl.to([wTitle, wSub, wModes], { opacity: 0, y: -40, filter: 'blur(6px)', duration: 0.4, ease: 'power2.in', stagger: 0.03 }, 17.82);
+    tl.to(wNotice, { opacity: 0, duration: 0.3, ease: 'power2.out' }, 17.82);                       // notice + disclaimer fade in place
+    wInput.style.position = 'relative'; wInput.style.zIndex = '5';                              // glide above the dock's backdrop
+    const rWrap = R(wInput), dKids = $$('.dock .mode-bar, .dock .clear-btn, .dock .upload-notice, .dock .footer-bottom', m);
+    tl.to(wInput, { x: rDForm.cx - rForm.cx, y: rDForm.y - rForm.y, width: rWrap.w - (rForm.w - rDForm.w), duration: 0.6, ease: 'power3.inOut' }, 17.85);
+    focusRing(wForm, 17.85, false, 0.4);
     tl.set([fi.typed, fi.caret], { opacity: 1 }, 14.6); tl.set([fi.typed, fi.caret], { opacity: 0 }, 17.84);   // the field clears on send
     tl.set(fi.ph, { opacity: 1 }, 17.84);
     toggleAt(17.84, function () { fi.line.style.visibility = 'hidden'; fi.line.style.transform = 'none'; fi.line.style.visibility = 'visible'; }, function () {});
-    tl.to(wInput, { opacity: 0, duration: 0.01 }, 18.45); tl.set(dock, { opacity: 1 }, 18.45);
+    // the dock fades in around the arriving input; the two inputs cross-fade only once they coincide
+    tl.set(dock, { opacity: 1 }, 18.1);
+    tl.set(dKids.concat([dForm]), { opacity: 0 }, 0);
+    tl.fromTo(dKids, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out', immediateRender: false }, 18.12);
+    tl.fromTo(dForm, { opacity: 0 }, { opacity: 1, duration: 0.15, ease: 'none', immediateRender: false }, 18.43);
+    tl.to(wInput, { opacity: 0, duration: 0.15, ease: 'none' }, 18.47);
     tl.fromTo(uMsg, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 18.05);
     cur.move(tl, 18.0, 0.7, rSend.cx + 260, 1000, 'power2.in');                                   // cursor leaves the frame
     S('ui-message-pop', 18.1, 0.45);
@@ -297,7 +330,7 @@
     // Moní's answer streams in (real output, captured from tajiklaw.ai/trial)
     tl.set(ans, { opacity: 1 }, 19.85);
     const stream = FX.stream(tl, content, 19.85, 4.6, { lead: 7 });
-    tl.set(btns, { opacity: 1 }, 24.4);
+    tl.fromTo(btns, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out', immediateRender: false }, 24.3);
     tl.fromTo(hl, { scaleX: 0 }, { scaleX: 1, duration: 0.55, ease: 'power2.inOut' }, 20.75);
     S('sparkle-touch', 20.8, 0.35);
 
@@ -331,6 +364,7 @@
   function buildS4() {
     const cam = $('#s4Cam'), box = $('#langChips'), cards = $('#langCards');
     const chips = D.languages.map(function (n) { return el('span', 'lang-chip', n, box); });
+    chips.push(el('span', 'lang-chip more', 'and many more', box));
     const v = D.voice;
     const card = el('div', 'lang-card voice-card', '<div class="lang-tag"><b class="mic-b">' + MIC + '</b>Asked by voice</div>' +
       '<div class="voice-pill"><span class="mic">' + MIC + '</span><span class="bars">' + '<span></span>'.repeat(26) + '</span></div>' +
@@ -346,7 +380,7 @@
     FX.waterfall(tl, FX.words($('#langHead')), 26.15, { stagger: 0.06, y: 40, blur: 8, dur: 0.75 });
     // the 18 languages cascade in, then a soft gold wave runs through them
     tl.fromTo(chips, { opacity: 0, y: 34, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out', stagger: 0.045 }, 26.5);
-    chips.forEach(function (c, i) {
+    chips.slice(0, -1).forEach(function (c, i) {
       const t = 27.75 + i * 0.055;
       tl.to(c, { backgroundColor: 'rgba(232,192,120,.42)', borderColor: 'rgba(193,141,72,.7)', duration: 0.3, ease: 'power2.out' }, t);
       tl.to(c, { backgroundColor: 'rgba(255,255,255,1)', borderColor: 'rgba(224,221,214,1)', duration: 0.6, ease: 'power2.inOut' }, t + 0.3);
@@ -426,7 +460,10 @@
     const sheet = $('.dv-sheet', paper), rSheet = R(sheet);
     const rF = fnd.map(R), rFix = R(fixBtn), rSend = R(upSend);
     const card = $('.doc-review-card', rv), rCard = R(card), rSumm = R(summ), Z = 1.15;
-    const clipAt = function (bottomY) { return 'inset(0px 0px ' + Math.max(0, (rCard.b - bottomY) / Z).toFixed(1) + 'px 0px round 16px)'; };
+    const clipSt = { b: 0 };
+    const writeClip = function () { card.style.clipPath = 'inset(0px 0px ' + Math.max(0, clipSt.b).toFixed(1) + 'px 0px round 16px)'; };
+    const clipB = function (bottomY) { return Math.max(0, (rCard.b - bottomY) / Z); };
+    const clipTo = function (bottomY, t, dur) { tl.to(clipSt, { b: clipB(bottomY), duration: dur, ease: 'power3.out', onUpdate: writeClip }, t); };
 
     // phase A — the document arrives
     tl.set([rv, counter, status, svg], { opacity: 0 }, 0);
@@ -454,7 +491,7 @@
     // phase B — the drop (music returns at 38.5): scan + findings
     tl.fromTo(rv, { opacity: 0, x: 60 }, { opacity: 1, x: 0, duration: 0.6, ease: 'power3.out' }, 37.98);
     tl.set(fnd, { opacity: 0 }, 0);
-    tl.set(card, { clipPath: clipAt(rSumm.b + 8) }, 0);
+    clipSt.b = clipB(rSumm.b + 8); writeClip();
     tl.fromTo([head, summ], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out', stagger: 0.1 }, 38.03);
     tl.set(fixbar, { opacity: 0 }, 0);
     tl.to(status, { opacity: 0, duration: 0.3 }, 37.95);
@@ -473,7 +510,7 @@
       tl.fromTo(o.c.flag, { scaleX: 0, opacity: 0 }, { scaleX: 1, opacity: 1, duration: 0.35, ease: 'power3.out' }, t);
       const ff = fnd[o.i];
       tl.fromTo(ff, { opacity: 0, x: 40 }, { opacity: 1, x: 0, duration: 0.45, ease: 'power3.out' }, t + 0.12);
-      tl.to(card, { clipPath: clipAt(rF[o.i].b + 10), duration: 0.4, ease: 'power3.out' }, t + 0.06);
+      clipTo(rF[o.i].b + 10, t + 0.06, 0.4);
       // connector: clause → finding
       const a = o.c.r, b = rF[o.i];
       const x1 = a.r + 6, y1 = a.cy, x2 = b.x - 8, y2 = b.y + 22;
@@ -489,7 +526,7 @@
       S(o.f.cat === 'red' ? 'ui-select-click' : 'switch-tap', t + 0.1, 0.45);
     });
     tl.fromTo(fixbar, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 43.1);
-    tl.to(card, { clipPath: clipAt(rCard.b + 2), duration: 0.5, ease: 'power3.out' }, 43.05);
+    clipTo(rCard.b + 2, 43.05, 0.6);
     tl.to(svg, { opacity: 0, duration: 0.5 }, 45.6);
 
     // phase C — apply fixes: redlines appear on the document (tracked changes)
@@ -514,6 +551,14 @@
       const t = redStart + k * redGap;
       tl.set(del, { textDecorationColor: 'rgba(224,82,82,0)', color: '#1a1a1a' }, 0);
       tl.to(del, { textDecorationColor: 'rgba(224,82,82,1)', color: '#9a5050', duration: 0.3, ease: 'power2.out' }, t);
+      const box = o.c.el, h0 = FX.layoutHeight(box);
+      ins.textContent = f.ins; ins.style.display = 'inline';
+      const h1 = FX.layoutHeight(box);
+      ins.textContent = ''; ins.style.display = 'none';
+      if (h1 > h0 + 0.5) {                                                                 // no reflow jumps below it
+        box.style.height = h0 + 'px';
+        tl.fromTo(box, { height: h0 }, { height: h1, duration: 0.45, ease: 'power2.inOut', immediateRender: false }, t);
+      }
       tl.set(ins, { display: 'none' }, 0);
       tl.set(ins, { display: 'inline' }, t + 0.18);
       FX.type(tl, ins, f.ins, t + 0.18, 0.55);
@@ -597,7 +642,7 @@
     cur.move(tl, 52.45, 0.65, rCalc.cx + 8, rCalc.cy + 4, 'power3.out');
     cur.ringAt(tl, 53.15, rCalc.cx + 8, rCalc.cy + 4); cur.click(tl, 53.15);
     tl.to(bCalc, { scale: 0.95, duration: 0.1, ease: 'power2.in' }, 53.15); tl.to(bCalc, { scale: 1, duration: 0.3, ease: 'power3.out' }, 53.25);
-    toggleAt(53.2, function () { bCalc.classList.add('active'); bSend.classList.remove('active'); }, function () { bCalc.classList.remove('active'); bSend.classList.add('active'); });
+    tweenState(bCalc, 'active', true, 53.2, 0.35); tweenState(bSend, 'active', false, 53.2, 0.35);
     S('ui-click-tone', 53.15, 0.6);
     tl.to(wInput, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in' }, 53.2);
     tl.fromTo([notice, panel, disc], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.06 }, 53.3);
@@ -631,14 +676,14 @@
     const ix = rInc.x + 120, iy = rInc.cy - sc1;
     cur.move(tl, 57.0, 0.35, ix, iy, 'power3.inOut');
     cur.ringAt(tl, 57.38, ix, iy); cur.click(tl, 57.38);
-    toggleAt(57.42, function () { income.classList.add('film-focus'); }, function () { income.classList.remove('film-focus'); });
+    focusRing(income, 57.42, true);
     const ist = { n: 0 }, digits = '8000';
     tl.to(ist, { n: 4, duration: 0.42, ease: 'none', onUpdate: function () { income.value = digits.slice(0, Math.round(ist.n)); } }, 57.48);
     S('typewriter-digital', 57.48, 0.3);
     const sc2 = Math.max(sc1, rSub.b - 610);
     tl.to(main, { y: -sc2, duration: 0.7, ease: 'power3.inOut' }, 57.9);
     camS.to(tl, 57.85, 0.8, { fx: rPanel.cx, fy: 400, s: 1.3 }, 'power3.inOut');
-    toggleAt(57.95, function () { income.classList.remove('film-focus'); }, function () { income.classList.add('film-focus'); });
+    focusRing(income, 57.95, false);
     cur.move(tl, 57.95, 0.6, rSub.cx + 40, rSub.cy - sc2, 'power3.inOut');
     cur.ringAt(tl, 58.6, rSub.cx + 40, rSub.cy - sc2); cur.click(tl, 58.6);
     tl.to(submit, { scale: 0.97, duration: 0.1, ease: 'power2.in' }, 58.6); tl.to(submit, { scale: 1, duration: 0.3, ease: 'power3.out' }, 58.7);
@@ -711,7 +756,7 @@
     $$('button, span, div', panel).forEach(function (n) { if (n.children.length === 0 && /Отправить замечания в чат/.test(n.textContent)) n.textContent = 'Send comments to chat'; });
     const marks = $$('.ph-mark', panel);
     const rSheet = FX.measure($('.dv-sheet', panel), B.el);
-    overlay.style.backgroundColor = 'rgba(0,0,0,0.38)';
+    tl.fromTo(overlay, { backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: 'rgba(0,0,0,0.38)', duration: 0.8, ease: 'power2.inOut' }, 64.15);
 
     const s1 = 1.3, fxA = rSheet.r - (1870 - 960) / s1, fyA = rSheet.y + 330;
     const camS = FX.camera(cam, { fx: fxA, fy: fyA, s: s1 });
@@ -795,13 +840,13 @@
     cur.place(tl, 70.3, rEmail.x + 300, 860);
     cur.move(tl, 70.4, 0.45, rEmail.x + 120, rEmail.cy + 4, 'power3.out');
     cur.ringAt(tl, 70.88, rEmail.x + 120, rEmail.cy + 4); cur.click(tl, 70.88);
-    toggleAt(70.92, function () { emailIn.classList.add('film-focus'); }, function () { emailIn.classList.remove('film-focus'); });
+    focusRing(emailIn, 70.92, true);
     const est = { n: 0 };
     tl.to(est, { n: A.email.length, duration: 0.55, ease: 'none', onUpdate: function () { emailIn.value = A.email.slice(0, Math.round(est.n)); } }, 70.95);
     S('typewriter-digital', 70.95, 0.3);
     cur.move(tl, 71.4, 0.25, rPw.x + 120, rPw.cy + 4, 'power3.inOut');
     cur.ringAt(tl, 71.68, rPw.x + 120, rPw.cy + 4); cur.click(tl, 71.68);
-    toggleAt(71.7, function () { emailIn.classList.remove('film-focus'); pwIn.classList.add('film-focus'); }, function () { emailIn.classList.add('film-focus'); pwIn.classList.remove('film-focus'); });
+    focusRing(emailIn, 71.7, false); focusRing(pwIn, 71.7, true);
     const pst = { n: 0 };
     tl.to(pst, { n: 10, duration: 0.3, ease: 'none', onUpdate: function () { pwIn.value = '••••••••••'.slice(0, Math.round(pst.n)); } }, 71.72);
     cur.move(tl, 72.05, 0.3, rSub.cx + 30, rSub.cy, 'power3.inOut');
@@ -818,19 +863,19 @@
     S('ui-success-soft', 72.7, 0.45);
     // whole page in view (the account sits top-right), caption on the left
     camS.to(tl, 72.6, 1.1, { fx: 340, fy: 360, s: 1.0 }, 'power3.inOut');
-    tl.fromTo(sidebar, { x: -300 }, { x: 0, duration: 0.7, ease: 'power3.out' }, 72.95);
+    tl.fromTo(sidebar, { x: -300, boxShadow: '4px 0 28px rgba(0,0,0,0)' }, { x: 0, boxShadow: '4px 0 28px rgba(0,0,0,0.14)', duration: 0.7, ease: 'power3.out' }, 72.95);
     tl.fromTo(overlay, { opacity: 0 }, { opacity: 0.55, duration: 0.6, ease: 'power2.out' }, 72.95);
-    toggleAt(72.95, function () { sidebar.style.boxShadow = '4px 0 28px rgba(0,0,0,.14)'; overlay.style.visibility = 'visible'; },
-      function () { sidebar.style.boxShadow = ''; overlay.style.visibility = 'hidden'; });
+    toggleAt(72.95, function () { overlay.style.visibility = 'visible'; }, function () { overlay.style.visibility = 'hidden'; });
     tl.fromTo(sbItems, { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', stagger: 0.08 }, 73.2);
     S('ui-popup-dry', 73.0, 0.35);
     // open an earlier chat: the calculation from a minute ago, exactly as it was
     const ix = rItem1.x + 120, iy = rItem1.cy;
     cur.place(tl, 74.6, ix + 120, 860);
     cur.move(tl, 74.7, 0.6, ix, iy, 'power3.out');
-    toggleAt(75.0, function () { sbItems[1].classList.add('film-hover'); }, function () { sbItems[1].classList.remove('film-hover'); });
+    tweenState(sbItems[1], 'film-hover', true, 75.0, 0.2);
+    tl.fromTo($('.sb-actions', sbItems[1]), { opacity: 0 }, { opacity: 1, duration: 0.2, ease: 'power2.out', immediateRender: false }, 75.0);
     cur.ringAt(tl, 75.4, ix, iy); cur.click(tl, 75.4);
-    toggleAt(75.45, function () { sbItems[0].classList.remove('active'); sbItems[1].classList.add('active'); }, function () { sbItems[0].classList.add('active'); sbItems[1].classList.remove('active'); });
+    tweenState(sbItems[1], 'active', true, 75.45, 0.3); tweenState(sbItems[0], 'active', false, 75.45, 0.3);
     tl.set(chatBEl, { opacity: 0 }, 0);
     tl.to(chatAEl, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 75.5);
     tl.fromTo(chatBEl, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 75.65);

@@ -189,6 +189,18 @@
     else tl.fromTo(st, { v: 0 }, { v: peak, duration: dur, ease: 'power3.in', onUpdate: write, immediateRender: false }, t);
   };
 
+  /* Layout height (ignores transforms such as a tilted page), with the owning scene forced visible. */
+  FX.layoutHeight = function (el) {
+    const scenes = [];
+    let p = el;
+    while (p && p !== document.body) { if (p.classList && p.classList.contains('scene')) scenes.push(p); p = p.parentElement; }
+    const saved = scenes.map(function (s) { return [s, s.getAttribute('style')]; });
+    scenes.forEach(function (s) { s.style.display = 'block'; s.style.visibility = 'visible'; });
+    const h = el.offsetHeight;
+    saved.forEach(function (pair) { if (pair[1] == null) pair[0].removeAttribute('style'); else pair[0].setAttribute('style', pair[1]); });
+    return h;
+  };
+
   /* Waterfall entry: staggered rise + de-blur of word spans. */
   FX.waterfall = function (tl, els, t, opts) {
     opts = opts || {};

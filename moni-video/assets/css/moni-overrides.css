@@ -4,7 +4,8 @@
 .moni:not(.free) { position: relative; width: 1280px; height: 720px; overflow: hidden; transform: translateZ(0); background: var(--bg-primary); }
 .moni .welcome-title, .moni .welcome-sub, .moni .mode-bar, .moni .input-wrap.centered,
 .moni .msg, .moni .disclaimer-text, .moni .gen-indicator, .moni .input-form { opacity: 1; }
-.moni .logo-img.light-logo { display: block; height: 40px; width: auto; }
+/* explicit width (logo is 320x145): measured before the image loads, so the S2 logo flight lands at the right size */
+.moni .logo-img.light-logo { display: block; height: 40px; width: 88.28px; }
 .moni .logo-img.dark-logo { display: none; }
 /* free-floating site components (no 1280x720 viewport) */
 .moni.free { min-height: 0; display: block; overflow: visible; background: transparent; }

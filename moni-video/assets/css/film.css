@@ -241,3 +241,6 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .moni .sb-item.film-hover { background: var(--bg-tertiary); }
 .moni .sb-item.film-hover .sb-actions { opacity: 1; }
 .moni .chat-scroll .chat-area.chat-b { margin: 0 auto; }
+.lang-chip.more { background: transparent; border-style: dashed; color: var(--ink-2); box-shadow: none; }
+/* the S2 logo flies over the S3 page as it fades up (S2 ends at 12.1 s) */
+#s2 { z-index: 3; }
