@@ -3,6 +3,7 @@
 Music: "Better Times are Coming" — Alejandro Magaña (A. M.), Mixkit Stock Music Free License.
 SFX: Mixkit Sound Effects Free License (see assets/audio/CREDITS.md).
 The track is 120 BPM with its first downbeat at 0.564 s, so film time t == music time t + 0.564.
+The film is 96 s long, so the track plays to its own ending (film ~95.4 s).
 The last 0.564 s of the film carries the track's own pickup so the loop restarts seamlessly.
 
 usage: python3 tools/mix-audio.py assets/audio/cues.json assets/audio/soundtrack.wav
@@ -10,7 +11,7 @@ usage: python3 tools/mix-audio.py assets/audio/cues.json assets/audio/soundtrack
 import json, subprocess, sys
 import numpy as np
 
-SR, DUR, OFF = 48000, 90.0, 0.564
+SR, DUR, OFF = 48000, 96.0, 0.564
 MUSIC = 'assets/audio/src/better-times-are-coming.mp3'
 SFX_DIR = 'assets/audio/sfx/'
 
@@ -30,7 +31,7 @@ out = np.zeros((N, 2), np.float32)
 m = load(MUSIC)
 bed = m[int(OFF * SR): int(OFF * SR) + N]
 bed = np.pad(bed, ((0, N - len(bed)), (0, 0)))
-fo = int(2.0 * SR)                                   # fade the bed over the last 2 s ...
+fo = int(0.5 * SR)                                   # the track ends on its own at ~95.4 s; fade only its tail ...
 bed[-fo:] *= ramp(fo, up=False)
 pick = m[:int(OFF * SR)]                             # ... and lay the pickup bar's tail under it
 p0 = N - len(pick)

@@ -12,13 +12,13 @@
   </head>
   <body>
     <!--
-      Moní · tajiklaw.ai — 90 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct). English only.
+      Moní · tajiklaw.ai — 96 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct). English only.
       Music is 120 BPM, so every scene boundary sits on a 2 s bar. The site UI is rebuilt from
       tajiklaw.ai's own stylesheet (assets/css/moni-site.css, scoped under .moni) and real DOM
       captured from the Pro version (assets/data/fragments.js). All motion lives in
       assets/js/film.js on one paused GSAP timeline.
     -->
-    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="90" data-fps="60">
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="96" data-fps="60">
       <div class="bg" id="bg"><div class="bg-glow"></div><div class="bg-night" id="bgNight"></div></div>
 
       <!-- 1 · hook: "Laws are written for everyone…" -->
@@ -74,8 +74,14 @@
         <div class="layer" id="s6Over"></div>
       </section>
 
-      <!-- 8 · capabilities (night) -->
-      <section id="s7" class="clip scene" data-start="70" data-duration="8.2" data-track-index="7">
+      <!-- 8 · your account: every chat saved -->
+      <section id="sA" class="clip scene" data-start="70" data-duration="8.2" data-track-index="10">
+        <div class="cam" id="sACam"></div>
+        <div class="layer" id="sAOver"></div>
+      </section>
+
+      <!-- 9 · capabilities (night) -->
+      <section id="s7" class="clip scene" data-start="78" data-duration="8.2" data-track-index="7">
         <div class="cam" id="s7Cam">
           <div class="caps-head">
             <div class="kicker" id="capsKick">Moní Pro</div>
@@ -85,8 +91,8 @@
         </div>
       </section>
 
-      <!-- 9 · end card + loop back into the hook -->
-      <section id="s8" class="clip scene" data-start="78" data-duration="12" data-track-index="8">
+      <!-- 10 · end card + loop back into the hook -->
+      <section id="s8" class="clip scene" data-start="86" data-duration="10" data-track-index="8">
         <div class="s1-space"><div class="s1-world" id="s8World"></div></div>
         <div class="cam" id="s8Cam">
           <div class="end-logo" id="endLogo"></div>
@@ -109,7 +115,7 @@
       <div class="vignette"></div>
       <div class="grain"></div>
 
-      <audio id="soundtrack" src="assets/audio/soundtrack.wav" data-start="0" data-duration="90" data-track-index="20" data-volume="1"></audio>
+      <audio id="soundtrack" src="assets/audio/soundtrack.wav" data-start="0" data-duration="96" data-track-index="20" data-volume="1"></audio>
     </div>
 
     <script src="assets/brand/logo-paths.js"></script>

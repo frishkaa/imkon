@@ -101,6 +101,20 @@ window.FILM = {
     question: 'Calculation: Income Tax',
     result: "<p><strong>Income tax for an individual: resident, main place of work, 12% rate</strong></p><p><strong>Given:</strong> gross income 8,000.00 TJS for 1 calendar month; organization type: other; resident, main place of work; rate 12% (Tax Code, Art. 183(1)).</p><p><strong>Step 1. Social tax of the insured person.</strong><br>For other organizations the rate is 2% (Tax Code, Art. 332(2)).<br>8,000.00 × 2% = <strong>160.00 TJS</strong>.</p><p><strong>Step 2. Personal deduction.</strong><br>Two calculation indicators for each calendar month (Tax Code, Art. 191(1)). With PDR = 78: 2 × 78 × 1 = <strong>156.00 TJS</strong>.</p><p><strong>Step 3. Taxable income.</strong><br>8,000.00 − 160.00 − 156.00 = <strong>7,684.00 TJS</strong> (Tax Code, Art. 191(1), (6)).</p><p><strong>Step 4. Income tax at 12%.</strong><br>7,684.00 × 12% = <strong>922.08 TJS</strong>.</p><p><strong>Breakdown:</strong></p><div class=\"tbl-wrap\"><div class=\"tbl-scroll\"><table data-moni-tbl=\"1\"><thead><tr><th>Item</th><th>Amount, TJS</th></tr></thead><tbody><tr><td>Gross income</td><td>8,000.00</td></tr><tr><td>Social tax of the insured person (2%)</td><td>160.00</td></tr><tr><td>Personal deduction (2 PDR × 78 × 1 mo.)</td><td>156.00</td></tr><tr><td>Taxable income</td><td>7,684.00</td></tr><tr><td>Income tax (12%)</td><td>922.08</td></tr><tr class=\"net\"><td><strong>Net pay to the employee</strong></td><td><strong>6,917.92</strong></td></tr></tbody></table></div><div class=\"tbl-tools\"><button type=\"button\" class=\"tbl-btn\">CSV</button><button type=\"button\" class=\"tbl-btn\">Excel</button></div></div><p>Net pay: 8,000.00 − 160.00 − 922.08 = 6,917.92 TJS.</p><hr><p><strong>Sources:</strong><br>• <strong>Tax Code of the Republic of Tajikistan</strong> — Art. 183, 191, 332 (of 03.11.2021, as amended 11.02.2025)<br>• <strong>Instruction on calculating and paying social tax</strong> (of 07.01.2022)</p>"
   },
+  /* Account: tajiklaw.ai/trial/en/login says "Log in to see your chat history"; the site keeps history on the
+     server for logged-in users (localStorage for guests). The sidebar lists this film's own chats. */
+  account: {
+    name: 'Nilufar', email: 'nilufar@example.com',
+    chats: [
+      'Draft a services agreement for a new corporate website',
+      'Calculation: Income Tax',
+      'Commercial_Lease_14-26.docx',
+      'What is the general limitation period under the Civil Code?',
+      'Can an employer dismiss an employee during the probation period?',
+      'What is the VAT rate in Tajikistan?'
+    ],
+    icons: {"collapse": "<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"15 18 9 12 15 6\"></polyline></svg>", "new": "<svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><line x1=\"12\" y1=\"5\" x2=\"12\" y2=\"19\"></line><line x1=\"5\" y1=\"12\" x2=\"19\" y2=\"12\"></line></svg>", "pin": "<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M12 17v5M7 9V4h10v5l-3 3v0H10v0L7 9z\"></path></svg>", "edit": "<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7\"></path><path d=\"M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z\"></path></svg>", "del": "<svg viewBox=\"0 0 24 24\" width=\"15\" height=\"15\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><polyline points=\"3 6 5 6 21 6\"></polyline><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"></path></svg>"}
+  },
   draftPrompt: 'Draft a services agreement for a new corporate website — TJS 25,000, 60 days, 50% advance, 50% on acceptance.',
   /* English rendering of the contract Moní drafted (its original output was in Russian). */
   draft: {

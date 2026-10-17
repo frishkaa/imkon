@@ -1,12 +1,13 @@
 # Moní · AI Conf 2026 film
 
-A 90-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
+A 96-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
 screen at **AI Conf 2026, Dushanbe (30–31 October)**. It shows Moní Pro doing real work:
 - answering a legal question with article citations;
 - answering in 18 languages, by text or voice;
 - reviewing a lease against the Civil Code;
 - running a tax calculation;
-- drafting a services agreement.
+- drafting a services agreement;
+- keeping every chat in your account.
 
 Everything on screen is in English.
 
@@ -39,8 +40,9 @@ The film also works without sound, because every beat has on-screen text.
 | 34–52 | Review | A lease is uploaded and sent. On the music's drop (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
 | 52–64 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
 | 64–70 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
-| 70–78 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · 18 languages · drafting · current legislation |
-| 78–90 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. It then dissolves into the opening frame |
+| 70–78 | Your account | The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
+| 78–86 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · 18 languages · drafting · current legislation |
+| 86–96 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The song reaches its own ending here, then the card dissolves into the opening frame |
 
 ## How it is made
 
@@ -105,6 +107,11 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
     | Income tax, 12% (Art. 183(1)) | 922.08 |
     | Net pay | 6,917.92 TJS |
 - **Drafting.** An English rendering of the contract Moní drafted. Its output was in Russian.
+- **Account.** Two parts are real; the rest is a stand-in:
+  - The login card is the site's own: /trial/en/login reads "Log in to see your chat history".
+  - The sidebar is the site's own chat-history drawer. The site's code notes that history is kept on the server
+    for logged-in users and in the browser for guests.
+  - The user "Nilufar" (nilufar@example.com) is a stand-in, so no real account was created or used.
 - **Fictitious parties.** The lease and the companies in it (Somon City Plaza LLC, Pamir Trade LLC, Somon
   Digital LLC) are fictitious.
 
@@ -122,6 +129,7 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
 - **Calculator on `/en/`:**
   - Results come back in Russian, starting with the request bubble "Расчёт: Income Tax".
   - The field labels of *Vacation Pay*, *Final Settlement* and *Salary & Advance* are still in Russian.
+- **Chat sidebar on `/en/`.** The labels are still Russian ("Чаты", "Новый чат"); the film shows them in English.
 - **Languages.** llms.txt advertises 18 languages; the Pro header's language menu offers only the interface
   languages.
 

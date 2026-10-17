@@ -233,3 +233,9 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .calc-out .num { font-family: var(--serif); font-weight: 500; font-size: 76px; letter-spacing: -.02em; color: var(--gold-deep); font-variant-numeric: tabular-nums; }
 .calc-out .cur { font-family: var(--sans); font-weight: 800; font-size: 26px; color: var(--ink-2); }
 .fx-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* ---------- S8 · account ---------- */
+.moni .auth-input.film-focus { border-color: var(--input-border-focus, #c18d48); box-shadow: 0 0 0 3px var(--gold-soft, rgba(193,141,72,.14)); }
+.moni .sb-item.film-hover { background: var(--bg-tertiary); }
+.moni .sb-item.film-hover .sb-actions { opacity: 1; }
+.moni .chat-scroll .chat-area.chat-b { margin: 0 auto; }

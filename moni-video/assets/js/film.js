@@ -1,6 +1,7 @@
-/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 90 s @ 60 fps, 120 BPM (bar = 2 s).
+/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 96 s @ 60 fps, 120 BPM (bar = 2 s).
    Scene map (seconds):  1 hook 0–8 · 2 logo 8–12 · 3 ask 12–26 · 4 18 languages 26–34 · 5 review 34–52 ·
-   6 calculator 52–64 · 7 drafting 64–70 · 8 Moní Pro 70–78 · 9 end card + loop 78–90. English only. */
+   6 calculator 52–64 · 7 drafting 64–70 · 8 account 70–78 · 9 Moní Pro 78–86 · 10 end card + loop 86–96.
+   English only. */
 (function () {
   const F = window.FRAG, D = window.FILM, L = window.MONI_LOGO;
   const $ = (s, r) => (r || document).querySelector(s);
@@ -733,14 +734,124 @@
         { boxShadow: '0 0 0 2px rgba(193,141,72,.55)', backgroundColor: 'rgba(232,192,120,.55)', duration: 0.4, ease: 'power2.out' }, 65.1 + i * 0.16);
     });
     S('ui-popup-dry', 64.45, 0.4); S('sparkle-touch', 65.15, 0.3);
-    // exit: rise (chapter boundary into Moní Pro)
-    tl.to(over, { opacity: 0, duration: 0.3 }, 69.3);
-    camS.to(tl, 69.45, 0.75, { fx: fxA, fy: fyA + 1300, s: s1 }, 'power4.in');
-    FX.whipBlur(tl, cam, 69.45, 0.75, 1300, 'in', 'y');
-    S('transition-tech-slide', 69.45, 0.6);
+    // exit LEFT into the account scene
+    tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 69.3);
+    camS.to(tl, 69.42, 0.58, { fx: fxA + 1900, fy: fyA, s: s1 }, 'power4.in');
+    FX.whipBlur(tl, cam, 69.42, 0.58, 1900, 'in');
+    S('whoosh-fast', 69.42, 0.7);
   }
 
-  /* ======================= 7 · MONÍ PRO (night) ======================= */
+
+  /* ======================= 8 · ACCOUNT: every chat saved ======================= */
+  function buildA() {
+    const A = D.account, IC = A.icons;
+    const cam = $('#sACam'), over = $('#sAOver');
+    const B = makeBrowser(cam, '/trial/en/login');
+    // page 1 — the real login card ("Log in to see your chat history")
+    const mL = B.moni;
+    mL.innerHTML = F.header + '<main class="main main-content"><div class="auth-page"><div class="auth-card">' +
+      '<img src="assets/brand/moni-logo.svg" alt="Moní" class="auth-logo light-logo">' +
+      '<div class="auth-title">Welcome back</div><div class="auth-sub">Log in to see your chat history</div>' +
+      '<div class="auth-field"><label>Email</label><input class="auth-input" type="text" placeholder="you@example.com"></div>' +
+      '<div class="auth-field"><label>Password</label><input class="auth-input" type="text" placeholder="Your password"></div>' +
+      '<button class="auth-submit" type="button">Log in</button>' +
+      '<div class="auth-foot"><a>Forgot password?</a><br>Don\'t have an account? <a>Sign up</a></div></div></div></main>';
+    // page 2 — home, logged in: account in the header, chat history in the sidebar
+    const mH = el('div', 'moni', null, $('.bw-view', B.el));
+    mH.setAttribute('data-theme', 'light');
+    mH.style.position = 'absolute'; mH.style.left = '0'; mH.style.top = '0';
+    const acct = '<div class="acct-wrap"><button class="acct-btn"><span class="acct-avatar">' + A.name[0] + '</span><span class="acct-label">' + A.name + '</span></button></div>';
+    const items = A.chats.map(function (t, i) {
+      return '<div class="sb-item' + (i === 0 ? ' active' : '') + '"><span class="sb-title">' + t + '</span><span class="sb-actions">' +
+        '<button class="sb-act">' + IC.pin + '</button><button class="sb-act">' + IC.edit + '</button><button class="sb-act danger">' + IC.del + '</button></span></div>';
+    }).join('');
+    const chatA = '<div class="msg msg-user"><div class="msg-content">' + D.draftPrompt + '</div></div>' +
+      '<div class="msg msg-ai"><div class="msg-content"><p>Drafted a contract (services). Review it and fill in the «[specify: …]» marks.</p></div></div>';
+    const chatB = '<div class="msg msg-user"><div class="msg-content calc-q">' + CALC_IC + ' ' + D.calc.question + '</div></div>' +
+      '<div class="msg msg-ai calc-ans"><div class="calc-result-card" style="opacity:1"><div class="calc-result-header">' + CALC_IC + ' Income Tax</div>' +
+      '<div class="calc-result-body"><div class="msg-content">' + D.calc.result + '</div></div></div></div>';
+    mH.innerHTML = F.header.replace(/<a class="acct-login-btn"[^>]*>[^<]*<\/a>/, acct) +
+      '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area chat-a" style="display:flex">' + chatA + '</div>' +
+      '<div class="chat-area chat-b" style="display:flex;position:absolute;left:0;right:0;top:0">' + chatB + '</div></div></div>' +
+      '<div class="dock">' + F.modeBarChat + F.inputWrapChat + F.uploadNoticeChat + F.footerBottom + '</div>' +
+      '<div class="sb-overlay"></div><aside class="sidebar"><div class="sb-head"><span class="sb-head-title">Chats</span><button class="sb-collapse">' + IC.collapse + '</button></div>' +
+      '<button class="sb-new">' + IC.new + ' New chat</button><div class="sb-list">' + items + '</div></aside>';
+    fakeInput($('.dock .input-form', mH));
+    const sidebar = $('.sidebar', mH), overlay = $('.sb-overlay', mH), sbItems = $$('.sb-item', mH), chatAEl = $('.chat-a', mH), chatBEl = $('.chat-b', mH);
+    const emailIn = $$('.auth-input', mL)[0], pwIn = $$('.auth-input', mL)[1], submit = $('.auth-submit', mL);
+
+    const R = function (e) { return FX.measure(e, B.el); };
+    const rEmail = R(emailIn), rPw = R(pwIn), rSub = R(submit), rItem1 = R(sbItems[1]);
+
+    // ---- camera: arrive on the login card ----
+    const camS = FX.camera(cam, { fx: 640, fy: 400, s: 1.25 });
+    camS.set(tl, 70.0, { fx: 640 - 760, fy: 400, s: 1.25 });
+    camS.to(tl, 70.0, 0.75, { fx: 640, fy: 400, s: 1.25 }, 'power4.out');
+    FX.whipBlur(tl, cam, 70.0, 0.75, 760, 'out');
+    tl.set(over, { opacity: 1 }, 70.0);
+
+    // ---- log in ----
+    const cur = FX.cursor(B.el, 64);
+    cur.place(tl, 70.3, rEmail.x + 300, 860);
+    cur.move(tl, 70.4, 0.45, rEmail.x + 120, rEmail.cy + 4, 'power3.out');
+    cur.ringAt(tl, 70.88, rEmail.x + 120, rEmail.cy + 4); cur.click(tl, 70.88);
+    toggleAt(70.92, function () { emailIn.classList.add('film-focus'); }, function () { emailIn.classList.remove('film-focus'); });
+    const est = { n: 0 };
+    tl.to(est, { n: A.email.length, duration: 0.55, ease: 'none', onUpdate: function () { emailIn.value = A.email.slice(0, Math.round(est.n)); } }, 70.95);
+    S('typewriter-digital', 70.95, 0.3);
+    cur.move(tl, 71.4, 0.25, rPw.x + 120, rPw.cy + 4, 'power3.inOut');
+    cur.ringAt(tl, 71.68, rPw.x + 120, rPw.cy + 4); cur.click(tl, 71.68);
+    toggleAt(71.7, function () { emailIn.classList.remove('film-focus'); pwIn.classList.add('film-focus'); }, function () { emailIn.classList.add('film-focus'); pwIn.classList.remove('film-focus'); });
+    const pst = { n: 0 };
+    tl.to(pst, { n: 10, duration: 0.3, ease: 'none', onUpdate: function () { pwIn.value = '••••••••••'.slice(0, Math.round(pst.n)); } }, 71.72);
+    cur.move(tl, 72.05, 0.3, rSub.cx + 30, rSub.cy, 'power3.inOut');
+    cur.ringAt(tl, 72.38, rSub.cx + 30, rSub.cy); cur.click(tl, 72.38);
+    tl.to(submit, { scale: 0.98, duration: 0.1, ease: 'power2.in' }, 72.38); tl.to(submit, { scale: 1, duration: 0.25, ease: 'power3.out' }, 72.48);
+    S('ui-click-tone', 72.38, 0.7);
+    cur.move(tl, 72.5, 0.6, rSub.cx + 400, 1000, 'power2.in');
+
+    // ---- signed in: the history is there ----
+    const card = $('.auth-card', mL), urlDim = $('.bw-url .dim', B.el);
+    tl.to(card, { opacity: 0, y: -24, duration: 0.25, ease: 'power2.in' }, 72.45);                      // the login card leaves first
+    tl.fromTo(mH, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 72.68);
+    toggleAt(72.68, function () { urlDim.textContent = '/trial/en/'; }, function () { urlDim.textContent = '/trial/en/login'; });
+    S('ui-success-soft', 72.7, 0.45);
+    // whole page in view (the account sits top-right), caption on the left
+    camS.to(tl, 72.6, 1.1, { fx: 340, fy: 360, s: 1.0 }, 'power3.inOut');
+    tl.fromTo(sidebar, { x: -300 }, { x: 0, duration: 0.7, ease: 'power3.out' }, 72.95);
+    tl.fromTo(overlay, { opacity: 0 }, { opacity: 0.55, duration: 0.6, ease: 'power2.out' }, 72.95);
+    toggleAt(72.95, function () { sidebar.style.boxShadow = '4px 0 28px rgba(0,0,0,.14)'; overlay.style.visibility = 'visible'; },
+      function () { sidebar.style.boxShadow = ''; overlay.style.visibility = 'hidden'; });
+    tl.fromTo(sbItems, { opacity: 0, x: -18 }, { opacity: 1, x: 0, duration: 0.5, ease: 'power3.out', stagger: 0.08 }, 73.2);
+    S('ui-popup-dry', 73.0, 0.35);
+    // open an earlier chat: the calculation from a minute ago, exactly as it was
+    const ix = rItem1.x + 120, iy = rItem1.cy;
+    cur.place(tl, 74.6, ix + 120, 860);
+    cur.move(tl, 74.7, 0.6, ix, iy, 'power3.out');
+    toggleAt(75.0, function () { sbItems[1].classList.add('film-hover'); }, function () { sbItems[1].classList.remove('film-hover'); });
+    cur.ringAt(tl, 75.4, ix, iy); cur.click(tl, 75.4);
+    toggleAt(75.45, function () { sbItems[0].classList.remove('active'); sbItems[1].classList.add('active'); }, function () { sbItems[0].classList.add('active'); sbItems[1].classList.remove('active'); });
+    tl.set(chatBEl, { opacity: 0 }, 0);
+    tl.to(chatAEl, { opacity: 0, duration: 0.25, ease: 'power2.in' }, 75.5);
+    tl.fromTo(chatBEl, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 75.65);
+    S('ui-click-tone', 75.4, 0.6);
+    cur.move(tl, 75.6, 0.6, ix + 260, 1000, 'power2.in');
+
+    // ---- caption ----
+    const c1 = callout(over, 110, 330, 'Your account', 'Every chat, <em>saved.</em>',
+      '<div class="lede">Log in on any device and your whole history is there.</div>');
+    c1.style.width = '470px'; $('.display', c1).style.fontSize = '64px'; $('.lede', c1).style.maxWidth = '440px';
+    calloutIn(c1, 73.15);
+    S('ui-popup-dry', 73.2, 0.3);
+
+    // exit: rise (chapter boundary into Moní Pro)
+    tl.to(over, { opacity: 0, duration: 0.3 }, 77.3);
+    camS.to(tl, 77.45, 0.75, { fx: 340, fy: 360 + 1300, s: 1.0 }, 'power4.in');
+    FX.whipBlur(tl, cam, 77.45, 0.75, 1300, 'in', 'y');
+    S('transition-tech-slide', 77.45, 0.6);
+  }
+
+  /* ======================= 9 · MONÍ PRO (night) ======================= */
   const ICONS = {
     chat: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>',
     search: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h7"/><polyline points="14 2 14 8 20 8"/><circle cx="17" cy="16" r="3.2"/><line x1="19.4" y1="18.4" x2="22" y2="21"/>',
@@ -754,49 +865,49 @@
     const tiles = D.caps.map(function (c) {
       return el('div', 'cap', '<div class="shine"></div><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + ICONS[c.ic] + '</svg></div><h3>' + c.h + '</h3><p>' + c.p + '</p>', grid);
     });
-    tl.to('#bgNight', { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, 69.6);
+    tl.to('#bgNight', { opacity: 1, duration: 0.55, ease: 'power2.inOut' }, 77.6);
     const camS = FX.camera($('#s7Cam'), { fx: 960, fy: 540, s: 1 });
-    camS.set(tl, 70.0, { fx: 960, fy: 540 - 420, s: 1 });
-    camS.to(tl, 70.0, 0.8, { fx: 960, fy: 540, s: 1 }, 'power4.out');                               // rises in
-    tl.fromTo('#capsKick', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 70.15);
-    FX.waterfall(tl, FX.words($('#capsHead')), 70.25, { stagger: 0.07, y: 50, blur: 10, dur: 0.8 });
-    tl.fromTo(tiles, { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out', stagger: 0.12 }, 71.3);
+    camS.set(tl, 78, { fx: 960, fy: 540 - 420, s: 1 });
+    camS.to(tl, 78, 0.8, { fx: 960, fy: 540, s: 1 }, 'power4.out');                               // rises in
+    tl.fromTo('#capsKick', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5 }, 78.15);
+    FX.waterfall(tl, FX.words($('#capsHead')), 78.25, { stagger: 0.07, y: 50, blur: 10, dur: 0.8 });
+    tl.fromTo(tiles, { opacity: 0, y: 70, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: 'power3.out', stagger: 0.12 }, 79.3);
     tiles.forEach(function (t, i) {
       const strokes = $$('svg *', t);
       strokes.forEach(function (s) {
         const len = (s.getTotalLength ? s.getTotalLength() : 60) || 60;
         s.style.strokeDasharray = len;
-        tl.fromTo(s, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 71.5 + i * 0.12);
+        tl.fromTo(s, { strokeDashoffset: len }, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.inOut' }, 79.5 + i * 0.12);
       });
-      tl.fromTo($('.shine', t), { x: 0 }, { x: 760, duration: 0.9, ease: 'power2.inOut' }, 74.2 + i * 0.1);
-      S('ui-popup-dry', 71.3 + i * 0.12, 0.22);
+      tl.fromTo($('.shine', t), { x: 0 }, { x: 760, duration: 0.9, ease: 'power2.inOut' }, 82.2 + i * 0.1);
+      S('ui-popup-dry', 79.3 + i * 0.12, 0.22);
     });
-    S('impact-zoom-quick', 70.05, 0.5); S('shimmer-sparkle-sweep', 74.2, 0.35);
-    tl.to('#bgNight', { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 77.55);
-    tl.to('#s7Cam', { opacity: 0, filter: 'blur(8px)', duration: 0.45, ease: 'power2.in' }, 77.6);
-    S('air-woosh-quick', 77.6, 0.5);
+    S('impact-zoom-quick', 78.05, 0.5); S('shimmer-sparkle-sweep', 82.2, 0.35);
+    tl.to('#bgNight', { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 85.55);
+    tl.to('#s7Cam', { opacity: 0, filter: 'blur(8px)', duration: 0.45, ease: 'power2.in' }, 85.6);
+    S('air-woosh-quick', 85.6, 0.5);
   }
 
-  /* ======================= 8 · END CARD + LOOP ======================= */
+  /* ======================= 10 · END CARD + LOOP ======================= */
   function buildS8() {
     const logo = $('#endLogo');
     logo.innerHTML = logoSVG('lg8');
     $('#qrSlot').innerHTML = window.MONI_QR;
-    FX.waterfall(tl, $$('.lg', logo), 78.2, { stagger: 0.07, y: 30, blur: 6, dur: 0.75 });
-    drawSwirl(logo, 78.5, 1.1);
-    FX.waterfall(tl, FX.words($('#endHead')), 78.9, { stagger: 0.06, y: 40, blur: 8, dur: 0.75 });
-    tl.fromTo('#endUrl', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 79.6);
-    tl.fromTo('#qrCard', { opacity: 0, x: 80, rotateZ: 2 }, { opacity: 1, x: 0, rotateZ: 0, duration: 0.9, ease: 'power3.out' }, 78.6);
-    tl.fromTo('#endMeta', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 80.0);
-    tl.fromTo('#confBadge', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 80.2);
-    S('shimmer-sparkle-sweep', 78.3, 0.5); S('chime-crystal', 79.6, 0.3);
+    FX.waterfall(tl, $$('.lg', logo), 86.2, { stagger: 0.07, y: 30, blur: 6, dur: 0.75 });
+    drawSwirl(logo, 86.5, 1.1);
+    FX.waterfall(tl, FX.words($('#endHead')), 86.9, { stagger: 0.06, y: 40, blur: 8, dur: 0.75 });
+    tl.fromTo('#endUrl', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 87.6);
+    tl.fromTo('#qrCard', { opacity: 0, x: 80, rotateZ: 2 }, { opacity: 1, x: 0, rotateZ: 0, duration: 0.9, ease: 'power3.out' }, 86.6);
+    tl.fromTo('#endMeta', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 88);
+    tl.fromTo('#confBadge', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 88.2);
+    S('shimmer-sparkle-sweep', 86.3, 0.5); S('chime-crystal', 87.6, 0.3);
     // the card holds perfectly still so people can scan the QR code (a slow drift would make text shimmer)
     // loop seam: the end card dissolves into the exact opening frame of the hook
-    tl.to('#s8Cam', { opacity: 0, filter: 'blur(10px)', duration: 1.1, ease: 'power2.inOut' }, 88.4);
+    tl.to('#s8Cam', { opacity: 0, filter: 'blur(10px)', duration: 1.1, ease: 'power2.inOut' }, 94.4);
     const items = buildField($('#s8World'));
     fieldAt(items, 0);
-    tl.set($$('.frag', $('#s8World')), { opacity: 0 }, 78.0);
-    items.forEach(function (it) { tl.to(it.e, { opacity: it.s.op, duration: 1.2, ease: 'power1.inOut' }, 88.75); });
+    tl.set($$('.frag', $('#s8World')), { opacity: 0 }, 86);
+    items.forEach(function (it) { tl.to(it.e, { opacity: it.s.op, duration: 1.2, ease: 'power1.inOut' }, 94.75); });
   }
 
   /* ======================= assemble ======================= */
@@ -810,6 +921,7 @@
     buildS5();
     buildC();
     buildS6();
+    buildA();
     buildS7();
     buildS8();
     FX.flushInit(tl);

@@ -275,63 +275,98 @@
   "gain": 0.3
  },
  {
+  "name": "whoosh-fast",
+  "t": 69.42,
+  "gain": 0.7
+ },
+ {
+  "name": "typewriter-digital",
+  "t": 70.95,
+  "gain": 0.3
+ },
+ {
+  "name": "ui-click-tone",
+  "t": 72.38,
+  "gain": 0.7
+ },
+ {
+  "name": "ui-success-soft",
+  "t": 72.7,
+  "gain": 0.45
+ },
+ {
+  "name": "ui-popup-dry",
+  "t": 73,
+  "gain": 0.35
+ },
+ {
+  "name": "ui-popup-dry",
+  "t": 73.2,
+  "gain": 0.3
+ },
+ {
+  "name": "ui-click-tone",
+  "t": 75.4,
+  "gain": 0.6
+ },
+ {
   "name": "transition-tech-slide",
-  "t": 69.45,
+  "t": 77.45,
   "gain": 0.6
  },
  {
   "name": "impact-zoom-quick",
-  "t": 70.05,
+  "t": 78.05,
   "gain": 0.5
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.3,
+  "t": 79.3,
   "gain": 0.22
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.42,
+  "t": 79.42,
   "gain": 0.22
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.54,
+  "t": 79.54,
   "gain": 0.22
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.66,
+  "t": 79.66,
   "gain": 0.22
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.78,
+  "t": 79.78,
   "gain": 0.22
  },
  {
   "name": "ui-popup-dry",
-  "t": 71.9,
+  "t": 79.9,
   "gain": 0.22
  },
  {
   "name": "shimmer-sparkle-sweep",
-  "t": 74.2,
+  "t": 82.2,
   "gain": 0.35
  },
  {
   "name": "air-woosh-quick",
-  "t": 77.6,
+  "t": 85.6,
   "gain": 0.5
  },
  {
   "name": "shimmer-sparkle-sweep",
-  "t": 78.3,
+  "t": 86.3,
   "gain": 0.5
  },
  {
   "name": "chime-crystal",
-  "t": 79.6,
+  "t": 87.6,
   "gain": 0.3
  }
 ]
