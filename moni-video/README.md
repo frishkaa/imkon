@@ -2,38 +2,45 @@
 
 A 90-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
 screen at **AI Conf 2026, Dushanbe (30–31 October)**. It shows Moní Pro doing real work:
-answering a legal question with article citations, answering in English / Русский / Тоҷикӣ,
-reviewing a lease against the Civil Code, and drafting a services agreement.
+- answering a legal question with article citations;
+- answering in 18 languages, by text or voice;
+- reviewing a lease against the Civil Code;
+- running a tax calculation;
+- drafting a services agreement.
 
-Built with [HyperFrames](https://github.com/heygen-com/hyperframes) (Apache-2.0: HTML + GSAP,
-rendered frame-by-frame in headless Chrome), so there is no licence fee for commercial use.
+Everything on screen is in English.
+
+Built with [HyperFrames](https://github.com/heygen-com/hyperframes) (Apache-2.0). It is HTML plus GSAP,
+rendered frame by frame in headless Chrome, so there is no licence fee for commercial use.
 
 ## Deliverables
 
 | file | use |
 |---|---|
-| `renders/moni-aiconf2026-4k.mp4` | **play this on the TV** — 3840×2160, 30 fps, H.264, stereo AAC |
-| `renders/moni-aiconf2026-1080p.mp4` | lighter copy for laptops / social (~90 MB, 8 Mbps) |
+| `renders/moni-aiconf2026-4k60.mp4` | **The master.** 3840×2160 at 60 fps, H.264 with stereo AAC |
+| `renders/moni-aiconf2026-4k60-hevc.mp4` | The same picture in HEVC (H.265). Use it if the TV won't play 4K60 H.264 from USB |
+| `renders/moni-aiconf2026-1080p60.mp4` | A lighter 1080p60 copy for laptops and social media |
 
-The MP4s are build outputs and are not committed (`renders/` is git-ignored); re-create them
-with the render commands at the bottom of this file.
+The MP4s are build outputs and are not committed (`renders/` is git-ignored). Re-create them
+with the commands at the bottom of this file.
 
 Set the player to **loop**. The last two seconds dissolve back into the opening frame, and the
 music's pickup bar is mixed into the tail, so the loop point is invisible and inaudible.
-The film works without sound too (every beat has on-screen text).
+The film also works without sound, because every beat has on-screen text.
 
-## Storyboard (120 BPM — every cut lands on a 2 s bar)
+## Storyboard (120 BPM: every cut lands on a 2 s bar)
 
 | time | scene | what happens |
 |---|---|---|
-| 0–8 | Hook | Real code names drift in 3D; "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
-| 8–12 | Logo | Vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
-| 12–26 | Ask | tajiklaw.ai assembles around the logo; cursor types the probation question; "Moní is thinking"; the real answer streams with `ТК РТ, ст. 28` highlighted; sources (Labour Code, ed. 17.06.2026) |
-| 26–34 | Languages | Three real answers: EN (probation), RU and TJ (limitation period — three years, ГК РТ ст. 214); Tajik one arrives by voice |
-| 34–56 | Review | A lease flies in and is sent; on the music's drop (38 s) a scan line finds 5 problem clauses, wired to Moní's review card; "Apply fixes" writes tracked changes into the document |
-| 56–70 | Drafting | "Draft a services agreement…" → Moní's document card → the site's document viewer opens the contract; `[specify: …]` gaps glow gold |
-| 70–78 | Moní Pro | Night scene: all laws · review · drafting · calculators · languages · current legislation |
-| 78–90 | End card | Logo, "Need a lawyer? Ask Moní first.", tajiklaw.ai, QR code (→ https://tajiklaw.ai/), AI Conf 2026 · Dushanbe, then dissolve into the opening frame |
+| 0–8 | Hook | The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
+| 8–12 | Logo | The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
+| 12–26 | Ask | tajiklaw.ai assembles around the logo. The cursor types the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
+| 26–34 | 18 languages | The 18 languages Moní answers in cascade in. A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
+| 34–52 | Review | A lease is uploaded and sent. On the music's drop (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
+| 52–64 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
+| 64–70 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
+| 70–78 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · 18 languages · drafting · current legislation |
+| 78–90 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. It then dissolves into the opening frame |
 
 ## How it is made
 
@@ -43,30 +50,63 @@ The film works without sound too (every beat has on-screen text).
   Fonts are the site's (Nunito, Roboto Serif) plus Tinos for the Times-style document sheet.
 - **Vector logo.** `assets/brand/moni-logo.svg` is traced from the site's 320 px PNG so it stays
   sharp at 4K and the swirl can be drawn on.
-- **Motion.** `assets/js/film.js` builds one paused GSAP timeline; `assets/js/fx.js` holds the
-  seek-safe helpers (token-stream reveal, typing, camera rig, oversized cursor). Motion follows
-  the HyperFrames *motion-doctrine*: one current (leftward), causal clicks, no idle wobble.
+- **Motion.**
+  - `assets/js/film.js` builds one paused GSAP timeline at 60 fps.
+  - `assets/js/fx.js` holds the seek-safe helpers: token-stream reveal, typing, camera rig,
+    oversized cursor and motion blur.
+  - Motion follows the HyperFrames *motion-doctrine*: one current (leftward), causal clicks, no idle
+    wobble.
+  - **Every fast camera move carries directional motion blur.** It is a one-axis SVG Gaussian whose
+    strength follows the move's own velocity curve, roughly a 180° shutter.
+  - Button presses settle without overshoot.
+  - Text-heavy holds are kept perfectly still, because a very slow zoom makes text re-rasterize in
+    visible steps.
+- **English only.** Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"). The film
+  converts them to English ("Labour Code, Art. 28"). At build time it scans every text node in the
+  composition and reports any Cyrillic, and the count is zero.
 - **Sound.** `tools/mix-audio.py` mixes the music bed with SFX cues that the film registers at
   build time (`tools/export-cues.mjs` → `assets/audio/cues.json`). Credits: `assets/audio/CREDITS.md`.
 
 ## Provenance of the legal content
 
-Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.ai/trial (Pro) on
-16 Oct 2026:
+Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.ai/trial (Pro), 16–17 Oct 2026:
 
-- **Ask scene** — the full answer to *"Can an employer dismiss an employee during the probation
-  period under the Labor Code of Tajikistan?"* (trimmed to fit: sections 3–6 omitted).
-- **Languages** — RU: *"Какой срок исковой давности по Гражданскому кодексу РТ?"* → «три года
-  (ГК РТ, ст. 214)»; TJ: *"Мӯҳлати умумии даъво…"* → «се сол (ГК РТ, моддаи 214)».
-- **Review** — the review endpoint was timing out during capture (see notes), so each finding on
-  Moní's review card is taken from Moní's answers to clause-specific questions: rent changes only
-  by agreement, ≤ once a year (ГК РТ ст. 680 ч. 5); building lease ≥ 1 year needs state
-  registration (ст. 718 ч. 3); landlord may terminate early only in court on art. 687 grounds
-  (ст. 687, 516); capital repairs are the landlord's duty by default (ст. 683 п. 1); a court may
-  reduce a disproportionate penalty (ст. 384 ч. 1). The suggested replacement wording is ours.
-- **Drafting** — an English rendering of the contract Moní drafted (its output was in Russian).
-- The lease and the companies in it (Somon City Plaza LLC, Pamir Trade LLC, Somon Digital LLC)
-  are fictitious.
+- **Ask.** The full answer to *"Can an employer dismiss an employee during the probation period under the Labor
+  Code of Tajikistan?"*.
+  - It is trimmed to fit: sections 3–6 are omitted.
+  - Citations are shown in English.
+- **18 languages.** The list comes from Moní's own llms.txt: Russian, Tajik, English, Chinese, Kazakh, Uzbek,
+  Arabic, Turkish, Italian, German, French, Spanish, Japanese, Hindi, Urdu, Persian, Korean and Kyrgyz.
+  The same file says voice input works in all 18.
+  - The voice answer (three years, Civil Code Art. 214) is Moní's answer to the same question asked in
+    Russian and in Tajik, shown in English.
+- **Review.** The review endpoint was timing out during capture (see the notes below). Each finding on Moní's
+  review card therefore comes from Moní's answers to clause-specific questions:
+
+  | finding | source |
+  |---|---|
+  | Rent changes only by agreement, at most once a year | Civil Code Art. 680(5) |
+  | A building lease of one year or more needs state registration | Art. 718(3) |
+  | The landlord may terminate early only in court, on Art. 687 grounds | Arts. 687, 516 |
+  | Capital repairs are the landlord's duty by default | Art. 683(1) |
+  | A court may reduce a disproportionate penalty | Art. 384(1) |
+
+  The suggested replacement wording is ours.
+- **Calculator.** The panel is the real Pro calculator: the 17 calculation types and the Income Tax form,
+  captured in English.
+  - The result is Moní's real calculation for 8,000 TJS a month, at an "other" organization, for a resident
+    at their main place of work. Its output was in Russian and is shown here in English. It works out as:
+
+    | step | amount |
+    |---|---|
+    | Social tax, 2% (Tax Code Art. 332(2)) | 160.00 |
+    | Personal deduction, 2 × 78 (Art. 191(1)) | 156.00 |
+    | Taxable income | 7,684.00 |
+    | Income tax, 12% (Art. 183(1)) | 922.08 |
+    | Net pay | 6,917.92 TJS |
+- **Drafting.** An English rendering of the contract Moní drafted. Its output was in Russian.
+- **Fictitious parties.** The lease and the companies in it (Somon City Plaza LLC, Pamir Trade LLC, Somon
+  Digital LLC) are fictitious.
 
 ## Notes for the Moní team (found while capturing)
 
@@ -79,6 +119,11 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
 - In English, the limitation-period question did not retrieve ГК РТ ст. 214, while the same question
   in Russian and Tajik did.
 - The /trial page says the free Pro trial ended on 9 September; the `moni-pro` login still works.
+- **Calculator on `/en/`:**
+  - Results come back in Russian, starting with the request bubble "Расчёт: Income Tax".
+  - The field labels of *Vacation Pay*, *Final Settlement* and *Salary & Advance* are still in Russian.
+- **Languages.** llms.txt advertises 18 languages; the Pro header's language menu offers only the interface
+  languages.
 
 ## Edit / re-render
 
@@ -90,8 +135,9 @@ npx http-server -p 8765 -s . &                   # any static server
 node tools/export-cues.mjs http://127.0.0.1:8765/index.html assets/audio/cues.json
 python3 tools/mix-audio.py assets/audio/cues.json assets/audio/soundtrack.wav
 # final renders
-npx hyperframes@0.8.166 render --resolution 4k --quality high --output renders/moni-aiconf2026-4k.mp4
-npx hyperframes@0.8.166 render --quality high --output renders/moni-aiconf2026-1080p.mp4
+npx hyperframes@0.8.166 render --fps 60 --resolution 4k --quality high --crf 14 --output renders/moni-aiconf2026-4k60.mp4
+ffmpeg -i renders/moni-aiconf2026-4k60.mp4 -c:v libx265 -crf 18 -preset medium -tag:v hvc1 -c:a copy renders/moni-aiconf2026-4k60-hevc.mp4
+ffmpeg -i renders/moni-aiconf2026-4k60.mp4 -vf scale=1920:1080:flags=lanczos -c:v libx264 -crf 16 -preset slow -c:a copy renders/moni-aiconf2026-1080p60.mp4
 ```
 
 ## Skills used to make this

@@ -2,51 +2,50 @@
    tajiklaw.ai/trial (Pro) on 16 Oct 2026 — see README.md "Provenance" for the exact questions. */
 window.FILM = {
   hookFragments: [
-    ['ГРАЖДАНСКИЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН', 'caps'],
-    ['Статья 214', 'serif'],
-    ['ТРУДОВОЙ КОДЕКС', 'caps'],
-    ['Статья 28. Испытание при приёме на работу', ''],
-    ['Кодекси граждании Ҷумҳурии Тоҷикистон', 'serif goldtxt'],
-    ['Моддаи 214', 'serif'],
-    ['НАЛОГОВЫЙ КОДЕКС', 'caps'],
-    ['Статья 183', 'serif'],
-    ['ТАМОЖЕННЫЙ КОДЕКС', 'caps'],
-    ['Закон РТ «О государственной регистрации юридических лиц»', ''],
-    ['Статья 680. Арендная плата', ''],
-    ['ЗЕМЕЛЬНЫЙ КОДЕКС', 'caps'],
-    ['Статья 718', 'serif goldtxt'],
-    ['Кодекси меҳнат', 'serif'],
-    ['СЕМЕЙНЫЙ КОДЕКС', 'caps'],
-    ['Статья 384. Уменьшение неустойки', ''],
-    ['ЖИЛИЩНЫЙ КОДЕКС', 'caps'],
-    ['Закон РТ «О разрешительной системе»', ''],
-    ['Статья 687', 'serif'],
-    ['КОДЕКС ОБ АДМИНИСТРАТИВНЫХ ПРАВОНАРУШЕНИЯХ', 'caps'],
-    ['Моддаи 28', 'serif goldtxt'],
-    ['Статья 516', 'serif'],
-    ['Закон РТ «Об обществах с ограниченной ответственностью»', ''],
-    ['Статья 683. Капитальный ремонт', ''],
-    ['УГОЛОВНЫЙ КОДЕКС', 'caps'],
-    ['Статья 94', 'serif'],
-    ['Қонуни ҶТ «Дар бораи истеҳсолоти иҷро»', 'serif'],
-    ['ГРАЖДАНСКИЙ ПРОЦЕССУАЛЬНЫЙ КОДЕКС', 'caps']
+    ['CIVIL CODE OF THE REPUBLIC OF TAJIKISTAN', 'caps'],
+    ['Article 214', 'serif'],
+    ['LABOUR CODE', 'caps'],
+    ['Article 28. Probation on hiring', ''],
+    ['Tax Code of the Republic of Tajikistan', 'serif goldtxt'],
+    ['Article 183', 'serif'],
+    ['TAX CODE', 'caps'],
+    ['Article 332. Social tax', 'serif'],
+    ['CUSTOMS CODE', 'caps'],
+    ['Law on State Registration of Legal Entities', ''],
+    ['Article 680. Rent', ''],
+    ['LAND CODE', 'caps'],
+    ['Article 718', 'serif goldtxt'],
+    ['Labour Code of the Republic of Tajikistan', 'serif'],
+    ['FAMILY CODE', 'caps'],
+    ['Article 384. Reduction of a penalty', ''],
+    ['HOUSING CODE', 'caps'],
+    ['Law on the Licensing System', ''],
+    ['Article 687', 'serif'],
+    ['CODE OF ADMINISTRATIVE OFFENCES', 'caps'],
+    ['Article 191', 'serif goldtxt'],
+    ['Article 516', 'serif'],
+    ['Law on Limited Liability Companies', ''],
+    ['Article 683. Capital repairs', ''],
+    ['CRIMINAL CODE', 'caps'],
+    ['Article 94', 'serif'],
+    ['Law on Enforcement Proceedings', 'serif'],
+    ['CIVIL PROCEDURE CODE', 'caps']
   ],
+
 
   ask: {
     question: 'Can an employer dismiss an employee during the probation period under the Labor Code of Tajikistan?'
   },
 
-  langs: [
-    { tag: 'EN', name: 'English',
-      q: 'Can an employer dismiss an employee during the probation period?',
-      a: '<strong>Yes — but only on the ground and under the procedure set out in ТК РТ, ст. 28.</strong> Written notice is required not earlier than seven calendar days before probation ends.' },
-    { tag: 'RU', name: 'Русский',
-      q: 'Какой срок исковой давности по Гражданскому кодексу РТ?',
-      a: '<strong>Общий срок исковой давности по ГК РТ — три года (ГК РТ, ст. 214).</strong> По отдельным требованиям закон устанавливает специальные сроки.' },
-    { tag: 'TJ', name: 'Тоҷикӣ', voice: true,
-      q: 'Мӯҳлати умумии даъво тибқи Кодекси граждании Ҷумҳурии Тоҷикистон чанд сол аст?',
-      a: '<strong>Мӯҳлати умумии даъво се сол муқаррар шудааст (ГК РТ, моддаи 214).</strong>' }
-  ],
+  /* tajiklaw.ai/llms.txt: "in 18 languages … Speak your question in any of the 18 supported languages." */
+  languages: ['English', 'Russian', 'Tajik', 'Chinese', 'Kazakh', 'Uzbek', 'Arabic', 'Turkish', 'Italian',
+    'German', 'French', 'Spanish', 'Japanese', 'Hindi', 'Urdu', 'Persian', 'Korean', 'Kyrgyz'],
+  /* Moní's answer to the limitation-period question (captured in Russian and Tajik; shown in English). */
+  voice: {
+    q: 'What is the general limitation period under the Civil Code?',
+    a: '<strong>The general limitation period is three years (Civil Code, Art. 214).</strong> For some claims the law sets special periods.'
+  },
+
 
   lease: {
     file: 'Commercial_Lease_14-26.docx',
@@ -69,31 +68,39 @@ window.FILM = {
   findings: [
     { clause: 'cl. 2.2', para: 'c22', cat: 'red', catLabel: 'Not compliant with the law', sev: 'high',
       issue: 'Rent cannot be changed unilaterally — only by agreement of the parties, and no more than once a year.',
-      law: 'ГК РТ, ст. 680, ч. 5',
+      law: 'Civil Code, Art. 680(5)',
       del: 'The Landlord may unilaterally change the rent at any time without the Tenant’s consent by giving 3 (three) days’ notice.',
       ins: 'The rent may be changed by agreement of the Parties, no more than once a year.' },
     { clause: 'cl. 6.1', para: 'c61', cat: 'red', catLabel: 'Not compliant with the law', sev: 'high',
       issue: 'A building lease for one year or more is subject to state registration and is concluded only from the moment of registration.',
-      law: 'ГК РТ, ст. 718, ч. 3',
+      law: 'Civil Code, Art. 718(3)',
       del: 'is not subject to state registration.',
       ins: 'is subject to state registration and is deemed concluded from the moment of registration.' },
     { clause: 'cl. 5.1', para: 'c51', cat: 'red', catLabel: 'Not compliant with the law', sev: 'high',
       issue: 'The landlord may seek early termination only in court, on the grounds of art. 687 — not “without giving reasons”.',
-      law: 'ГК РТ, ст. 687, ст. 516',
+      law: 'Civil Code, Arts. 687, 516',
       del: 'terminate this Agreement unilaterally at any time without giving reasons.',
       ins: 'demand early termination of this Agreement in court on the grounds of Article 687 of the Civil Code.' },
     { clause: 'cl. 3.1', para: 'c31', cat: 'amber', catLabel: 'Unfavourable term', sev: 'med',
       issue: 'By default, capital repairs are the landlord’s duty, at its own expense.',
-      law: 'ГК РТ, ст. 683, п. 1',
+      law: 'Civil Code, Art. 683(1)',
       del: 'The Tenant shall carry out, at its own expense, all capital repairs',
       ins: 'The Landlord shall carry out, at its own expense, capital repairs' },
     { clause: 'cl. 4.1', para: 'c41', cat: 'amber', catLabel: 'Risk', sev: 'med',
       issue: 'A penalty clearly disproportionate to the breach can be reduced by the court at the debtor’s request.',
-      law: 'ГК РТ, ст. 384, ч. 1',
+      law: 'Civil Code, Art. 384(1)',
       del: '5% of the overdue amount for each day of delay.',
       ins: '0.1% of the overdue amount per day, capped at 10%.' }
   ],
 
+  /* Calculator: the Pro panel captured on tajiklaw.ai/trial/en (17 calculation types) and Moní's real
+     Income Tax calculation for 8,000 TJS/month (its output was in Russian; shown here in English). */
+  calc: {
+    types: ["Income Tax", "Non-Resident Income Tax", "VAT", "Profit Tax", "Social Tax", "Simplified Tax System", "Customs Duty", "Fees and Payments", "Licenses and Permits", "State Duty", "Maternity Benefit", "Salary &amp; Advance", "Vacation Pay", "Sick Leave", "Final Settlement", "Business Trip", "Fine"],
+    panel: "<div class=\"calc-panel show\" id=\"calcPanel\"> <div class=\"calc-header\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"4\" y=\"2\" width=\"16\" height=\"20\" rx=\"2\"></rect><line x1=\"8\" y1=\"6\" x2=\"16\" y2=\"6\"></line></svg> <span>Calculator</span></div> <div class=\"calc-group\"><label>Calculation type</label><select class=\"calc-select\" id=\"calcType\"><option value=\"income\">Income Tax</option><option value=\"nonresident\">Non-Resident Income Tax</option><option value=\"vat\">VAT</option><option value=\"profit\">Profit Tax</option><option value=\"social\">Social Tax</option><option value=\"simplified\">Simplified Tax System</option><option value=\"customs\">Customs Duty</option><option value=\"fees\">Fees and Payments</option><option value=\"permits\">Licenses and Permits</option><option value=\"duty\">State Duty</option><option value=\"maternity\">Maternity Benefit</option><option value=\"salary_adv\">Salary &amp; Advance</option><option value=\"vacation\">Vacation Pay</option><option value=\"sick\">Sick Leave</option><option value=\"dismissal\">Final Settlement</option><option value=\"trip\">Business Trip</option><option value=\"penalty\">Fine</option></select></div> <div id=\"calcFields\"><div class=\"calc-group\"><label>Monthly income (TJS)</label><input class=\"calc-input\" id=\"cIncome\" type=\"number\" placeholder=\"5000\" style=\"\"></div><div class=\"calc-group\"><label>Period</label><select class=\"calc-select\" id=\"cPeriod\"><option value=\"month\">Month</option><option value=\"quarter\">Quarter</option><option value=\"year\">Year</option></select></div><div class=\"calc-group\"><label>Status</label><select class=\"calc-select\" id=\"cStatus\"><option value=\"resident\">Resident</option><option value=\"nonresident\">Non-resident</option></select></div><div class=\"calc-group\" id=\"mainPlaceGroup\" style=\"display: block;\"><label class=\"calc-check\"><input type=\"checkbox\" id=\"cMainPlace\" checked=\"\" style=\"\"><span>Main place of work</span></label><div class=\"calc-hint\">Affects rate: main place — 12% (with deduction), other — 15% (no deductions)</div></div><div class=\"calc-group\" id=\"incomeOrgGroup\" style=\"display: block;\"><label>Organization type</label><select class=\"calc-select\" id=\"cIncomeOrgType\"><option value=\"budget\">Budget/State</option><option value=\"other\">Other</option></select></div><div class=\"calc-group\" id=\"countryGroup\" style=\"display:none\"><label>Country of residence</label><select class=\"calc-select\" id=\"cCountry\"><option value=\"none\">Per Tax Code</option><option value=\"russia\">Russia</option><option value=\"kazakhstan\">Kazakhstan</option><option value=\"kyrgyzstan\">Kyrgyzstan</option><option value=\"belarus\">Belarus</option><option value=\"ukraine\">Ukraine</option><option value=\"moldova\">Moldova</option><option value=\"armenia\">Armenia</option><option value=\"germany\">Germany</option><option value=\"france\">France</option><option value=\"czech\">Czech Republic</option><option value=\"india\">India</option><option value=\"kuwait\">Kuwait</option><option value=\"other\">Other country...</option></select></div><div class=\"calc-group\" id=\"customCountryGroup\" style=\"display:none\"><label>Specify country</label><input class=\"calc-input\" id=\"cCustomCountry\" type=\"text\" placeholder=\"e.g., Turkey\" style=\"\"></div><div class=\"calc-group\" id=\"deductionsGroup\" style=\"display: block;\"><label>Deductions (TJS)</label><input class=\"calc-input\" id=\"cDeductions\" type=\"number\" value=\"0\" style=\"\"></div></div> <div class=\"calc-rates\" id=\"calcRates\" title=\"\">Calculation Indicator (PDR) = 78 somoni (2026)</div> <button class=\"calc-submit\">Calculate</button> </div>",
+    question: 'Calculation: Income Tax',
+    result: "<p><strong>Income tax for an individual: resident, main place of work, 12% rate</strong></p><p><strong>Given:</strong> gross income 8,000.00 TJS for 1 calendar month; organization type: other; resident, main place of work; rate 12% (Tax Code, Art. 183(1)).</p><p><strong>Step 1. Social tax of the insured person.</strong><br>For other organizations the rate is 2% (Tax Code, Art. 332(2)).<br>8,000.00 × 2% = <strong>160.00 TJS</strong>.</p><p><strong>Step 2. Personal deduction.</strong><br>Two calculation indicators for each calendar month (Tax Code, Art. 191(1)). With PDR = 78: 2 × 78 × 1 = <strong>156.00 TJS</strong>.</p><p><strong>Step 3. Taxable income.</strong><br>8,000.00 − 160.00 − 156.00 = <strong>7,684.00 TJS</strong> (Tax Code, Art. 191(1), (6)).</p><p><strong>Step 4. Income tax at 12%.</strong><br>7,684.00 × 12% = <strong>922.08 TJS</strong>.</p><p><strong>Breakdown:</strong></p><div class=\"tbl-wrap\"><div class=\"tbl-scroll\"><table data-moni-tbl=\"1\"><thead><tr><th>Item</th><th>Amount, TJS</th></tr></thead><tbody><tr><td>Gross income</td><td>8,000.00</td></tr><tr><td>Social tax of the insured person (2%)</td><td>160.00</td></tr><tr><td>Personal deduction (2 PDR × 78 × 1 mo.)</td><td>156.00</td></tr><tr><td>Taxable income</td><td>7,684.00</td></tr><tr><td>Income tax (12%)</td><td>922.08</td></tr><tr class=\"net\"><td><strong>Net pay to the employee</strong></td><td><strong>6,917.92</strong></td></tr></tbody></table></div><div class=\"tbl-tools\"><button type=\"button\" class=\"tbl-btn\">CSV</button><button type=\"button\" class=\"tbl-btn\">Excel</button></div></div><p>Net pay: 8,000.00 − 160.00 − 922.08 = 6,917.92 TJS.</p><hr><p><strong>Sources:</strong><br>• <strong>Tax Code of the Republic of Tajikistan</strong> — Art. 183, 191, 332 (of 03.11.2021, as amended 11.02.2025)<br>• <strong>Instruction on calculating and paying social tax</strong> (of 07.01.2022)</p>"
+  },
   draftPrompt: 'Draft a services agreement for a new corporate website — TJS 25,000, 60 days, 50% advance, 50% on acceptance.',
   /* English rendering of the contract Moní drafted (its original output was in Russian). */
   draft: {
@@ -122,9 +129,9 @@ window.FILM = {
   caps: [
     { h: 'Legal Q&A', p: 'Plain-language answers that cite the exact article.', ic: 'chat' },
     { h: 'Contract review', p: 'Risks, conflicts with the law, suggested fixes.', ic: 'search' },
+    { h: 'Calculators', p: 'Taxes, duties, fees, salary and fines: 17 calculation types.', ic: 'calc' },
+    { h: '18 languages', p: 'Ask by text or by voice, in your own language.', ic: 'globe' },
     { h: 'Contract drafting', p: 'A full first draft, ready to edit as .docx.', ic: 'doc' },
-    { h: 'Calculators', p: 'Taxes, fees, duties and fines — 12 categories.', ic: 'calc' },
-    { h: 'English · Русский · Тоҷикӣ', p: 'And more — by text or by voice.', ic: 'globe' },
-    { h: 'Current legislation', p: 'Codes, laws and bylaws, kept up to date.', ic: 'book' }
+    { h: 'Current legislation', p: 'About 220 Tajik legal acts, kept up to date.', ic: 'book' }
   ]
 };

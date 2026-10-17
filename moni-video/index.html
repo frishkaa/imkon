@@ -12,13 +12,13 @@
   </head>
   <body>
     <!--
-      Moní · tajiklaw.ai — 90 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct).
+      Moní · tajiklaw.ai — 90 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct). English only.
       Music is 120 BPM, so every scene boundary sits on a 2 s bar. The site UI is rebuilt from
       tajiklaw.ai's own stylesheet (assets/css/moni-site.css, scoped under .moni) and real DOM
       captured from the Pro version (assets/data/fragments.js). All motion lives in
       assets/js/film.js on one paused GSAP timeline.
     -->
-    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="90" data-fps="30">
+    <div id="root" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="90" data-fps="60">
       <div class="bg" id="bg"><div class="bg-glow"></div><div class="bg-night" id="bgNight"></div></div>
 
       <!-- 1 · hook: "Laws are written for everyone…" -->
@@ -46,39 +46,46 @@
         <div class="layer" id="s3Over"></div>
       </section>
 
-      <!-- 4 · English · Русский · Тоҷикӣ -->
+      <!-- 4 · 18 languages, by text or by voice -->
       <section id="s4" class="clip scene" data-start="26" data-duration="8.2" data-track-index="4">
         <div class="cam" id="s4Cam">
-          <div class="lang-head"><div class="display" id="langHead">Ask in English, <em>Русский</em> or <em>Тоҷикӣ</em>.</div></div>
+          <div class="lang-head"><div class="display" id="langHead">Ask in <em>18 languages.</em></div></div>
+          <div class="lang-chips" id="langChips"></div>
           <div class="lang-cards moni free" id="langCards"></div>
-          <div class="lang-foot" id="langFoot">Type it or <b>say it</b> — Moní answers in your language.</div>
+          <div class="lang-foot" id="langFoot">Type it or <b>say it</b> — Moní answers in the language you ask in.</div>
         </div>
       </section>
 
       <!-- 5 · contract review -->
-      <section id="s5" class="clip scene" data-start="34" data-duration="22.2" data-track-index="5">
+      <section id="s5" class="clip scene" data-start="34" data-duration="18.2" data-track-index="5">
         <div class="cam" id="s5Cam"></div>
         <div class="layer" id="s5Over"></div>
       </section>
 
-      <!-- 6 · contract drafting -->
-      <section id="s6" class="clip scene" data-start="56" data-duration="14.2" data-track-index="6">
+      <!-- 6 · calculator -->
+      <section id="sC" class="clip scene" data-start="52" data-duration="12.2" data-track-index="9">
+        <div class="cam" id="sCCam"></div>
+        <div class="layer" id="sCOver"></div>
+      </section>
+
+      <!-- 7 · contract drafting (a short beat) -->
+      <section id="s6" class="clip scene" data-start="64" data-duration="6.2" data-track-index="6">
         <div class="cam" id="s6Cam"></div>
         <div class="layer" id="s6Over"></div>
       </section>
 
-      <!-- 7 · capabilities (night) -->
+      <!-- 8 · capabilities (night) -->
       <section id="s7" class="clip scene" data-start="70" data-duration="8.2" data-track-index="7">
         <div class="cam" id="s7Cam">
           <div class="caps-head">
             <div class="kicker" id="capsKick">Moní Pro</div>
-            <div class="display" id="capsHead">All laws. Review. Drafting. <em>No limits.</em></div>
+            <div class="display" id="capsHead">All laws. Review. Calculators. <em>No limits.</em></div>
           </div>
           <div class="caps-grid" id="capsGrid"></div>
         </div>
       </section>
 
-      <!-- 8 · end card + loop back into the hook -->
+      <!-- 9 · end card + loop back into the hook -->
       <section id="s8" class="clip scene" data-start="78" data-duration="12" data-track-index="8">
         <div class="s1-space"><div class="s1-world" id="s8World"></div></div>
         <div class="cam" id="s8Cam">
@@ -88,7 +95,7 @@
             <div class="url" id="endUrl">tajiklaw.ai</div>
           </div>
           <div class="end-meta" id="endMeta">
-            <span><b>Moní Pro</b> — all laws · review · drafting</span><span class="sep"></span>
+            <span><b>Moní Pro</b> — all laws · review · calculators</span><span class="sep"></span>
             <span>info@tajiklaw.ai</span><span class="sep"></span>
             <span>powered by <b>AAA Law Offices</b></span>
           </div>
@@ -97,6 +104,8 @@
         </div>
       </section>
 
+      <!-- directional motion blur for fast camera moves (stdDeviation driven by the timeline) -->
+      <svg class="fx-defs" width="0" height="0" aria-hidden="true"><defs id="fxDefs"></defs></svg>
       <div class="vignette"></div>
       <div class="grain"></div>
 

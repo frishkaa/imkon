@@ -168,6 +168,27 @@
     return { x: x, y: y, w: w, h: h, cx: x + w / 2, cy: y + h / 2, r: x + w, b: y + h };
   };
 
+  /* Directional motion blur for fast camera moves. A one-axis SVG Gaussian whose strength follows the
+     move's own velocity curve: a power4 move (x ~ t^5) has velocity ~ t^4, so the blur rides a power3
+     (quartic) curve up into the cut ('in') or down out of it ('out'). Peak sigma ~ 0.012 * distance /
+     duration (local px), i.e. roughly a 180-degree shutter at 60 fps. Removed entirely when ~0. */
+  let mbN = 0;
+  FX.whipBlur = function (tl, el, t, dur, dist, mode, axis) {
+    const id = 'mb' + (++mbN), peak = 0.012 * dist / dur;
+    const defs = document.getElementById('fxDefs');
+    defs.insertAdjacentHTML('beforeend', '<filter id="' + id + '" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">' +
+      '<feGaussianBlur stdDeviation="0 0" edgeMode="duplicate"/></filter>');
+    const g = defs.lastElementChild.firstElementChild;
+    const st = { v: 0 };
+    const write = function () {
+      if (st.v < 0.3) { el.style.filter = ''; return; }
+      g.setAttribute('stdDeviation', axis === 'y' ? '0 ' + st.v.toFixed(2) : st.v.toFixed(2) + ' 0');
+      el.style.filter = 'url(#' + id + ')';
+    };
+    if (mode === 'out') tl.fromTo(st, { v: peak }, { v: 0, duration: dur, ease: 'power3.out', onUpdate: write, immediateRender: false }, t);
+    else tl.fromTo(st, { v: 0 }, { v: peak, duration: dur, ease: 'power3.in', onUpdate: write, immediateRender: false }, t);
+  };
+
   /* Waterfall entry: staggered rise + de-blur of word spans. */
   FX.waterfall = function (tl, els, t, opts) {
     opts = opts || {};

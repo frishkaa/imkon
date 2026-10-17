@@ -118,9 +118,9 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .cite-chip i { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); display: block; }
 
 /* ---------- S4 languages ---------- */
-.lang-head { position: absolute; left: 0; right: 0; top: 96px; text-align: center; }
+.lang-head { position: absolute; left: 0; right: 0; top: 130px; text-align: center; }
 .lang-head .display { font-size: 80px; }
-.lang-cards { position: absolute; left: 0; right: 0; top: 300px; height: 600px; }
+.lang-cards { position: absolute; left: 0; right: 0; top: 372px; height: 600px; }
 .lang-card { position: absolute; top: 0; width: 560px; min-height: 420px; border-radius: 22px; background: #fff; border: 1px solid var(--line); padding: 28px 30px 30px;
   box-shadow: 0 30px 70px -40px rgba(60,40,10,.45), 0 2px 6px rgba(26,26,31,.04); }
 .lang-tag { display: inline-flex; align-items: center; gap: 12px; font-family: var(--sans); font-weight: 800; font-size: 19px; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-deep); margin-bottom: 20px; }
@@ -129,7 +129,7 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .lang-card .msg-user .msg-content { font-size: 24px; line-height: 1.45; max-width: 100%; }
 .lang-card .msg-ai { margin-top: 22px !important; }
 .lang-card .msg-ai .msg-content { font-size: 26px; line-height: 1.5; max-width: 100%; padding: 0 4px; }
-.lang-foot { position: absolute; left: 0; right: 0; bottom: 70px; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 26px; color: var(--ink-2); letter-spacing: .02em; }
+.lang-foot { position: absolute; left: 0; right: 0; bottom: 110px; text-align: center; font-family: var(--sans); font-weight: 700; font-size: 26px; color: var(--ink-2); letter-spacing: .02em; }
 .lang-foot b { color: var(--gold-deep); }
 .voice-pill { display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px; border-radius: 999px; background: var(--canvas-2); border: 1px solid var(--line); margin-bottom: 16px; }
 .voice-pill .bars { display: flex; align-items: center; gap: 3px; height: 26px; }
@@ -206,3 +206,30 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 
 /* wipe used to switch scenes on a gold sweep */
 .gold-wipe { position: absolute; top: -10%; bottom: -10%; width: 70%; left: 0; background: linear-gradient(90deg, rgba(232,192,120,0), rgba(232,192,120,.85) 45%, #c18d48 50%, rgba(232,192,120,.85) 55%, rgba(232,192,120,0)); z-index: 80; opacity: 0; }
+
+/* ---------- S4 · 18 languages ---------- */
+.lang-chips { position: absolute; left: 150px; top: 386px; width: 860px; display: flex; flex-wrap: wrap; gap: 16px 14px; }
+.lang-chip { display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 999px; background: #fff; border: 1px solid #e0ddd6;
+  font-family: var(--sans); font-weight: 700; font-size: 26px; color: var(--ink); box-shadow: 0 10px 26px -18px rgba(60,40,10,.4); }
+.lang-card.voice-card { left: 1080px; width: 690px; min-height: 0; padding-bottom: 34px; }
+.lang-tag .mic-b { background: var(--gold); width: 44px; }
+.lang-tag .mic-b svg { width: 17px; height: 17px; }
+
+/* ---------- S6 · calculator ---------- */
+.calc-home .welcome { justify-content: flex-start; padding-top: 34px; }
+.moni .calc-panel { position: relative; }
+.calc-dd { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; padding: 6px; border-radius: 12px; background: var(--input-bg, #fff);
+  border: 1px solid var(--border-color); box-shadow: 0 22px 44px -18px rgba(26,26,31,.32), 0 2px 6px rgba(26,26,31,.06); }
+.calc-dd .dd-win { position: relative; overflow: hidden; }
+.calc-dd .dd-list { position: relative; z-index: 1; }
+.calc-dd .dd-it { height: 38px; display: flex; align-items: center; padding: 0 14px; font-size: 16px; color: var(--text-primary); border-radius: 8px; }
+.calc-dd .dd-it.sel { font-weight: 700; color: var(--gold); }
+.calc-dd .dd-hover { position: absolute; left: 0; right: 0; top: 0; height: 38px; border-radius: 8px; background: rgba(193,141,72,.16); z-index: 0; }
+.moni .calc-input.film-focus { border-color: var(--input-border-focus, #c18d48); box-shadow: 0 0 0 4px rgba(193,141,72,.14); }
+.moni .calc-q { display: inline-flex; align-items: center; gap: 8px; }
+.moni .calc-ans .calc-result-card { max-width: none; }
+.calc-out { display: flex; align-items: baseline; gap: 16px; margin-top: 30px; }
+.calc-out .lbl { font-family: var(--sans); font-weight: 800; font-size: 20px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-2); }
+.calc-out .num { font-family: var(--serif); font-weight: 500; font-size: 76px; letter-spacing: -.02em; color: var(--gold-deep); font-variant-numeric: tabular-nums; }
+.calc-out .cur { font-family: var(--sans); font-weight: 800; font-size: 26px; color: var(--ink-2); }
+.fx-defs { position: absolute; width: 0; height: 0; overflow: hidden; }

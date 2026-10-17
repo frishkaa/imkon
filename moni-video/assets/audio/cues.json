@@ -85,33 +85,18 @@
   "gain": 0.7
  },
  {
-  "name": "typewriter-digital",
-  "t": 26.9,
-  "gain": 0.18
- },
- {
-  "name": "ui-message-pop",
-  "t": 27.85,
-  "gain": 0.3
- },
- {
-  "name": "typewriter-digital",
-  "t": 27.9,
-  "gain": 0.18
- },
- {
-  "name": "ui-message-pop",
-  "t": 28.85,
-  "gain": 0.3
- },
- {
   "name": "ui-notify-tech",
-  "t": 29.05,
+  "t": 27.6,
+  "gain": 0.3
+ },
+ {
+  "name": "shimmer-sparkle-sweep",
+  "t": 27.75,
   "gain": 0.3
  },
  {
   "name": "ui-message-pop",
-  "t": 30.9,
+  "t": 29.75,
   "gain": 0.3
  },
  {
@@ -186,88 +171,108 @@
  },
  {
   "name": "write-fast",
-  "t": 47.4,
+  "t": 47.28,
   "gain": 0.28
  },
  {
   "name": "write-fast",
-  "t": 48.02,
+  "t": 47.78,
   "gain": 0.28
  },
  {
   "name": "write-fast",
-  "t": 48.64,
+  "t": 48.28,
   "gain": 0.28
  },
  {
   "name": "write-fast",
-  "t": 49.26,
+  "t": 48.78,
   "gain": 0.28
  },
  {
   "name": "ui-success-soft",
-  "t": 51.4,
+  "t": 49.95,
   "gain": 0.5
  },
  {
   "name": "whoosh-fast",
-  "t": 55.62,
+  "t": 51.62,
   "gain": 0.7
  },
  {
   "name": "ui-click-tone",
-  "t": 57.4,
-  "gain": 0.6
- },
- {
-  "name": "typewriter-digital",
-  "t": 57.55,
-  "gain": 0.32
- },
- {
-  "name": "ui-click-tone",
-  "t": 59.75,
-  "gain": 0.7
- },
- {
-  "name": "ui-message-pop",
-  "t": 59.95,
-  "gain": 0.45
- },
- {
-  "name": "chime-crystal",
-  "t": 61.6,
-  "gain": 0.35
- },
- {
-  "name": "ui-click-tone",
-  "t": 62.5,
-  "gain": 0.7
- },
- {
-  "name": "paper-page-turn",
-  "t": 62.6,
+  "t": 53.15,
   "gain": 0.6
  },
  {
   "name": "ui-popup-dry",
-  "t": 64.25,
+  "t": 53.35,
+  "gain": 0.35
+ },
+ {
+  "name": "ui-select-click",
+  "t": 54.75,
+  "gain": 0.5
+ },
+ {
+  "name": "ui-select-click",
+  "t": 56.8,
+  "gain": 0.45
+ },
+ {
+  "name": "typewriter-digital",
+  "t": 57.48,
+  "gain": 0.3
+ },
+ {
+  "name": "ui-click-tone",
+  "t": 58.6,
+  "gain": 0.7
+ },
+ {
+  "name": "ui-message-pop",
+  "t": 59.05,
+  "gain": 0.45
+ },
+ {
+  "name": "data-compute",
+  "t": 59.35,
+  "gain": 0.3
+ },
+ {
+  "name": "ui-popup-dry",
+  "t": 59.6,
+  "gain": 0.4
+ },
+ {
+  "name": "chime-crystal",
+  "t": 60.15,
+  "gain": 0.3
+ },
+ {
+  "name": "sparkle-touch",
+  "t": 62.05,
+  "gain": 0.35
+ },
+ {
+  "name": "whoosh-fast",
+  "t": 63.42,
+  "gain": 0.7
+ },
+ {
+  "name": "paper-page-turn",
+  "t": 64.1,
+  "gain": 0.5
+ },
+ {
+  "name": "ui-popup-dry",
+  "t": 64.45,
   "gain": 0.4
  },
  {
   "name": "sparkle-touch",
-  "t": 64.8,
+  "t": 65.15,
   "gain": 0.3
- },
- {
-  "name": "ui-success-soft",
-  "t": 65.3,
-  "gain": 0.35
- },
- {
-  "name": "paper-page-turn",
-  "t": 67.4,
-  "gain": 0.4
  },
  {
   "name": "transition-tech-slide",

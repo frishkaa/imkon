@@ -1,6 +1,6 @@
-/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 90 s, 120 BPM (bar = 2 s).
-   Scene map (seconds):  1 hook 0–8 · 2 logo 8–12 · 3 ask 12–26 · 4 languages 26–34 ·
-   5 review 34–56 · 6 drafting 56–70 · 7 Moní Pro 70–78 · 8 end card + loop 78–90. */
+/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 90 s @ 60 fps, 120 BPM (bar = 2 s).
+   Scene map (seconds):  1 hook 0–8 · 2 logo 8–12 · 3 ask 12–26 · 4 18 languages 26–34 · 5 review 34–52 ·
+   6 calculator 52–64 · 7 drafting 64–70 · 8 Moní Pro 70–78 · 9 end card + loop 78–90. English only. */
 (function () {
   const F = window.FRAG, D = window.FILM, L = window.MONI_LOGO;
   const $ = (s, r) => (r || document).querySelector(s);
@@ -83,6 +83,26 @@
     };
     write();
     tl.to(st, { t: t1 - t0, duration: t1 - t0, ease: 'none', onUpdate: write }, t0);
+  }
+
+  /* Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"); the film shows them in English. */
+  const CODES = { 'ТК': 'Labour Code', 'ГК': 'Civil Code', 'УК': 'Criminal Code', 'НК': 'Tax Code', 'СК': 'Family Code' };
+  const ACTS = [
+    [/ТРУДОВОЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Labour Code of the Republic of Tajikistan'],
+    [/УГОЛОВНЫЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Criminal Code of the Republic of Tajikistan'],
+    [/Закон РТ "О содействии занятости населения"/g, 'Law of the Republic of Tajikistan "On Promotion of Employment"'],
+    [/Законы РТ от 17\.05\.2004 г\. № 35 and от 6\.10\.2008 г\. № 422/g, 'Laws of the Republic of Tajikistan No. 35 of 17.05.2004 and No. 422 of 06.10.2008']
+  ];
+  function englishCitations(root) {
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [];
+    while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(function (n) {
+      let v = n.nodeValue;
+      v = v.replace(/(ТК|ГК|УК|НК|СК) РТ, ст\. (\d+)(?:, (?:п\.|ч\.) (\d+))?/g, function (_, c, a, k) { return CODES[c] + ', Art. ' + a + (k ? '(' + k + ')' : ''); });
+      ACTS.forEach(function (r) { v = v.replace(r[0], r[1]); });
+      v = v.replace(/ — ст\. ([\d, ]+) \(от ([\d.]+), ред\. ([\d.]+)\)/g, ' — Art. $1 (of $2, as amended $3)');
+      n.nodeValue = v;
+    });
   }
 
   /* boolean class/attr switch that survives seeking in both directions */
@@ -205,6 +225,7 @@
       const k = s ? s.textContent.trim() : '';
       if (/^(3|4|5|6)\.|^Summary/.test(k)) p.remove();
     });
+    englishCitations(content);
     const lead = $('p strong', content);
     lead.classList.add('mark-hl');
     const hl = el('span', 'hl-bar', null, lead);
@@ -251,7 +272,7 @@
     cur.move(tl, 17.2, 0.45, rSend.cx, rSend.cy, 'power3.inOut');
     cur.ringAt(tl, 17.7, rSend.cx, rSend.cy);
     cur.click(tl, 17.7);
-    tl.to(wSend, { scale: 0.88, duration: 0.1, ease: 'power2.in' }, 17.7); tl.to(wSend, { scale: 1, duration: 0.25, ease: 'back.out(1.6)' }, 17.8);
+    tl.to(wSend, { scale: 0.88, duration: 0.1, ease: 'power2.in' }, 17.7); tl.to(wSend, { scale: 1, duration: 0.25, ease: 'power3.out' }, 17.8);
     S('ui-click-tone', 17.7, 0.7); S('swoosh-quick', 17.85, 0.4);
 
     // send → welcome hero lifts away, input docks at the bottom, the question bubble lands
@@ -280,7 +301,7 @@
     S('sparkle-touch', 20.8, 0.35);
 
     // camera slides the chat to the right half; editorial caption takes the left
-    camS.to(tl, 20.2, 1.1, { fx: 332, fy: 352, s: 1.3 }, 'power3.inOut');
+    camS.to(tl, 20.2, 1.1, { fx: 190, fy: 352, s: 1.12 }, 'power3.inOut');
     const visTop = 70, visBottom = 720 - 190;                                                     // visible chat window in site px
     const sListEnd = Math.max(0, rList.b - visBottom + 10);
     const sSrc = Math.max(0, rSrc.y - visTop - 150);
@@ -288,7 +309,7 @@
     tl.to(scroll, { y: -sSrc, duration: 1.2, ease: 'power3.inOut' }, 23.55);
 
     const c1 = callout(over, 120, 290, 'Legal Q&amp;A', 'Answers that cite <em>the law.</em>',
-      '<div class="lede">Every claim points to the exact article — here, the Labour Code.</div><span class="cite-chip"><i></i>ТК РТ, ст. 28</span>');
+      '<div class="lede">Every claim points to the exact article — here, the Labour Code.</div><span class="cite-chip"><i></i>Labour Code · Art. 28</span>');
     calloutIn(c1, 20.9);
     calloutOut(c1, 23.35);
     const c2 = callout(over, 120, 300, 'Sources', 'Built on <em>current</em> legislation.',
@@ -298,58 +319,60 @@
     S('ui-popup-dry', 20.95, 0.4); S('ui-popup-dry', 23.8, 0.4);
 
     // exit: whip LEFT (the film's current) into the languages scene
-    camS.to(tl, 25.6, 0.6, { fx: 332 + 1700, fy: 352, s: 1.3 }, 'power4.in');
+    camS.to(tl, 25.6, 0.6, { fx: 190 + 1700, fy: 352, s: 1.12 }, 'power4.in');
+    FX.whipBlur(tl, cam, 25.6, 0.6, 1700, 'in');
     S('whoosh-fast', 25.6, 0.7);
     return { stream: stream };
   }
 
-  /* ======================= 4 · LANGUAGES ======================= */
+  /* ======================= 4 · 18 LANGUAGES ======================= */
+  const MIC = '<svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1f" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>';
   function buildS4() {
-    const cam = $('#s4Cam'), cards = $('#langCards');
-    const xs = [90, 680, 1270];
-    const built = D.langs.map(function (lg, i) {
-      const c = el('div', 'lang-card', '<div class="lang-tag"><b>' + lg.tag + '</b>' + lg.name + '</div>' +
-        (lg.voice ? '<div class="voice-pill"><span class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1f" stroke-width="2.2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></span><span class="bars">' + '<span></span>'.repeat(18) + '</span></div>' : '') +
-        '<div class="msg msg-user"><div class="msg-content"><span class="q"></span></div></div>' +
-        '<div class="msg msg-ai"><div class="msg-content">' + lg.a + '</div></div>', cards);
-      c.style.left = xs[i] + 'px';
-      return { c: c, q: $('.q', c), a: $('.msg-ai .msg-content', c), u: $('.msg-user', c), v: $('.voice-pill', c), lg: lg };
-    });
+    const cam = $('#s4Cam'), box = $('#langChips'), cards = $('#langCards');
+    const chips = D.languages.map(function (n) { return el('span', 'lang-chip', n, box); });
+    const v = D.voice;
+    const card = el('div', 'lang-card voice-card', '<div class="lang-tag"><b class="mic-b">' + MIC + '</b>Asked by voice</div>' +
+      '<div class="voice-pill"><span class="mic">' + MIC + '</span><span class="bars">' + '<span></span>'.repeat(26) + '</span></div>' +
+      '<div class="msg msg-user"><div class="msg-content"><span class="q"></span></div></div>' +
+      '<div class="msg msg-ai"><div class="msg-content">' + v.a + '</div></div>', cards);
+    const q = $('.q', card), ans = $('.msg-ai .msg-content', card), uMsg = $('.msg-user', card), pill = $('.voice-pill', card);
+    q.textContent = v.q;
+
     const camS = FX.camera(cam, { fx: 960, fy: 540, s: 1 });
     camS.set(tl, 26.0, { fx: 960 - 760, fy: 540, s: 1 });
     camS.to(tl, 26.0, 0.75, { fx: 960, fy: 540, s: 1 }, 'power4.out');                              // arrive from the right
-    FX.waterfall(tl, FX.words($('#langHead')), 26.15, { stagger: 0.06, y: 40, blur: 8, dur: 0.7 });
-    const starts = [26.55, 27.55, 28.55];
-    built.forEach(function (b, i) {
-      const t = starts[i];
-      tl.fromTo(b.c, { opacity: 0, y: 70, rotateZ: i === 1 ? 0 : (i === 0 ? -1.2 : 1.2) }, { opacity: 1, y: 0, rotateZ: 0, duration: 0.7, ease: 'power3.out' }, t);
-      if (b.v) {
-        tl.set(b.u, { opacity: 0 }, 0);
-        const bars = $$('.bars span', b.v), st = { k: 0 };
-        const wr = function () {
-          bars.forEach(function (s, j) {
-            const amp = Math.max(0, Math.sin(st.k * 7.3 + j * 0.9) * 0.55 + Math.sin(st.k * 11.1 + j * 1.7) * 0.45);
-            const env = Math.min(1, st.k / 0.3) * Math.min(1, Math.max(0, (1.3 - st.k) / 0.3));
-            s.style.height = (6 + 18 * amp * env).toFixed(1) + 'px';
-          });
-        };
-        wr();
-        tl.to(st, { k: 1.3, duration: 1.3, ease: 'none', onUpdate: wr }, t + 0.5);
-        tl.to(b.v, { opacity: 0.45, duration: 0.3 }, t + 1.8);
-        tl.fromTo(b.u, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }, t + 1.75);
-        b.q.textContent = b.lg.q;
-        FX.stream(tl, b.q, t + 1.75, 0.5, { lead: 3 });
-        FX.stream(tl, b.a, t + 2.35, 1.0, { lead: 4 });
-        S('ui-notify-tech', t + 0.5, 0.3); S('ui-message-pop', t + 2.35, 0.3);
-      } else {
-        FX.type(tl, b.q, b.lg.q, t + 0.35, 0.8);
-        FX.stream(tl, b.a, t + 1.3, 1.0, { lead: 4 });
-        S('typewriter-digital', t + 0.35, 0.18); S('ui-message-pop', t + 1.3, 0.3);
-      }
+    FX.whipBlur(tl, cam, 26.0, 0.75, 760, 'out');
+    FX.waterfall(tl, FX.words($('#langHead')), 26.15, { stagger: 0.06, y: 40, blur: 8, dur: 0.75 });
+    // the 18 languages cascade in, then a soft gold wave runs through them
+    tl.fromTo(chips, { opacity: 0, y: 34, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out', stagger: 0.045 }, 26.5);
+    chips.forEach(function (c, i) {
+      const t = 27.75 + i * 0.055;
+      tl.to(c, { backgroundColor: 'rgba(232,192,120,.42)', borderColor: 'rgba(193,141,72,.7)', duration: 0.3, ease: 'power2.out' }, t);
+      tl.to(c, { backgroundColor: 'rgba(255,255,255,1)', borderColor: 'rgba(224,221,214,1)', duration: 0.6, ease: 'power2.inOut' }, t + 0.3);
     });
-    tl.fromTo('#langFoot', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 31.4);
-    camS.to(tl, 31.0, 2.6, { fx: 960, fy: 556, s: 1.035 }, 'sine.inOut');
-    camS.to(tl, 33.62, 0.58, { fx: 960 + 1900, fy: 556, s: 1.035 }, 'power4.in');                     // exit LEFT
+    tl.to(chips[0], { backgroundColor: '#c18d48', borderColor: '#c18d48', color: '#1a1a1f', duration: 0.45, ease: 'power2.out' }, 29.3);   // the one being spoken
+    S('shimmer-sparkle-sweep', 27.75, 0.3);
+    // a question asked by voice: waveform → transcript → answer
+    tl.fromTo(card, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 27.0);
+    tl.set(uMsg, { opacity: 0 }, 0);
+    const bars = $$('.bars span', pill), st = { k: 0 };
+    const wr = function () {
+      bars.forEach(function (sp, j) {
+        const amp = Math.max(0, Math.sin(st.k * 7.3 + j * 0.9) * 0.55 + Math.sin(st.k * 11.1 + j * 1.7) * 0.45);
+        const env = Math.min(1, st.k / 0.3) * Math.min(1, Math.max(0, (1.5 - st.k) / 0.3));
+        sp.style.height = (6 + 20 * amp * env).toFixed(1) + 'px';
+      });
+    };
+    wr();
+    tl.to(st, { k: 1.5, duration: 1.5, ease: 'none', onUpdate: wr }, 27.6);
+    tl.to(pill, { opacity: 0.45, duration: 0.4 }, 29.1);
+    tl.fromTo(uMsg, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 29.05);
+    FX.stream(tl, q, 29.05, 0.6, { lead: 3 });
+    FX.stream(tl, ans, 29.75, 1.2, { lead: 4 });
+    S('ui-notify-tech', 27.6, 0.3); S('ui-message-pop', 29.75, 0.3);
+    tl.fromTo('#langFoot', { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 31.2);
+    camS.to(tl, 33.62, 0.58, { fx: 960 + 1900, fy: 540, s: 1 }, 'power4.in');                          // exit LEFT
+    FX.whipBlur(tl, cam, 33.62, 0.58, 1900, 'in');
     S('whoosh-fast', 33.62, 0.7);
   }
 
@@ -408,6 +431,7 @@
     tl.set([rv, counter, status, svg], { opacity: 0 }, 0);
     camS.set(tl, 34.0, { fx: 960 - 760, fy: 540, s: 1 });
     camS.to(tl, 34.0, 0.75, { fx: 960, fy: 540, s: 1 }, 'power4.out');
+    FX.whipBlur(tl, cam, 34.0, 0.75, 760, 'out');
     tl.fromTo(paper, { x: 900, y: 40, rotateZ: 4, opacity: 0 }, { x: 0, y: 0, rotateZ: -1.4, opacity: 1, duration: 1.1, ease: 'power3.out' }, 34.15);
     tl.to(paper, { rotateZ: 0, duration: 0.8, ease: 'power2.inOut' }, 35.25);
     calloutIn(c0, 34.5);
@@ -417,7 +441,7 @@
     cur.place(tl, 35.6, rSend.cx + 120, 1250);
     cur.move(tl, 35.7, 0.8, rSend.cx, rSend.cy, 'power3.out');
     cur.ringAt(tl, 36.6, rSend.cx, rSend.cy); cur.click(tl, 36.6);
-    tl.to(upSend, { scale: 0.88, duration: 0.1 }, 36.6); tl.to(upSend, { scale: 1, duration: 0.25, ease: 'back.out(1.6)' }, 36.7);
+    tl.to(upSend, { scale: 0.88, duration: 0.1 }, 36.6); tl.to(upSend, { scale: 1, duration: 0.25, ease: 'power3.out' }, 36.7);
     S('ui-click-tone', 36.6, 0.7);
     tl.to([c0, up], { opacity: 0, y: -30, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in', stagger: 0.05 }, 36.8);
     cur.move(tl, 36.9, 0.6, rSend.cx + 300, 1250, 'power2.in');
@@ -472,21 +496,21 @@
     cur2.place(tl, 44.0, rFix.cx + 160, 1250);
     cur2.move(tl, 44.1, 0.8, rFix.cx, rFix.cy, 'power3.out');
     cur2.ringAt(tl, 45.1, rFix.cx, rFix.cy); cur2.click(tl, 45.1);
-    tl.to(fixBtn, { scale: 0.95, duration: 0.1 }, 45.1); tl.to(fixBtn, { scale: 1, duration: 0.25, ease: 'back.out(1.6)' }, 45.2);
+    tl.to(fixBtn, { scale: 0.95, duration: 0.1 }, 45.1); tl.to(fixBtn, { scale: 1, duration: 0.25, ease: 'power3.out' }, 45.2);
     S('ui-click-tone', 45.1, 0.7); S('write-fast', 45.5, 0.4);
     cur2.move(tl, 45.4, 0.6, rFix.cx + 400, 1250, 'power2.in');
     tl.to(rv, { opacity: 0, x: 80, duration: 0.5, ease: 'power2.in' }, 45.5);
     tl.to(counter, { opacity: 0, duration: 0.3 }, 45.5);
     camS.to(tl, 45.55, 1.2, { fx: rSheet.cx, fy: rSheet.cy + 10, s: 1.4 }, 'power3.inOut');
     // build redline spans per clause
-    const redStart = 46.6;
+    const redStart = 46.6, redGap = 0.5;
     order.forEach(function (o, k) {
       const txt = o.c.txt, f = o.f, html = txt.innerHTML;
       const at = html.indexOf(f.del);
       if (at < 0) return;
       txt.innerHTML = html.slice(0, at) + '<span class="del">' + f.del + '</span> <span class="ins"></span>' + html.slice(at + f.del.length);
       const del = $('.del', txt), ins = $('.ins', txt);
-      const t = redStart + k * 0.62;
+      const t = redStart + k * redGap;
       tl.set(del, { textDecorationColor: 'rgba(224,82,82,0)', color: '#1a1a1a' }, 0);
       tl.to(del, { textDecorationColor: 'rgba(224,82,82,1)', color: '#9a5050', duration: 0.3, ease: 'power2.out' }, t);
       tl.set(ins, { display: 'none' }, 0);
@@ -496,22 +520,168 @@
       S('pen-click', 0, 0);
     });
     FX.cues = FX.cues.filter(function (c) { return c.name !== 'pen-click'; });
-    order.forEach(function (o, k) { S('write-fast', redStart + k * 0.62 + 0.18, 0.28); });
+    order.forEach(function (o, k) { S('write-fast', redStart + k * redGap + 0.18, 0.28); });
 
     // phase D — corrected file + caption
     const c3 = callout(over, 1130, 300, 'Fixed', 'Corrections, <em>tracked.</em>',
       '<div class="lede">Every edit is visible in the .docx — formatting, stamps and layout stay intact.</div>' +
       '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">Commercial_Lease_14-26_fixed.docx</div><div class="sub"><b>5 edits applied</b> · tracked changes</div></div></div>');
-    camS.to(tl, 50.2, 1.3, { fx: rSheet.r - 70, fy: rSheet.cy - 10, s: 1.12 }, 'power3.inOut');
-    calloutIn(c3, 50.9);
-    S('ui-success-soft', 51.4, 0.5);
-    camS.to(tl, 52.6, 3.0, { fx: rSheet.r - 64, fy: rSheet.cy - 10, s: 1.15 }, 'sine.inOut');
-    tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 55.55);
-    camS.to(tl, 55.62, 0.58, { fx: rSheet.r - 64 + 1900, fy: rSheet.cy - 10, s: 1.15 }, 'power4.in');   // exit LEFT
-    S('whoosh-fast', 55.62, 0.7);
+    camS.to(tl, 48.95, 1.2, { fx: rSheet.r - 70, fy: rSheet.cy - 10, s: 1.12 }, 'power3.inOut');
+    calloutIn(c3, 49.45);
+    S('ui-success-soft', 49.95, 0.5);
+    tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 51.5);
+    camS.to(tl, 51.62, 0.58, { fx: rSheet.r - 70 + 1900, fy: rSheet.cy - 10, s: 1.12 }, 'power4.in');   // exit LEFT
+    FX.whipBlur(tl, cam, 51.62, 0.58, 1900, 'in');
+    S('whoosh-fast', 51.62, 0.7);
   }
 
-  /* ======================= 6 · DRAFTING ======================= */
+  /* ======================= 6 · CALCULATOR ======================= */
+  const CALC_IC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>';
+  function fmtTJS(v) { return v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+  function buildC() {
+    const cam = $('#sCCam'), over = $('#sCOver');
+    const B = makeBrowser(cam, '/trial/en/');
+    const m = B.moni;
+    m.innerHTML = F.header + F.sbToggle + '<main class="main main-home calc-home">' + F.welcome + '</main>' +
+      '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area" style="display:flex"></div></div></div>' +
+      '<div class="dock">' + F.modeBarChat + F.inputWrapChat + F.uploadNoticeChat + F.footerBottom + '</div>';
+    $$('.welcome-title', m).forEach(function (t) { t.innerHTML = t.innerHTML.replace('Need lawyer?', 'Need a lawyer?'); });
+    const main = $('.main', m), welcome = $('.welcome', m);
+    const mb = $$('.welcome .mode-btn', m), bSend = mb[0], bCalc = mb[1];
+    const wTop = $$('.welcome-title, .welcome-sub, .welcome .mode-bar', m);
+    const wInput = $('.input-wrap.centered', m), notice = $('.welcome .upload-notice', m), disc = $('.welcome .disclaimer-text', m);
+    notice.insertAdjacentHTML('afterend', D.calc.panel);
+    const panel = $('.welcome .calc-panel', m);
+    const typeSel = $('#calcType', panel), income = $('#cIncome', panel), submit = $('.calc-submit', panel);
+    $('#cIncomeOrgType', panel).value = 'other';
+    income.value = '';
+    // the native option list can't be captured, so it is drawn in the site's own select style
+    const g0 = typeSel.parentElement; g0.style.position = 'relative';
+    const dd = el('div', 'calc-dd', '<div class="dd-win"><div class="dd-list">' + D.calc.types.map(function (t, i) {
+      return '<div class="dd-it' + (i === 0 ? ' sel' : '') + '">' + t + '</div>'; }).join('') + '</div><div class="dd-hover"></div></div>', g0);
+    const ddList = $('.dd-list', dd), ddHover = $('.dd-hover', dd);
+    // chat after "Calculate": request bubble, thinking card, Moní's calculation (English rendering of its real output)
+    const chat = $('.chat-area', m), scroll = $('.chat-scroll', m), dock = $('.dock', m), dForm = $('.dock .input-form', m);
+    fakeInput(dForm);
+    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content calc-q">' + CALC_IC + ' ' + D.calc.question + '</div></div>' + genCardHTML('Moní is calculating') +
+      '<div class="msg msg-ai calc-ans"><div class="calc-result-card"><div class="calc-result-header">' + CALC_IC + ' Income Tax</div>' +
+      '<div class="calc-result-body"><div class="msg-content">' + D.calc.result + '</div></div></div></div>';
+    const uMsg = $('.msg-user', chat), gen = $('.gen-indicator', chat), ans = $('.calc-ans', chat), rcard = $('.calc-result-card', ans);
+    const content = $('.calc-result-body .msg-content', ans), netRow = $('tr.net', ans), table = $('.tbl-wrap', ans);
+    gen.style.position = 'absolute'; gen.style.left = '40px';
+    // pre-click layout: the chat input sits where the calculator will open
+    welcome.style.position = 'relative';
+
+    const R = function (e) { return FX.measure(e, B.el); };
+    const rWel = R(welcome), rNotice = R(notice);
+    wInput.style.position = 'absolute'; wInput.style.left = '50%'; wInput.style.marginLeft = '-400px'; wInput.style.width = '800px';
+    wInput.style.top = (rNotice.y - rWel.y) + 'px';
+    const rCalc = R(bCalc), rType = R(typeSel), rInc = R(income), rSub = R(submit), rPanel = R(panel);
+    const rAns = R(ans), rTable = R(table), rChat = R(chat), rItem = R($('.dd-it', dd));
+    gen.style.top = (rAns.y - rChat.y + 32) + 'px';
+    const itemH = rItem.h, visItems = 9;
+    $('.dd-win', dd).style.height = (itemH * visItems + 12) + 'px';
+
+    // ---- camera ----
+    const camS = FX.camera(cam, { fx: 640, fy: 380, s: 1.15 });
+    camS.set(tl, 52.0, { fx: 640 - 760, fy: 380, s: 1.15 });
+    camS.to(tl, 52.0, 0.75, { fx: 640, fy: 380, s: 1.15 }, 'power4.out');
+    FX.whipBlur(tl, cam, 52.0, 0.75, 760, 'out');
+    tl.set([notice, panel, disc, dd, dock, uMsg, gen, ans], { opacity: 0 }, 0);
+    tl.set(main, { y: 0 }, 0);
+
+    // ---- 1. switch to Calculator mode ----
+    const cur = FX.cursor(B.el, 64);
+    cur.place(tl, 52.35, rCalc.cx + 240, 900);
+    cur.move(tl, 52.45, 0.65, rCalc.cx + 8, rCalc.cy + 4, 'power3.out');
+    cur.ringAt(tl, 53.15, rCalc.cx + 8, rCalc.cy + 4); cur.click(tl, 53.15);
+    tl.to(bCalc, { scale: 0.95, duration: 0.1, ease: 'power2.in' }, 53.15); tl.to(bCalc, { scale: 1, duration: 0.3, ease: 'power3.out' }, 53.25);
+    toggleAt(53.2, function () { bCalc.classList.add('active'); bSend.classList.remove('active'); }, function () { bCalc.classList.remove('active'); bSend.classList.add('active'); });
+    S('ui-click-tone', 53.15, 0.6);
+    tl.to(wInput, { opacity: 0, y: -12, duration: 0.3, ease: 'power2.in' }, 53.2);
+    tl.fromTo([notice, panel, disc], { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.06 }, 53.3);
+    S('ui-popup-dry', 53.35, 0.35);
+    // the page scrolls so the form is in view; the camera follows it in
+    const sc1 = Math.max(0, rType.y - 150);
+    tl.to(main, { y: -sc1, duration: 0.9, ease: 'power3.inOut' }, 53.65);
+    camS.to(tl, 53.6, 1.0, { fx: rPanel.cx, fy: 330, s: 1.42 }, 'power3.inOut');
+
+    // ---- 2. the 17 calculation types ----
+    const tx = rType.x + 190, ty = rType.cy - sc1;
+    cur.move(tl, 54.2, 0.5, tx, ty, 'power3.inOut');
+    cur.ringAt(tl, 54.75, tx, ty); cur.click(tl, 54.75);
+    S('ui-select-click', 54.75, 0.5);
+    tl.fromTo(dd, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.22, ease: 'power2.out' }, 54.8);
+    const listTop = rType.b - sc1 + 6 + 6;                              // first item's top in browser space
+    const itemY = function (i, scrollPx) { return listTop + i * itemH - scrollPx + itemH / 2; };
+    const maxScroll = (D.calc.types.length - visItems) * itemH;
+    // hover travels down the list (the list scrolls under it), then back up to "Income Tax"
+    tl.fromTo(ddHover, { y: 0 }, { y: (visItems - 2) * itemH, duration: 0.75, ease: 'power2.inOut' }, 55.0);
+    cur.move(tl, 55.0, 0.75, tx - 40, itemY(visItems - 2, 0), 'power2.inOut');
+    tl.fromTo(ddList, { y: 0 }, { y: -maxScroll, duration: 0.6, ease: 'power2.inOut' }, 55.55);
+    tl.to(ddList, { y: 0, duration: 0.55, ease: 'power2.inOut' }, 56.2);
+    tl.to(ddHover, { y: 0, duration: 0.55, ease: 'power2.inOut' }, 56.2);
+    cur.move(tl, 56.2, 0.55, tx - 60, itemY(0, 0), 'power2.inOut');
+    cur.ringAt(tl, 56.8, tx - 60, itemY(0, 0)); cur.click(tl, 56.8);
+    tl.to(dd, { opacity: 0, duration: 0.18, ease: 'power2.in' }, 56.88);
+    S('ui-select-click', 56.8, 0.45);
+
+    // ---- 3. income, then Calculate ----
+    const ix = rInc.x + 120, iy = rInc.cy - sc1;
+    cur.move(tl, 57.0, 0.35, ix, iy, 'power3.inOut');
+    cur.ringAt(tl, 57.38, ix, iy); cur.click(tl, 57.38);
+    toggleAt(57.42, function () { income.classList.add('film-focus'); }, function () { income.classList.remove('film-focus'); });
+    const ist = { n: 0 }, digits = '8000';
+    tl.to(ist, { n: 4, duration: 0.42, ease: 'none', onUpdate: function () { income.value = digits.slice(0, Math.round(ist.n)); } }, 57.48);
+    S('typewriter-digital', 57.48, 0.3);
+    const sc2 = Math.max(sc1, rSub.b - 610);
+    tl.to(main, { y: -sc2, duration: 0.7, ease: 'power3.inOut' }, 57.9);
+    camS.to(tl, 57.85, 0.8, { fx: rPanel.cx, fy: 400, s: 1.3 }, 'power3.inOut');
+    toggleAt(57.95, function () { income.classList.remove('film-focus'); }, function () { income.classList.add('film-focus'); });
+    cur.move(tl, 57.95, 0.6, rSub.cx + 40, rSub.cy - sc2, 'power3.inOut');
+    cur.ringAt(tl, 58.6, rSub.cx + 40, rSub.cy - sc2); cur.click(tl, 58.6);
+    tl.to(submit, { scale: 0.97, duration: 0.1, ease: 'power2.in' }, 58.6); tl.to(submit, { scale: 1, duration: 0.3, ease: 'power3.out' }, 58.7);
+    S('ui-click-tone', 58.6, 0.7);
+    cur.move(tl, 58.75, 0.6, rSub.cx + 300, 1000, 'power2.in');
+
+    // ---- 4. Moní calculates ----
+    tl.to(welcome, { opacity: 0, y: -40, filter: 'blur(6px)', duration: 0.45, ease: 'power2.in' }, 58.75);
+    tl.fromTo(dock, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 59.0);
+    tl.fromTo(uMsg, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 59.0);
+    S('ui-message-pop', 59.05, 0.45);
+    camS.to(tl, 58.9, 1.2, { fx: 190, fy: 352, s: 1.12 }, 'power3.inOut');                             // chat to the right half
+    tl.fromTo(gen, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power3.out' }, 59.3);
+    animateGen(gen, 59.3, 60.15);
+    tl.to(gen, { opacity: 0, duration: 0.2 }, 60.0);
+    S('data-compute', 59.35, 0.3);
+    tl.fromTo(ans, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 60.1);
+    tl.set(rcard, { opacity: 1 }, 60.1);
+    FX.stream(tl, content, 60.25, 1.9, { lead: 8 });
+    S('chime-crystal', 60.15, 0.3);
+    const visTop = 70, visBottom = 720 - 190;
+    const sTable = Math.max(0, rTable.b - visBottom + 6);
+    tl.fromTo(scroll, { y: 0 }, { y: -sTable, duration: 1.3, ease: 'power2.inOut' }, 60.75);
+    tl.fromTo($$('td', netRow), { backgroundColor: 'rgba(232,192,120,0)' }, { backgroundColor: 'rgba(232,192,120,.5)', duration: 0.5, ease: 'power2.out' }, 62.05);
+    S('sparkle-touch', 62.05, 0.35);
+
+    // ---- caption ----
+    const c1 = callout(over, 120, 250, 'Calculator', 'Taxes and fees, <em>calculated.</em>',
+      '<div class="lede">17 calculation types, every step tied to the Tax Code.</div>' +
+      '<div class="calc-out"><span class="lbl">Net pay</span><span class="num">0.00</span><span class="cur">TJS</span></div>' +
+      '<span class="cite-chip"><i></i>Tax Code · Art. 183, 191, 332</span>');
+    tl.set(over, { opacity: 1 }, 52.0);
+    calloutIn(c1, 59.55);
+    const out = $('.calc-out', c1), num = $('.num', out), cnt = { v: 0 };
+    tl.fromTo(out, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 60.9);
+    tl.to(cnt, { v: 6917.92, duration: 1.2, ease: 'power2.out', onUpdate: function () { num.textContent = fmtTJS(cnt.v); } }, 61.0);
+    S('ui-popup-dry', 59.6, 0.4);
+    tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 63.3);
+    camS.to(tl, 63.42, 0.58, { fx: 190 + 1900, fy: 352, s: 1.12 }, 'power4.in');                       // exit LEFT
+    FX.whipBlur(tl, cam, 63.42, 0.58, 1900, 'in');
+    S('whoosh-fast', 63.42, 0.7);
+  }
+
+  /* ======================= 7 · DRAFTING (a short beat) ======================= */
   function buildS6() {
     const cam = $('#s6Cam'), over = $('#s6Over');
     const B = makeBrowser(cam, '/trial/en/');
@@ -520,14 +690,11 @@
       '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area" style="display:flex"></div></div></div>' +
       '<div class="dock">' + F.modeBarChat + F.inputWrapChat + F.uploadNoticeChat + F.footerBottom + '</div>' +
       '<div class="dv-overlay film">' + F.docViewer + '</div>';
-    const chat = $('.chat-area', m), dForm = $('.dock .input-form', m), dSend = $('.dock .send-btn', m);
-    const fi = fakeInput(dForm);
-    const aiHtml = F.draft[1].html;
-    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content">' + D.draftPrompt + '</div></div>' + genCardHTML('Moní is thinking') +
-      '<div class="msg msg-ai drafted">' + aiHtml + '</div>';
-    const uMsg = $('.msg-user', chat), gen = $('.gen-indicator', chat), ai = $('.drafted', chat);
-    // English labels on the real draft message
-    const intro = ai.querySelector('.msg-content > p, .msg-content') ;
+    const chat = $('.chat-area', m);
+    fakeInput($('.dock .input-form', m));
+    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content">' + D.draftPrompt + '</div></div>' +
+      '<div class="msg msg-ai drafted">' + F.draft[1].html + '</div>';
+    const ai = $('.drafted', chat);
     $$('*', ai).forEach(function (n) {
       if (n.children.length === 0 && n.textContent) {
         n.textContent = n.textContent
@@ -536,92 +703,40 @@
           .replace(/Договор об оказании услуг № \[уточнить: номер договора\]/, D.draft.title);
       }
     });
-    const card = $('.doc-card', ai) || ai;
-    const gen2 = gen; gen2.style.position = 'absolute'; gen2.style.left = '40px';
-    // doc viewer: replace body with the English rendering of Moní's draft
     const panel = $('.dv-panel', m), overlay = $('.dv-overlay', m);
-        const title = $('.dv-title', panel); if (title) title.textContent = D.draft.title;
-    const body = $('.dv-body', panel);
-    body.innerHTML = '<div class="dv-sheet">' + D.draft.paras.map(function (p) { return '<div class="dv-para ' + (p.cls || '') + '">' + p.t + '</div>'; }).join('') + '</div>';
+    const title = $('.dv-title', panel); if (title) title.textContent = D.draft.title;
+    $('.dv-body', panel).innerHTML = '<div class="dv-sheet">' + D.draft.paras.map(function (p) { return '<div class="dv-para ' + (p.cls || '') + '">' + p.t + '</div>'; }).join('') + '</div>';
     const comments = $('.dv-comments', panel); if (comments) { const ct = $('.dv-comments-title', comments); if (ct) ct.textContent = 'Your comments (0)'; }
+    $$('button, span, div', panel).forEach(function (n) { if (n.children.length === 0 && /Отправить замечания в чат/.test(n.textContent)) n.textContent = 'Send comments to chat'; });
     const marks = $$('.ph-mark', panel);
+    const rSheet = FX.measure($('.dv-sheet', panel), B.el);
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.38)';
 
-    const R = function (e) { return FX.measure(e, B.el); };
-    const rDForm = R(dForm), rSend = R(dSend), rAi = R(ai), rCard = R(card), rPanel = R(panel), rSheet = R($('.dv-sheet', panel));
-    gen2.style.top = (rAi.y - R(chat).y + 32) + 'px';
-    const rPrice = R($$('.dv-para', panel).find(function (p) { return /^3\.1\./.test(p.textContent); }));
-
-    const camS = FX.camera(cam, { fx: 640, fy: 400, s: 1.2 });
-    camS.set(tl, 56.0, { fx: 640 - 760, fy: 300, s: 1.0, ry: -14 });
-    camS.to(tl, 56.0, 0.9, { fx: 640, fy: 300, s: 1.0, ry: 0 }, 'power4.out');
-    tl.set([uMsg, gen2, ai, panel], { opacity: 0 }, 0);
-    tl.set(panel, { x: 900 }, 0);
-
-    const c0 = callout(over, 0, 0, 'Contract drafting', 'Need a contract? <em>Moní drafts it.</em>');
-    c0.style.width = '1920px'; c0.style.textAlign = 'center'; c0.style.top = '70px';
-    $('.display', c0).style.fontSize = '62px';
-    calloutIn(c0, 56.2);
-    tl.to(c0, { opacity: 0, y: -20, duration: 0.4, ease: 'power2.in' }, 58.2);
-
-    const cur = FX.cursor(B.el, 64);
-    cur.place(tl, 56.6, rDForm.x + 300, 980);
-    cur.move(tl, 56.7, 0.7, rDForm.x + 240, rDForm.cy + 4, 'power3.out');
-    cur.ringAt(tl, 57.4, rDForm.x + 240, rDForm.cy + 4); cur.click(tl, 57.4);
-    toggleAt(57.45, function () { dForm.classList.add('focus'); }, function () { dForm.classList.remove('focus'); });
-    tl.set(fi.ph, { opacity: 1 }, 0); tl.set(fi.ph, { opacity: 0 }, 57.5);
-    tl.set(fi.caret, { opacity: 0 }, 0); tl.set(fi.caret, { opacity: 1 }, 57.5); tl.set(fi.caret, { opacity: 0 }, 59.9);
-    cur.move(tl, 57.6, 0.5, rDForm.x + 320, rDForm.b + 60, 'power2.out');
-    FX.type(tl, fi.typed, D.draftPrompt, 57.55, 1.9, fi);
-    toggleAt(57.6, function () { dSend.classList.add('on'); }, function () { dSend.classList.remove('on'); });
-    S('ui-click-tone', 57.4, 0.6); S('typewriter-digital', 57.55, 0.32);
-    camS.to(tl, 58.2, 1.5, { fx: 640, fy: 520, s: 1.36 }, 'power3.inOut');
-    cur.move(tl, 59.3, 0.4, rSend.cx, rSend.cy, 'power3.inOut');
-    cur.ringAt(tl, 59.75, rSend.cx, rSend.cy); cur.click(tl, 59.75);
-    S('ui-click-tone', 59.75, 0.7);
-    tl.set(fi.typed, { opacity: 1 }, 0); tl.set(fi.typed, { opacity: 0 }, 59.85);
-    toggleAt(59.85, function () { dSend.classList.remove('on'); dForm.classList.remove('focus'); }, function () { dSend.classList.add('on'); dForm.classList.add('focus'); });
-    tl.fromTo(uMsg, { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.45, ease: 'power3.out' }, 59.9);
-    S('ui-message-pop', 59.95, 0.45);
-    camS.to(tl, 59.9, 1.0, { fx: 640, fy: 300, s: 1.4 }, 'power3.inOut');
-    tl.fromTo(gen2, { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.35 }, 60.2);
-    animateGen(gen2, 60.2, 61.5);
-    tl.to(gen2, { opacity: 0, duration: 0.2 }, 61.35);
-    tl.fromTo(ai, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power3.out' }, 61.45);
-    if (card !== ai) tl.fromTo(card, { scale: 0.92, transformOrigin: '0 50%' }, { scale: 1, duration: 0.6, ease: 'back.out(1.7)' }, 61.6);
-    S('chime-crystal', 61.6, 0.35);
-    cur.move(tl, 61.8, 0.6, rCard.x + 120, rCard.cy, 'power3.out');
-    cur.ringAt(tl, 62.5, rCard.x + 120, rCard.cy); cur.click(tl, 62.5);
-    S('ui-click-tone', 62.5, 0.7); S('paper-page-turn', 62.6, 0.6);
-    cur.move(tl, 62.7, 0.5, rCard.x + 160, 1000, 'power2.in');
-    // doc viewer slides in
-    tl.fromTo(overlay, { backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: 'rgba(0,0,0,0.38)', duration: 0.45 }, 62.6);
-    tl.to(panel, { opacity: 1, x: 0, duration: 0.7, ease: 'power4.out' }, 62.6);
-    camS.to(tl, 62.6, 1.0, { fx: rPanel.cx - 260, fy: 380, s: 1.42 }, 'power3.inOut');
-    // 1) caption first: whole sheet on the right half, message on the left
-    const sheetBody = $('.dv-sheet', panel);
-    const s1 = 1.3, fxA = rSheet.r - (1870 - 960) / s1;
-    camS.to(tl, 63.65, 1.0, { fx: fxA, fy: rSheet.y + 330, s: s1 }, 'power3.inOut');
-    const c1 = callout(over, 120, 300, 'Drafted in seconds', 'A complete <em>first draft.</em>',
-      '<div class="lede">Real clauses for a real deal — the gaps you must fill are flagged in gold.</div>' +
+    const s1 = 1.3, fxA = rSheet.r - (1870 - 960) / s1, fyA = rSheet.y + 330;
+    const camS = FX.camera(cam, { fx: fxA, fy: fyA, s: s1 });
+    camS.set(tl, 64.0, { fx: fxA - 760, fy: fyA, s: s1 });
+    camS.to(tl, 64.0, 0.8, { fx: fxA, fy: fyA, s: s1 }, 'power4.out');
+    FX.whipBlur(tl, cam, 64.0, 0.8, 760, 'out');
+    tl.fromTo(panel, { x: 60 }, { x: 0, duration: 0.9, ease: 'power3.out' }, 64.0);
+    S('paper-page-turn', 64.1, 0.5);
+    const c1 = callout(over, 120, 300, 'Contract drafting', 'A first draft, <em>ready to edit.</em>',
+      '<div class="lede">The gaps you still need to fill are flagged in gold.</div>' +
       '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">Services_Agreement.docx</div><div class="sub">Ready to edit · download in one click</div></div></div>');
     const veil = el('div', 'layer', null, over);
     veil.style.background = 'linear-gradient(90deg, rgba(248,247,244,.98) 0%, rgba(248,247,244,.92) 38%, rgba(248,247,244,0) 47%)';
     over.insertBefore(veil, c1);
-    tl.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 63.9);
-    calloutIn(c1, 64.2);
+    tl.set(over, { opacity: 1 }, 64.0);
+    tl.fromTo(veil, { opacity: 0 }, { opacity: 1, duration: 0.6 }, 64.2);
+    calloutIn(c1, 64.4);
     marks.forEach(function (mk, i) {
       tl.fromTo(mk, { boxShadow: '0 0 0 0px rgba(193,141,72,0)', backgroundColor: 'rgba(232,192,120,0)' },
-        { boxShadow: '0 0 0 2px rgba(193,141,72,.55)', backgroundColor: 'rgba(232,192,120,.55)', duration: 0.35, ease: 'power2.out' }, 64.7 + i * 0.22);
+        { boxShadow: '0 0 0 2px rgba(193,141,72,.55)', backgroundColor: 'rgba(232,192,120,.55)', duration: 0.4, ease: 'power2.out' }, 65.1 + i * 0.16);
     });
-    S('ui-popup-dry', 64.25, 0.4); S('sparkle-touch', 64.8, 0.3); S('ui-success-soft', 65.3, 0.35);
-    tl.to([c1, veil], { opacity: 0, x: -30, duration: 0.45, ease: 'power2.in' }, 66.75);
-    // 2) detail: push into the page and scroll to the price clause
-    camS.to(tl, 66.85, 1.2, { fx: rSheet.cx, fy: rSheet.y + 300, s: 1.8 }, 'power3.inOut');
-    tl.fromTo(sheetBody, { y: 0 }, { y: -(rPrice.y - rSheet.y - 220), duration: 1.6, ease: 'power2.inOut' }, 67.3);
-    S('paper-page-turn', 67.4, 0.4);
+    S('ui-popup-dry', 64.45, 0.4); S('sparkle-touch', 65.15, 0.3);
     // exit: rise (chapter boundary into Moní Pro)
-    tl.to(over, { opacity: 0, duration: 0.3 }, 69.35);
-    camS.to(tl, 69.45, 0.75, { fx: rSheet.cx, fy: rSheet.y + 300 + 1300, s: 1.8 }, 'power4.in');
+    tl.to(over, { opacity: 0, duration: 0.3 }, 69.3);
+    camS.to(tl, 69.45, 0.75, { fx: fxA, fy: fyA + 1300, s: s1 }, 'power4.in');
+    FX.whipBlur(tl, cam, 69.45, 0.75, 1300, 'in', 'y');
     S('transition-tech-slide', 69.45, 0.6);
   }
 
@@ -657,7 +772,6 @@
       S('ui-popup-dry', 71.3 + i * 0.12, 0.22);
     });
     S('impact-zoom-quick', 70.05, 0.5); S('shimmer-sparkle-sweep', 74.2, 0.35);
-    camS.to(tl, 72.0, 5.4, { fx: 960, fy: 552, s: 1.04 }, 'sine.inOut');
     tl.to('#bgNight', { opacity: 0, duration: 0.6, ease: 'power2.inOut' }, 77.55);
     tl.to('#s7Cam', { opacity: 0, filter: 'blur(8px)', duration: 0.45, ease: 'power2.in' }, 77.6);
     S('air-woosh-quick', 77.6, 0.5);
@@ -676,10 +790,7 @@
     tl.fromTo('#endMeta', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 80.0);
     tl.fromTo('#confBadge', { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6 }, 80.2);
     S('shimmer-sparkle-sweep', 78.3, 0.5); S('chime-crystal', 79.6, 0.3);
-    // gentle camera — the card holds for people to scan the QR code
-    const camS = FX.camera($('#s8Cam'), { fx: 960, fy: 540, s: 1.03 });
-    camS.set(tl, 78.0, { fx: 960, fy: 540, s: 1.03 });
-    camS.to(tl, 78.0, 10.4, { fx: 960, fy: 540, s: 1.0 }, 'sine.inOut');
+    // the card holds perfectly still so people can scan the QR code (a slow drift would make text shimmer)
     // loop seam: the end card dissolves into the exact opening frame of the hook
     tl.to('#s8Cam', { opacity: 0, filter: 'blur(10px)', duration: 1.1, ease: 'power2.inOut' }, 88.4);
     const items = buildField($('#s8World'));
@@ -697,10 +808,15 @@
     fly();
     buildS4();
     buildS5();
+    buildC();
     buildS6();
     buildS7();
     buildS8();
     FX.flushInit(tl);
+    const cyr = [], tw = document.createTreeWalker($('#root'), NodeFilter.SHOW_TEXT, null);
+    while (tw.nextNode()) { if (/[\u0400-\u04FF]/.test(tw.currentNode.nodeValue)) cyr.push(tw.currentNode.nodeValue.trim().slice(0, 80)); }
+    window.__CYRILLIC = cyr;
+    if (cyr.length) console.warn('Cyrillic text in the film:', cyr);
     tl.seek(0);
     window.__FILM_CUES = FX.cues.slice().sort(function (a, b) { return a.t - b.t; });
     return { timeline: tl };   // wrapped: a GSAP timeline is a thenable and would stall the promise
