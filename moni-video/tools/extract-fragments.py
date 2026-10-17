@@ -1,12 +1,15 @@
 """Turn captured tajiklaw.ai/trial pages (saved by Playwright) into clean, script-free HTML
 fragments that the film re-renders with the site's own (scoped) CSS.
 
-usage: python3 tools/extract-fragments.py <capture-dir> assets/data/fragments.js
+usage: python3 tools/extract-fragments.py <capture-dir> assets/data/fragments.js [--reuse other-fragments.js]
+--reuse fills keys this capture lacks from another language's fragments (the Tajik capture has no draft card:
+the film relabels the draft card and the document viewer through its string table anyway).
 """
 import json, re, sys, html as H
 from pathlib import Path
 
 cap = Path(sys.argv[1]); out = Path(sys.argv[2])
+reuse = Path(sys.argv[sys.argv.index('--reuse') + 1]) if '--reuse' in sys.argv else None
 
 def body_of(p):
     s = Path(p).read_text(encoding='utf-8')
@@ -59,12 +62,22 @@ for key, path in [('qa', 'q2/answer.msgs.json'), ('qa_limit', 'q4/answer.msgs.js
         continue
     frag[key] = [{'cls': m['cls'], 'route': m['route'], 'html': clean(m['html'])} for m in ms]
 
-dv = clean(body_of(cap / 'draft2/opened.html'))
-frag['docViewer'] = grab(dv, r'<div class="dv-panel"')
+try:
+    frag['docViewer'] = grab(clean(body_of(cap / 'draft2/opened.html')), r'<div class="dv-panel"')
+except FileNotFoundError:
+    pass
 try:
     frag['draftDoc'] = json.loads((cap / 'draft2/doc.json').read_text(encoding='utf-8'))
 except FileNotFoundError:
     pass
+if reuse:
+    src = reuse.read_text(encoding='utf-8')
+    other = json.loads(src[src.index('{'):src.rindex('}') + 1])
+    if 'draft' in frag and 'doc-card' not in frag['draft'][-1]['html']:
+        del frag['draft']                                     # an inline text answer, not a draft card
+    for k in ('draft', 'docViewer', 'draftDoc'):
+        if k not in frag and k in other:
+            frag[k] = other[k]
 out.write_text('window.FRAG = ' + json.dumps(frag, ensure_ascii=False) + ';\n', encoding='utf-8')
 for k, v in frag.items():
     print(k, len(json.dumps(v, ensure_ascii=False)))

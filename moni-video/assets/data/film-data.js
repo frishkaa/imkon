@@ -149,3 +149,57 @@ window.FILM = {
     { h: 'Current legislation', p: 'Thousands of Tajik legal acts, kept up to date.', ic: 'book' }
   ]
 };
+
+/* The film's own words (captions, UI labels drawn outside the captured fragments). film-data.tg.js mirrors this. */
+FILM.lang = 'en';
+FILM.str = {
+  path: '/trial/en/', loginPath: '/trial/en/login',
+  askPh: 'Ask me...', stop: 'Stop', sec: 's',
+  thinking: 'Moní is thinking', calculating: 'Moní is calculating',
+  sourcesRe: /Sources/,
+  qa: { kick: 'Legal Q&amp;A', head: 'Answers that cite <em>the law.</em>', lede: 'Every claim points to the exact article — here, the Labour Code.', chip: 'Labour Code · Art. 28' },
+  src: { kick: 'Sources', head: 'Built on <em>current</em> legislation.', lede: 'Labour Code of the Republic of Tajikistan, as amended 17.06.2026.' },
+  more: 'and many more', voiceTag: 'Asked by voice',
+  review: { title: 'Document review: Commercial Lease Agreement', risk: 'High risk', type: 'Lease',
+    summary: '5 clauses conflict with the Civil Code of the Republic of Tajikistan or shift risk onto the tenant.',
+    verified: 'verified', fix: 'Apply fixes and download', track: 'track changes (see what was edited)', found: 'issues found',
+    status: 'Analyzing the document under the laws of Tajikistan…', attached: 'Attached · will be analyzed on send',
+    docPh: 'Ask about this document, or just press send…' },
+  upload: { kick: 'Contract review', head: 'Upload a <em>contract.</em>', lede: 'Moní reads it against the Civil Code and flags what could cost you.' },
+  fixed: { kick: 'Fixed', head: 'Corrections, <em>tracked.</em>', lede: 'Every edit is visible in the .docx — formatting, stamps and layout stay intact.',
+    file: 'Commercial_Lease_14-26_fixed.docx', sub: '<b>5 edits applied</b> · tracked changes' },
+  calc: { header: 'Income Tax', kick: 'Calculator', head: 'Taxes and fees, <em>calculated.</em>', lede: '17 calculation types, every step tied to the Tax Code.',
+    net: 'Net pay', cur: 'TJS', chip: 'Tax Code · Art. 183, 191, 332' },
+  num: function (v) { return v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); },
+  draft: { kick: 'Contract drafting', head: 'A first draft, <em>ready to edit.</em>', lede: 'The gaps you still need to fill are flagged in gold.',
+    file: 'Services_Agreement.docx', sub: 'Ready to edit · download in one click',
+    reply: 'Drafted a contract (services). Review it and fill in the «[specify: …]» marks.', open: 'Document · click to open',
+    comments: 'Your comments (0)', send: 'Send comments to chat',
+    disc: 'Moní is not a substitute for personalized legal advice. For your specific situation, consult a qualified lawyer.' },
+  login: { title: 'Welcome back', sub: 'Log in to see your chat history', email: 'Email', pw: 'Password', pwPh: 'Your password', submit: 'Log in',
+    foot: '<a>Forgot password?</a><br>Don\'t have an account? <a>Sign up</a>' },
+  chats: 'Chats', newChat: 'New chat',
+  acct: { kick: 'Your account', head: 'Every chat, <em>saved.</em>', lede: 'Log in on any device and your whole history is there.' }
+};
+/* Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"); the film shows them in English. */
+(function () {
+  const CODES = { 'ТК': 'Labour Code', 'ГК': 'Civil Code', 'УК': 'Criminal Code', 'НК': 'Tax Code', 'СК': 'Family Code' };
+  const ACTS = [
+    [/ТРУДОВОЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Labour Code of the Republic of Tajikistan'],
+    [/УГОЛОВНЫЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Criminal Code of the Republic of Tajikistan'],
+    [/Закон РТ "О содействии занятости населения"/g, 'Law of the Republic of Tajikistan "On Promotion of Employment"'],
+    [/Законы РТ от 17\.05\.2004 г\. № 35 and от 6\.10\.2008 г\. № 422/g, 'Laws of the Republic of Tajikistan No. 35 of 17.05.2004 and No. 422 of 06.10.2008']
+  ];
+  FILM.citations = function (v) {
+    v = v.replace(/(ТК|ГК|УК|НК|СК) РТ, ст\. (\d+)(?:, (?:п\.|ч\.) (\d+))?/g, function (_, c, a, k) { return CODES[c] + ', Art. ' + a + (k ? '(' + k + ')' : ''); });
+    ACTS.forEach(function (r) { v = v.replace(r[0], r[1]); });
+    return v.replace(/ — ст\. ([\d, ]+) \(от ([\d.]+), ред\. ([\d.]+)\)/g, ' — Art. $1 (of $2, as amended $3)');
+  };
+  /* the probation answer, trimmed to fit the frame: points 1–2, the sources */
+  FILM.trimAnswer = function (content) {
+    content.querySelectorAll('p').forEach(function (p) {
+      const s = p.querySelector('strong'), k = s ? s.textContent.trim() : '';
+      if (/^(3|4|5|6)\.|^Summary/.test(k)) p.remove();
+    });
+  };
+})();

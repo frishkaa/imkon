@@ -244,3 +244,16 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .lang-chip.more { background: transparent; border-style: dashed; color: var(--ink-2); box-shadow: none; }
 /* the S2 logo flies over the S3 page as it fades up (S2 ends at 12.1 s) */
 #s2 { z-index: 3; }
+
+/* Tajik film (tg.html): Geologica for the film's own type (General Sans has no Cyrillic); Cyrillic sets wider,
+   so display tracking is opened a touch */
+.lang-tg { --film: 'Geologica', system-ui, sans-serif; }
+.lang-tg .display { letter-spacing: -.025em; }
+/* Tajik words run ~25% longer than English: the hook, captions and Pro tiles step down a size to keep their margins */
+.lang-tg .hook-line { font-size: 80px; }
+.lang-tg .hook-line.second { font-size: 62px; }
+.lang-tg .callout .display { font-size: 60px; max-width: 560px; }
+.lang-tg .display em { white-space: nowrap; }        /* the gold phrase never splits across lines */
+.lang-tg .caps-head .display { font-size: 78px; }
+.lang-tg .cap h3 { font-size: 33px; }
+.lang-tg .cap p { font-size: 22px; }

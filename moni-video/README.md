@@ -1,6 +1,6 @@
 # Moní · AI Conf 2026 film
 
-A 96-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
+A 120-second, seamlessly looping motion-design film for **Moní (tajiklaw.ai)**, made for the big
 screen at **AI Conf 2026, Dushanbe (30–31 October)**. It shows Moní Pro doing real work:
 - answering a legal question with article citations;
 - answering in the user's own language, by text or voice;
@@ -9,7 +9,9 @@ screen at **AI Conf 2026, Dushanbe (30–31 October)**. It shows Moní Pro doing
 - drafting a services agreement;
 - keeping every chat in your account.
 
-Everything on screen is in English.
+There are two versions of the same film:
+- **English:** `index.html`.
+- **Tajik:** `tajik/index.html`, with every word on screen in Tajik, including the site UI captured from tajiklaw.ai/trial/tj.
 
 Built with [HyperFrames](https://github.com/heygen-com/hyperframes) (Apache-2.0). It is HTML plus GSAP,
 rendered frame by frame in headless Chrome, so there is no licence fee for commercial use.
@@ -21,28 +23,37 @@ rendered frame by frame in headless Chrome, so there is no licence fee for comme
 | `renders/moni-aiconf2026-4k60.mp4` | **The master.** 3840×2160 at 60 fps, H.264 with stereo AAC |
 | `renders/moni-aiconf2026-4k60-hevc.mp4` | The same picture in HEVC (H.265). Use it if the TV won't play 4K60 H.264 from USB |
 | `renders/moni-aiconf2026-1080p60.mp4` | A lighter 1080p60 copy for laptops and social media |
+| `renders/moni-aiconf2026-tg-*.mp4` | The same files for the Tajik version (`tajik/index.html`) |
+| `deliverables/Moni-AIConf2026-1080p60.mp4`, `deliverables/Moni-AIConf2026-TJ-1080p60.mp4` | Review copies, committed so they can be downloaded from GitHub |
 
 The MP4s are build outputs and are not committed (`renders/` is git-ignored). Re-create them
 with the commands at the bottom of this file.
 
 Set the player to **loop**. The last two seconds dissolve back into the opening frame, and the
-music's end hit hands over to the opening break on the last beat, so the loop point is invisible and inaudible.
+music's own ending and its pickup bar meet at the loop point, so the loop is invisible and inaudible.
 The film also works without sound, because every beat has on-screen text.
 
 ## Storyboard (120 BPM: every cut lands on a 2 s bar)
 
+The scenes are authored on a 96 s clock. `HOLDS` in `assets/js/film.js` then adds 24 s of reading time wherever
+captions, answers or findings are on screen, so a TV audience can read them:
+
+- **How holds work:** the story pauses there.
+- **Short moves** (fades, clicks, cursor glides under 1.25 s) keep their speed.
+- **Long moves** (answer streaming, scrolls, camera drifts) simply run slower.
+
 | time | scene | what happens |
 |---|---|---|
-| 0–8 | Hook | Music: a sparse break. The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
-| 8–12 | Logo | The build kicks in with the logo. The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
-| 12–26 | Ask | tajiklaw.ai assembles around the logo. Drop 1 hits as the cursor starts typing the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
-| 26–34 | Your language | "Ask in your language." A sample of the languages Moní answers in cascades in ("and many more"; the film gives no total). A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
-| 34–52 | Review | A lease is uploaded and sent. Under the breakdown and riser the scan runs; on drop 2 (38 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
-| 52–64 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
-| 64–70 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
-| 70–78 | Your account | Music: the second breakdown and riser. The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
-| 78–86 | Moní Pro | The final drop. Night scene with six tiles: Legal Q&A · contract review · calculators · any language · drafting · current legislation (thousands of Tajik legal acts) |
-| 86–96 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The final drop carries the card and the track's own end hit lands at 94 s, as the card dissolves into the opening frame |
+| 0–8 | Hook | The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
+| 8–12 | Logo | The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
+| 12–30 | Ask | tajiklaw.ai assembles around the logo. The cursor types the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
+| 30–40 | Your language | "Ask in your language." A sample of the languages Moní answers in cascades in ("and many more"; the film gives no total). A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
+| 40–66 | Review | A lease is uploaded and sent. On the music's return (46 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
+| 66–80 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
+| 80–86 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
+| 86–94 | Your account | The real login card ("Welcome back — Log in to see your chat history"). After logging in, the "Chats" sidebar opens with this film's conversations saved in it, and the earlier tax calculation reopens exactly as it was. "Every chat, *saved.*" |
+| 94–106 | Moní Pro | Night scene with six tiles: Legal Q&A · contract review · calculators · any language · drafting · current legislation (thousands of Tajik legal acts) |
+| 106–120 | End card | Logo; "Need a lawyer? Ask Moní first."; tajiklaw.ai; a QR code (→ https://tajiklaw.ai/); AI Conf 2026 · Dushanbe. The song reaches its own ending here, then the card dissolves into the opening frame |
 
 ## How it is made
 
@@ -66,23 +77,29 @@ The film also works without sound, because every beat has on-screen text.
   - Button presses settle without overshoot.
   - Text-heavy holds are kept perfectly still, because a very slow zoom makes text re-rasterize in
     visible steps.
-- **English only.** Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"). The film
+- **English version.** Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"). The film
   converts them to English ("Labour Code, Art. 28"). At build time it scans every text node in the
   composition and reports any Cyrillic, and the count is zero.
 - **Sound.** `tools/mix-audio.py` mixes the music bed with SFX cues that the film registers at
   build time (`tools/export-cues.mjs` → `assets/audio/cues.json`). Credits: `assets/audio/CREDITS.md`.
-- **Music.** "Our Ups and Downs" (Michael Ramir C., Mixkit, free for commercial use) was chosen to fit the
-  usual launch-film pattern:
-  - modern future-house / synth-pop, instrumental, at 120 BPM;
-  - a quiet open, a build into the reveal, the product moments on the drops, and a clean ending on the end card.
+- **Music.** "Better Times are Coming" (Alejandro Magaña, Mixkit, free for commercial use), 120 BPM.
+  `EDIT` in `tools/mix-audio.py` lays it out bar by bar on the film's 2 s grid. One 4-bar phrase repeats in
+  each part of the film, matching the 8 s of reading holds added there. That keeps three moments in place:
+  - its return lands on the review findings (46 s);
+  - its reprise lands on "Moní Pro" (94 s);
+  - it ends on its own at the loop point.
 
-  It was picked from 43 Mixkit candidates by measuring tempo, structure and dynamics. The CLAP audio–text model
-  was used as a check for "modern launch music" versus "cheesy corporate" and for vocals.
-
-  Its downbeats sit exactly on the film's 2 s grid. `EDIT` in `tools/mix-audio.py` re-cuts the track bar for bar,
-  so its own build, drops, breakdowns and end hit land on the logo (8 s), the first question (14 s), the review
-  findings (38 s), "Moní Pro" (78 s) and the loop (94 s). There are only three in-section splices, with no
+  The three splices fall between near-identical bars, chosen by spectral and chroma similarity; there is no
   time-stretching.
+- **Tajik version.** `tajik/index.html` runs the same `film.js` and assets (one folder down, so the HyperFrames lint sees one root composition per folder) with Tajik data and Tajik site captures:
+  - **Strings:** `assets/data/film-data.tg.js` holds every caption and label.
+  - **Site UI:** `assets/data/fragments.tg.js` is the site's Tajik UI and Moní's Tajik answer, captured on
+    tajiklaw.ai/trial/tj.
+  - **Titles font:** **Geologica** (Google Fonts, SIL Open Font License), because General Sans has no Cyrillic
+    and Tajik needs ғ қ ҳ ҷ ӣ ӯ.
+  - **Language guard:** at build time a guard reports any Latin word outside brand names and codes, and any
+    Russian, that slips into the Tajik film. Both counts are zero.
+  - **Sound:** the Tajik film has its own cue list and soundtrack (`cues.tg.json`, `soundtrack.tg.wav`).
 
 ## Provenance of the legal content
 
@@ -128,6 +145,20 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
   - The sidebar is the site's own chat-history drawer. The site's code notes that history is kept on the server
     for logged-in users and in the browser for guests.
   - The user "Nilufar" (nilufar@example.com) is a stand-in, so no real account was created or used.
+- **Tajik version.** Captured on tajiklaw.ai/trial/tj on 17 Oct 2026.
+  - **Moní's own Tajik output:**
+    - The probation answer is Moní's Tajik answer. It is trimmed to conditions 1 and 3, and its Russian source
+      titles are shown in Tajik.
+    - The voice answer is Moní's Tajik answer: three years, Art. 214; some claims are not subject to it, Art. 224.
+    - The drafted contract is Moní's Tajik draft. Its blanks (___) are the gaps flagged in gold.
+  - **Rendered in Tajik:**
+    - The calculation came back in Russian and is shown in Tajik, with the same figures.
+    - The review timed out on /tj, just as it did on /en, so the five findings are the same Moní findings,
+      rendered in Tajik.
+    - The site shows the chat sidebar, attach chip and review labels in Russian even on /tj. The film shows
+      them in Tajik.
+  - The lease is a Tajik copy of the same fictitious lease.
+  - A native speaker should proofread the captions before the conference.
 - **Fictitious parties.** The lease and the companies in it (Somon City Plaza LLC, Pamir Trade LLC, Somon
   Digital LLC) are fictitious.
 
@@ -145,7 +176,13 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
 - **Calculator on `/en/`:**
   - Results come back in Russian, starting with the request bubble "Расчёт: Income Tax".
   - The field labels of *Vacation Pay*, *Final Settlement* and *Salary & Advance* are still in Russian.
-- **Chat sidebar on `/en/`.** The labels are still Russian ("Чаты", "Новый чат"); the film shows them in English.
+- **Chat sidebar on `/en/` and `/tj/`.** The labels are still Russian ("Чаты", "Новый чат"); the film shows them in English or Tajik.
+- **`/tj/`.** On the Tajik interface, some text still comes back in Russian:
+  - the attach chip and the analysis status ("Прикреплён · будет проанализирован…", "Анализирую документ по законам РТ…");
+  - the calculator request bubble ("Расчёт: Андоз аз даромад");
+  - the calculator results.
+
+  A Tajik drafting request also returned the contract as plain text, with no document card.
 - **Languages.** tajiklaw.ai/llms.txt still says "18 languages" and "~220 legal acts". The team says both figures
   are out of date, so the llms.txt may be worth updating.
 
@@ -158,6 +195,10 @@ npx hyperframes@0.8.166 check                    # lint + layout + contrast
 npx http-server -p 8765 -s . &                   # any static server
 node tools/export-cues.mjs http://127.0.0.1:8765/index.html assets/audio/cues.json
 python3 tools/mix-audio.py assets/audio/cues.json assets/audio/soundtrack.wav
+node tools/export-cues.mjs http://127.0.0.1:8765/tajik/index.html assets/audio/cues.tg.json
+python3 tools/mix-audio.py assets/audio/cues.tg.json assets/audio/soundtrack.tg.wav
+# the Tajik film: the same commands with -c tajik/index.html, e.g.
+npx hyperframes@0.8.166 render -c tajik/index.html --fps 60 --quality high --output renders/moni-aiconf2026-tg-1080p60.mp4
 # final renders
 npx hyperframes@0.8.166 render --fps 60 --resolution 4k --quality high --crf 14 --output renders/moni-aiconf2026-4k60.mp4
 ffmpeg -i renders/moni-aiconf2026-4k60.mp4 -c:v libx265 -crf 18 -preset medium -tag:v hvc1 -c:a copy renders/moni-aiconf2026-4k60-hevc.mp4

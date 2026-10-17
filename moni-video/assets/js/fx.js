@@ -201,6 +201,40 @@
     return h;
   };
 
+  /* Reading holds. The film is authored on one clock; `holds` ([authored time, seconds], whole bars) pause the
+     story there so text stays on screen longer. W maps authored time to film time. */
+  FX.warp = function (holds) {
+    const hs = holds.slice().sort(function (a, b) { return a[0] - b[0]; });
+    const W = function (t) { let s = t; for (let i = 0; i < hs.length; i++) if (hs[i][0] < t - 1e-6) s += hs[i][1]; return s; };
+    W.holds = hs;
+    return W;
+  };
+  /* A timeline facade that places every tween through W. Short tweens (UI fades, clicks, cursor moves) jump whole
+     to whichever side of a hold their midpoint falls on, so they keep their speed; long ones (camera drifts, text
+     streams, scrolls) stretch across it, so a reveal simply runs slower. Staggered groups count as one span. */
+  FX.warped = function (tl, W, snap) {
+    snap = snap == null ? 1.25 : snap;
+    const place = function (targets, v, p) {
+      if (typeof p !== 'number') return [v, p];
+      const d = v.duration == null ? 0.5 : v.duration;
+      const n = typeof v.stagger === 'number' ? gsap.utils.toArray(targets).length : 1;
+      const span = d + (n > 1 ? v.stagger * (n - 1) : 0);
+      if (span <= snap) { const mid = p + span / 2; return [v, p + W(mid) - mid]; }
+      const p2 = W(p), k = (W(p + span) - p2) / span;
+      if (Math.abs(k - 1) < 1e-6) return [v, p2];
+      const v2 = Object.assign({}, v, { duration: d * k });
+      if (n > 1) v2.stagger = v.stagger * k;
+      return [v2, p2];
+    };
+    return {
+      to: function (t, v, p) { const a = place(t, v, p); return tl.to(t, a[0], a[1]); },
+      fromTo: function (t, f, v, p) { const a = place(t, v, p); return tl.fromTo(t, f, a[0], a[1]); },
+      set: function (t, v, p) { return tl.set(t, v, typeof p === 'number' ? W(p) : p); },
+      seek: function (x) { return tl.seek(x); },
+      W: W, timeline: tl
+    };
+  };
+
   /* Waterfall entry: staggered rise + de-blur of word spans. */
   FX.waterfall = function (tl, els, t, opts) {
     opts = opts || {};

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="tg">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Moní — AI Conf 2026 film (Тоҷикӣ)</title>
+    <link rel="stylesheet" href="../assets/fonts/fonts.css" />
+    <link rel="stylesheet" href="../assets/css/moni-site.css" />
+    <link rel="stylesheet" href="../assets/css/moni-overrides.css" />
+    <link rel="stylesheet" href="../assets/css/film.css" />
+    <script src="../assets/js/gsap.min.js"></script>
+  </head>
+  <body>
+    <!--
+      Moní · tajiklaw.ai — 120 s looping showcase for AI Conf 2026 (Dushanbe, 30–31 Oct). Tajik version: the same film as
+      index.html, every word in Tajik (assets/data/film-data.tg.js, fragments.tg.js captured on tajiklaw.ai/trial/tj).
+      Music is 120 BPM, so every scene boundary sits on a 2 s bar. The site UI is rebuilt from
+      tajiklaw.ai's own stylesheet (assets/css/moni-site.css, scoped under .moni) and real DOM
+      captured from the Pro version (assets/data/fragments.js). All motion lives in
+      assets/js/film.js on one paused GSAP timeline.
+    -->
+    <div id="root" class="lang-tg" data-composition-id="main" data-start="0" data-width="1920" data-height="1080" data-duration="120" data-fps="60">
+      <div class="bg" id="bg"><div class="bg-glow"></div><div class="bg-night" id="bgNight"></div></div>
+
+      <!-- 1 · hook: "Laws are written for everyone…" -->
+      <section id="s1" class="clip scene" data-start="0" data-duration="8.2" data-track-index="1">
+        <div class="s1-space"><div class="s1-world" id="s1World"></div></div>
+        <div class="hook-veil" id="hookVeil"></div>
+        <div class="hook" id="hook">
+          <div class="hook-line display" id="hookL1">Қонунҳо барои ҳама навишта шудаанд.</div>
+          <div class="hook-line second display" id="hookL2">Аммо гӯё барои фаҳмидан <em>тарҷумон</em> лозим аст.</div>
+        </div>
+      </section>
+
+      <!-- 2 · logo reveal → flies into the site header -->
+      <section id="s2" class="clip scene" data-start="8" data-duration="4.1" data-track-index="2">
+        <div class="logo-stage">
+          <div class="tagline-rule" id="tagRule"></div>
+          <div class="tagline lede" id="tagline">Фаҳмидани қонун — осон шуд.</div>
+          <div class="logo-wrap" id="logoWrap"></div>
+        </div>
+      </section>
+
+      <!-- 3 · ask a question on tajiklaw.ai -->
+      <section id="s3" class="clip scene" data-start="11.5" data-duration="18.7" data-track-index="3">
+        <div class="cam" id="s3Cam"></div>
+        <div class="layer" id="s3Over"></div>
+      </section>
+
+      <!-- 4 · ask in your language, by text or by voice -->
+      <section id="s4" class="clip scene" data-start="30" data-duration="10.2" data-track-index="4">
+        <div class="cam" id="s4Cam">
+          <div class="lang-head"><div class="display" id="langHead">Бо <em>забони худ</em> пурсед.</div></div>
+          <div class="lang-chips" id="langChips"></div>
+          <div class="lang-cards moni free" id="langCards"></div>
+          <div class="lang-foot" id="langFoot">Нависед ё <b>бигӯед</b> — Moní бо ҳамон забоне ҷавоб медиҳад, ки шумо пурсидед.</div>
+        </div>
+      </section>
+
+      <!-- 5 · contract review -->
+      <section id="s5" class="clip scene" data-start="40" data-duration="26.2" data-track-index="5">
+        <div class="cam" id="s5Cam"></div>
+        <div class="layer" id="s5Over"></div>
+      </section>
+
+      <!-- 6 · calculator -->
+      <section id="sC" class="clip scene" data-start="66" data-duration="14.2" data-track-index="9">
+        <div class="cam" id="sCCam"></div>
+        <div class="layer" id="sCOver"></div>
+      </section>
+
+      <!-- 7 · contract drafting (a short beat) -->
+      <section id="s6" class="clip scene" data-start="80" data-duration="6.2" data-track-index="6">
+        <div class="cam" id="s6Cam"></div>
+        <div class="layer" id="s6Over"></div>
+      </section>
+
+      <!-- 8 · your account: every chat saved -->
+      <section id="sA" class="clip scene" data-start="86" data-duration="8.2" data-track-index="10">
+        <div class="cam" id="sACam"></div>
+        <div class="layer" id="sAOver"></div>
+      </section>
+
+      <!-- 9 · capabilities (night) -->
+      <section id="s7" class="clip scene" data-start="94" data-duration="12.2" data-track-index="7">
+        <div class="cam" id="s7Cam">
+          <div class="caps-head">
+            <div class="kicker" id="capsKick">Moní Pro</div>
+            <div class="display" id="capsHead">Ҳамаи қонунҳо. Таҳлил. Ҳисобкунакҳо. <em>Бе маҳдудият.</em></div>
+          </div>
+          <div class="caps-grid" id="capsGrid"></div>
+        </div>
+      </section>
+
+      <!-- 10 · end card + loop back into the hook -->
+      <section id="s8" class="clip scene" data-start="106" data-duration="14" data-track-index="8">
+        <div class="s1-space"><div class="s1-world" id="s8World"></div></div>
+        <div class="cam" id="s8Cam">
+          <div class="end-logo" id="endLogo"></div>
+          <div class="end-copy">
+            <div class="display" id="endHead">Ҳуқуқшинос лозим? <em>Аз Мони оғоз кун.</em></div>
+            <div class="url" id="endUrl">tajiklaw.ai</div>
+          </div>
+          <div class="end-meta" id="endMeta">
+            <span><b>Moní Pro</b> — ҳамаи қонунҳо · таҳлил · ҳисобкунакҳо</span><span class="sep"></span>
+            <span>info@tajiklaw.ai</span><span class="sep"></span>
+            <span>бо дастгирии <b>AAA Law Offices</b></span>
+          </div>
+          <div class="qr-card" id="qrCard"><div id="qrSlot"></div><div class="cap-txt">Скан кунед · Moní-ро санҷед</div></div>
+          <div class="conf-badge" id="confBadge"><i></i>AI Conf 2026 · Душанбе</div>
+        </div>
+      </section>
+
+      <!-- directional motion blur for fast camera moves (stdDeviation driven by the timeline) -->
+      <svg class="fx-defs" width="0" height="0" aria-hidden="true"><defs id="fxDefs"></defs></svg>
+      <div class="vignette"></div>
+      <div class="grain"></div>
+
+      <audio id="soundtrack" src="../assets/audio/soundtrack.tg.wav" data-start="0" data-duration="120" data-track-index="20" data-volume="1"></audio>
+    </div>
+
+    <script src="../assets/brand/logo-paths.js"></script>
+    <script src="../assets/brand/qr.js"></script>
+    <script src="../assets/data/fragments.tg.js"></script>
+    <script src="../assets/data/film-data.tg.js"></script>
+    <script>window.FILM_ASSETS = '../';   // this page sits one folder below the shared assets</script>
+    <script src="../assets/js/fx.js"></script>
+    <script src="../assets/js/film.js"></script>
+    <script>
+      window.__buildFilm().then(function (built) {
+        window.__timelines["main"] = built.timeline;
+        if (window.__hfForceTimelineRebind) window.__hfForceTimelineRebind();
+      });
+    </script>
+  </body>
+</html>

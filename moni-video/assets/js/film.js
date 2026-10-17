@@ -1,13 +1,22 @@
-/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 96 s @ 60 fps, 120 BPM (bar = 2 s).
-   Scene map (seconds):  1 hook 0–8 · 2 logo 8–12 · 3 ask 12–26 · 4 18 languages 26–34 · 5 review 34–52 ·
-   6 calculator 52–64 · 7 drafting 64–70 · 8 account 70–78 · 9 Moní Pro 78–86 · 10 end card + loop 86–96.
-   English only. */
+/* Moní · tajiklaw.ai — AI Conf 2026 showcase. One paused GSAP timeline, 120 s @ 60 fps, 120 BPM (bar = 2 s).
+   Scenes are authored on a 96 s clock (below); HOLDS then add 24 s of reading time where text is on screen, so
+   the film runs 120 s. Scene map, film seconds:  1 hook 0–8 · 2 logo 8–12 · 3 ask 12–30 · 4 languages 30–40 ·
+   5 review 40–66 · 6 calculator 66–80 · 7 drafting 80–86 · 8 account 86–94 · 9 Moní Pro 94–106 ·
+   10 end card + loop 106–120. */
 (function () {
   const F = window.FRAG, D = window.FILM, L = window.MONI_LOGO;
   const $ = (s, r) => (r || document).querySelector(s);
   const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
-  const el = FX.el, S = FX.sfx;
-  const tl = gsap.timeline({ paused: true });
+  /* [authored time, extra seconds]: 8 s before the review drop, 8 s across review/calculator, 8 s for Moní Pro
+     and the end card, so the music stays on its phrases (tools/mix-audio.py adds one repeated phrase in each) */
+  const HOLDS = [[22, 2], [25, 2], [32, 2], [36, 2], [44, 4], [51, 2], [62.6, 2], [82, 4], [92, 4]];
+  const W = FX.warp(HOLDS);
+  const TL = gsap.timeline({ paused: true });
+  const tl = FX.warped(TL, W);
+  const el = FX.el, S = function (name, t, gain) { FX.sfx(name, W(t), gain); };
+  const T = D.str;   // every on-screen string of the film's own (assets/data/film-data*.js), so one film serves each language
+  const ASSETS = window.FILM_ASSETS || '';   // tajik/index.html sits one folder down and sets '../'
+  if (ASSETS) Object.keys(F).forEach(function (k) { if (typeof F[k] === 'string') F[k] = F[k].replace(/src="assets\//g, 'src="' + ASSETS + 'assets/'); });
 
   function rng(seed) {
     return function () {
@@ -61,14 +70,14 @@
     const ta = $('textarea', form);
     if (ta) ta.style.visibility = 'hidden';
     form.style.position = 'relative';
-    const f = el('div', 'fake-input', '<span class="fi-line"><span class="ph">Ask me...</span><span class="typed"></span><span class="caret"></span></span>', form);
+    const f = el('div', 'fake-input', '<span class="fi-line"><span class="ph">' + T.askPh + '</span><span class="typed"></span><span class="caret"></span></span>', form);
     return { ph: $('.ph', f), typed: $('.typed', f), caret: $('.caret', f), box: f, line: $('.fi-line', f) };
   }
 
   function genCardHTML(label) {
     return '<div class="msg msg-ai gen-indicator"><div class="gen-card"><div class="gen-progress"><div class="gen-progress-fill"></div></div>' +
       '<div class="gen-body"><div class="gen-wave">' + '<span></span>'.repeat(7) + '</div><div class="gen-info"><span class="gen-label">' + label +
-      '</span><span class="gen-time">0s</span></div></div><div class="gen-footer"><button class="gen-stop-btn">' + STOP + ' Stop</button></div></div></div>';
+      '</span><span class="gen-time">0' + T.sec + '</span></div></div><div class="gen-footer"><button class="gen-stop-btn">' + STOP + ' ' + T.stop + '</button></div></div></div>';
   }
   function animateGen(root, t0, t1) {
     const bars = $$('.gen-wave span', root), time = $('.gen-time', root), fill = $('.gen-progress-fill', root);
@@ -79,31 +88,19 @@
         const v = 0.5 - 0.5 * Math.cos((st.t - delays[i]) / 1.2 * Math.PI * 2);
         b.style.height = (6 + 14 * v) + 'px'; b.style.opacity = (0.4 + 0.6 * v).toFixed(3);
       });
-      time.textContent = Math.max(0, Math.floor(st.t)) + 's';
+      time.textContent = Math.max(0, Math.floor(st.t)) + T.sec;
       fill.style.width = (8 + 64 * (1 - Math.exp(-st.t / 2.2))).toFixed(2) + '%';
     };
     write();
     tl.to(st, { t: t1 - t0, duration: t1 - t0, ease: 'none', onUpdate: write }, t0);
   }
 
-  /* Moní's English answers keep Russian code abbreviations (e.g. "ТК РТ, ст. 28"); the film shows them in English. */
-  const CODES = { 'ТК': 'Labour Code', 'ГК': 'Civil Code', 'УК': 'Criminal Code', 'НК': 'Tax Code', 'СК': 'Family Code' };
-  const ACTS = [
-    [/ТРУДОВОЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Labour Code of the Republic of Tajikistan'],
-    [/УГОЛОВНЫЙ КОДЕКС РЕСПУБЛИКИ ТАДЖИКИСТАН/g, 'Criminal Code of the Republic of Tajikistan'],
-    [/Закон РТ "О содействии занятости населения"/g, 'Law of the Republic of Tajikistan "On Promotion of Employment"'],
-    [/Законы РТ от 17\.05\.2004 г\. № 35 and от 6\.10\.2008 г\. № 422/g, 'Laws of the Republic of Tajikistan No. 35 of 17.05.2004 and No. 422 of 06.10.2008']
-  ];
-  function englishCitations(root) {
+  /* Moní's answers keep Russian code abbreviations and source titles (e.g. "ТК РТ, ст. 28"); the language's data
+     file rewrites them (D.citations: English or Tajik). */
+  function citations(root) {
     const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [];
     while (w.nextNode()) nodes.push(w.currentNode);
-    nodes.forEach(function (n) {
-      let v = n.nodeValue;
-      v = v.replace(/(ТК|ГК|УК|НК|СК) РТ, ст\. (\d+)(?:, (?:п\.|ч\.) (\d+))?/g, function (_, c, a, k) { return CODES[c] + ', Art. ' + a + (k ? '(' + k + ')' : ''); });
-      ACTS.forEach(function (r) { v = v.replace(r[0], r[1]); });
-      v = v.replace(/ — ст\. ([\d, ]+) \(от ([\d.]+), ред\. ([\d.]+)\)/g, ' — Art. $1 (of $2, as amended $3)');
-      n.nodeValue = v;
-    });
+    nodes.forEach(function (n) { n.nodeValue = D.citations(n.nodeValue); });
   }
 
   /* Smooth state changes: read the real computed colours of a UI element with and without a class, then tween
@@ -221,7 +218,7 @@
   /* ======================= 3 · ASK ======================= */
   function buildS3() {
     const cam = $('#s3Cam'), over = $('#s3Over');
-    const B = makeBrowser(cam, '/trial/en/');
+    const B = makeBrowser(cam, T.path);
     const m = B.moni;
     m.innerHTML = F.header + F.sbToggle + '<main class="main main-home">' + F.welcome + '</main>' +
       '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area" style="display:flex"></div></div></div>' +
@@ -239,27 +236,23 @@
     const fi = fakeInput(wForm); fakeInput(dForm);
 
     // chat content: question, thinking card, Moní's real answer (trimmed to fit the frame)
-    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content">' + D.ask.question + '</div></div>' + genCardHTML('Moní is thinking') +
+    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content">' + D.ask.question + '</div></div>' + genCardHTML(T.thinking) +
       '<div class="msg msg-ai answer">' + F.qa[1].html + '</div>';
     const uMsg = $('.msg-user', chat), gen = $('.gen-indicator', chat), ans = $('.answer', chat);
     const content = $('.msg-content', ans);
-    $$('p', content).forEach(function (p) {
-      const s = p.querySelector('strong');
-      const k = s ? s.textContent.trim() : '';
-      if (/^(3|4|5|6)\.|^Summary/.test(k)) p.remove();
-    });
-    englishCitations(content);
+    D.trimAnswer(content);
+    citations(content);
     const lead = $('p strong', content);
     lead.classList.add('mark-hl');
     const hl = el('span', 'hl-bar', null, lead);
-    const srcP = $$('p', content).find(function (p) { return /Sources/.test(p.textContent); });
+    const srcP = $$('p', content).find(function (p) { return T.sourcesRe.test(p.textContent); });
     const btns = $('.msg-btns', ans);
     gen.style.position = 'absolute'; gen.style.left = '40px';   // overlay the answer's slot while thinking
 
     // ---- measurements (browser-space, untransformed) ----
     const R = function (e) { return FX.measure(e, B.el); };
     const rLogo = R(hdrLogo), rForm = R(wForm), rSend = R(wSend), rDForm = R(dForm);
-    const rU = R(uMsg), rAns = R(ans), rLead = R(lead), rSrc = R(srcP), rList = R($('ul', content));
+    const rU = R(uMsg), rAns = R(ans), rLead = R(lead), rSrc = R(srcP), rList = R($('ul, ol', content));
     gen.style.top = (rAns.y - R(chat).y + 32) + 'px';
 
     // ---- camera: starts full-bleed (site == frame), pulls back to reveal the browser ----
@@ -342,12 +335,11 @@
     tl.fromTo(scroll, { y: 0 }, { y: -sListEnd, duration: 1.9, ease: 'sine.inOut' }, 21.6);
     tl.to(scroll, { y: -sSrc, duration: 1.2, ease: 'power3.inOut' }, 23.55);
 
-    const c1 = callout(over, 120, 290, 'Legal Q&amp;A', 'Answers that cite <em>the law.</em>',
-      '<div class="lede">Every claim points to the exact article — here, the Labour Code.</div><span class="cite-chip"><i></i>Labour Code · Art. 28</span>');
+    const c1 = callout(over, 120, 290, T.qa.kick, T.qa.head,
+      '<div class="lede">' + T.qa.lede + '</div><span class="cite-chip"><i></i>' + T.qa.chip + '</span>');
     calloutIn(c1, 20.9);
     calloutOut(c1, 23.35);
-    const c2 = callout(over, 120, 300, 'Sources', 'Built on <em>current</em> legislation.',
-      '<div class="lede">Labour Code of the Republic of Tajikistan, as amended 17.06.2026.</div>');
+    const c2 = callout(over, 120, 300, T.src.kick, T.src.head, '<div class="lede">' + T.src.lede + '</div>');
     calloutIn(c2, 23.75);
     tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 25.55);
     S('ui-popup-dry', 20.95, 0.4); S('ui-popup-dry', 23.8, 0.4);
@@ -364,9 +356,9 @@
   function buildS4() {
     const cam = $('#s4Cam'), box = $('#langChips'), cards = $('#langCards');
     const chips = D.languages.map(function (n) { return el('span', 'lang-chip', n, box); });
-    chips.push(el('span', 'lang-chip more', 'and many more', box));
+    chips.push(el('span', 'lang-chip more', T.more, box));
     const v = D.voice;
-    const card = el('div', 'lang-card voice-card', '<div class="lang-tag"><b class="mic-b">' + MIC + '</b>Asked by voice</div>' +
+    const card = el('div', 'lang-card voice-card', '<div class="lang-tag"><b class="mic-b">' + MIC + '</b>' + T.voiceTag + '</div>' +
       '<div class="voice-pill"><span class="mic">' + MIC + '</span><span class="bars">' + '<span></span>'.repeat(26) + '</span></div>' +
       '<div class="msg msg-user"><div class="msg-content"><span class="q"></span></div></div>' +
       '<div class="msg msg-ai"><div class="msg-content">' + v.a + '</div></div>', cards);
@@ -426,27 +418,27 @@
     scan.style.top = '0px';
     // the review card — markup and classes from the site's upload.js renderReviewCard()
     const rv = el('div', 'rv-panel moni free', '<div class="msg msg-ai"><div class="doc-review-card"><div class="dr-head"><span class="dr-ic">' + DOC_IC + '</span>' +
-      '<div class="dr-ttl"><b>Document review: Commercial Lease Agreement</b><div class="dr-meta"><span class="dr-risk dr-risk-high">High risk</span><span class="dr-type">Lease</span></div></div></div>' +
-      '<div class="dr-summary">5 clauses conflict with the Civil Code of the Republic of Tajikistan or shift risk onto the tenant.</div>' +
+      '<div class="dr-ttl"><b>' + T.review.title + '</b><div class="dr-meta"><span class="dr-risk dr-risk-high">' + T.review.risk + '</span><span class="dr-type">' + T.review.type + '</span></div></div></div>' +
+      '<div class="dr-summary">' + T.review.summary + '</div>' +
       '<div class="dr-findings">' + findings.map(function (f, i) {
         return '<div class="dr-finding' + (f.sev === 'high' ? ' dr-sev-high' : '') + '" data-f="' + i + '"><div class="dr-f-head"><span class="dr-cat ' + (f.cat === 'red' ? 'dr-cat-red' : 'dr-cat-amber') + '">' + f.catLabel +
-          '</span><span class="dr-f-clause">' + f.clause + '</span></div><div class="dr-f-issue">' + f.issue + '</div><div class="dr-f-law">' + f.law + '<span class="dr-v ok">verified</span></div></div>';
-      }).join('') + '</div><div class="dr-fixbar"><button type="button" class="dr-fix-btn">Apply fixes and download</button>' +
-      '<label class="dr-fix-opt"><input type="checkbox" class="dr-fix-track" checked><span>track changes (see what was edited)</span></label></div></div></div>', cam);
+          '</span><span class="dr-f-clause">' + f.clause + '</span></div><div class="dr-f-issue">' + f.issue + '</div><div class="dr-f-law">' + f.law + '<span class="dr-v ok">' + T.review.verified + '</span></div></div>';
+      }).join('') + '</div><div class="dr-fixbar"><button type="button" class="dr-fix-btn">' + T.review.fix + '</button>' +
+      '<label class="dr-fix-opt"><input type="checkbox" class="dr-fix-track" checked><span>' + T.review.track + '</span></label></div></div></div>', cam);
     const fnd = $$('.dr-finding', rv), head = $('.dr-head', rv), summ = $('.dr-summary', rv), fixbar = $('.dr-fixbar', rv), fixBtn = $('.dr-fix-btn', rv);
     // counter + status
-    const counter = el('div', 'rv-counter', '<span class="num">0</span><span class="lbl">issues found</span>', cam);
+    const counter = el('div', 'rv-counter', '<span class="num">0</span><span class="lbl">' + T.review.found + '</span>', cam);
     const num = $('.num', counter);
-    const status = el('div', 'rv-status', '<span class="spin"></span><span>Analyzing the document under the laws of Tajikistan…</span>', cam);
+    const status = el('div', 'rv-status', '<span class="spin"></span><span>' + T.review.status + '</span>', cam);
     // upload strip (site attach chip + input), shown before the review exists
     const up = el('div', 'moni free', '<div class="input-wrap" style="width:760px"><div class="attach-chip"><span class="attach-ic">' + DOC_IC + '</span><span class="attach-text"><span class="attach-name">' + D.lease.file +
-      '</span><span class="attach-sub">Attached · will be analyzed on send</span></span></div><div class="input-form"><textarea class="input-textarea" rows="1"></textarea><div class="input-btns-right">' +
+      '</span><span class="attach-sub">' + T.review.attached + '</span></span></div><div class="input-form"><textarea class="input-textarea" rows="1"></textarea><div class="input-btns-right">' +
       '<button class="send-btn on"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg></button></div></div></div>', cam);
     up.style.position = 'absolute'; up.style.left = '1000px'; up.style.top = '640px';
     const upFI = fakeInput($('.input-form', up));
-    upFI.ph.textContent = 'Ask about this document, or just press send…';
+    upFI.ph.textContent = T.review.docPh;
     const upSend = $('.send-btn', up);
-    const c0 = callout(cam, 1000, 230, 'Contract review', 'Upload a <em>contract.</em>', '<div class="lede">Moní reads it against the Civil Code and flags what could cost you.</div>');
+    const c0 = callout(cam, 1000, 230, T.upload.kick, T.upload.head, '<div class="lede">' + T.upload.lede + '</div>');
     // connectors
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'connector'); svg.setAttribute('width', '1920'); svg.setAttribute('height', '1080');
@@ -569,9 +561,9 @@
     order.forEach(function (o, k) { S('write-fast', redStart + k * redGap + 0.18, 0.28); });
 
     // phase D — corrected file + caption
-    const c3 = callout(over, 1130, 300, 'Fixed', 'Corrections, <em>tracked.</em>',
-      '<div class="lede">Every edit is visible in the .docx — formatting, stamps and layout stay intact.</div>' +
-      '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">Commercial_Lease_14-26_fixed.docx</div><div class="sub"><b>5 edits applied</b> · tracked changes</div></div></div>');
+    const c3 = callout(over, 1130, 300, T.fixed.kick, T.fixed.head,
+      '<div class="lede">' + T.fixed.lede + '</div>' +
+      '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">' + T.fixed.file + '</div><div class="sub">' + T.fixed.sub + '</div></div></div>');
     camS.to(tl, 48.95, 1.2, { fx: rSheet.r - 70, fy: rSheet.cy - 10, s: 1.12 }, 'power3.inOut');
     calloutIn(c3, 49.45);
     S('ui-success-soft', 49.95, 0.5);
@@ -583,10 +575,9 @@
 
   /* ======================= 6 · CALCULATOR ======================= */
   const CALC_IC = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/></svg>';
-  function fmtTJS(v) { return v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
   function buildC() {
     const cam = $('#sCCam'), over = $('#sCOver');
-    const B = makeBrowser(cam, '/trial/en/');
+    const B = makeBrowser(cam, T.path);
     const m = B.moni;
     m.innerHTML = F.header + F.sbToggle + '<main class="main main-home calc-home">' + F.welcome + '</main>' +
       '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area" style="display:flex"></div></div></div>' +
@@ -609,8 +600,8 @@
     // chat after "Calculate": request bubble, thinking card, Moní's calculation (English rendering of its real output)
     const chat = $('.chat-area', m), scroll = $('.chat-scroll', m), dock = $('.dock', m), dForm = $('.dock .input-form', m);
     fakeInput(dForm);
-    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content calc-q">' + CALC_IC + ' ' + D.calc.question + '</div></div>' + genCardHTML('Moní is calculating') +
-      '<div class="msg msg-ai calc-ans"><div class="calc-result-card"><div class="calc-result-header">' + CALC_IC + ' Income Tax</div>' +
+    chat.innerHTML = '<div class="msg msg-user"><div class="msg-content calc-q">' + CALC_IC + ' ' + D.calc.question + '</div></div>' + genCardHTML(T.calculating) +
+      '<div class="msg msg-ai calc-ans"><div class="calc-result-card"><div class="calc-result-header">' + CALC_IC + ' ' + T.calc.header + '</div>' +
       '<div class="calc-result-body"><div class="msg-content">' + D.calc.result + '</div></div></div></div>';
     const uMsg = $('.msg-user', chat), gen = $('.gen-indicator', chat), ans = $('.calc-ans', chat), rcard = $('.calc-result-card', ans);
     const content = $('.calc-result-body .msg-content', ans), netRow = $('tr.net', ans), table = $('.tbl-wrap', ans);
@@ -711,15 +702,15 @@
     S('sparkle-touch', 62.05, 0.35);
 
     // ---- caption ----
-    const c1 = callout(over, 120, 250, 'Calculator', 'Taxes and fees, <em>calculated.</em>',
-      '<div class="lede">17 calculation types, every step tied to the Tax Code.</div>' +
-      '<div class="calc-out"><span class="lbl">Net pay</span><span class="num">0.00</span><span class="cur">TJS</span></div>' +
-      '<span class="cite-chip"><i></i>Tax Code · Art. 183, 191, 332</span>');
+    const c1 = callout(over, 120, 250, T.calc.kick, T.calc.head,
+      '<div class="lede">' + T.calc.lede + '</div>' +
+      '<div class="calc-out"><span class="lbl">' + T.calc.net + '</span><span class="num">' + T.num(0) + '</span><span class="cur">' + T.calc.cur + '</span></div>' +
+      '<span class="cite-chip"><i></i>' + T.calc.chip + '</span>');
     tl.set(over, { opacity: 1 }, 52.0);
     calloutIn(c1, 59.55);
     const out = $('.calc-out', c1), num = $('.num', out), cnt = { v: 0 };
     tl.fromTo(out, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 60.9);
-    tl.to(cnt, { v: 6917.92, duration: 1.2, ease: 'power2.out', onUpdate: function () { num.textContent = fmtTJS(cnt.v); } }, 61.0);
+    tl.to(cnt, { v: 6917.92, duration: 1.2, ease: 'power2.out', onUpdate: function () { num.textContent = T.num(cnt.v); } }, 61.0);
     S('ui-popup-dry', 59.6, 0.4);
     tl.to(over, { opacity: 0, duration: 0.3, ease: 'power2.in' }, 63.3);
     camS.to(tl, 63.42, 0.58, { fx: 190 + 1900, fy: 352, s: 1.12 }, 'power4.in');                       // exit LEFT
@@ -730,7 +721,7 @@
   /* ======================= 7 · DRAFTING (a short beat) ======================= */
   function buildS6() {
     const cam = $('#s6Cam'), over = $('#s6Over');
-    const B = makeBrowser(cam, '/trial/en/');
+    const B = makeBrowser(cam, T.path);
     const m = B.moni;
     m.innerHTML = F.header + F.sbToggle +
       '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area" style="display:flex"></div></div></div>' +
@@ -744,16 +735,17 @@
     $$('*', ai).forEach(function (n) {
       if (n.children.length === 0 && n.textContent) {
         n.textContent = n.textContent
-          .replace(/Составил проект договора \(([^)]+)\)\. Проверьте и заполните пометки «\[уточнить: …\]»\./, 'Drafted a contract (services). Review it and fill in the «[specify: …]» marks.')
-          .replace(/Документ · нажмите, чтобы открыть/, 'Document · click to open')
-          .replace(/Договор об оказании услуг № \[уточнить: номер договора\]/, D.draft.title);
+          .replace(/Составил проект договора \(([^)]+)\)\. Проверьте и заполните пометки «\[уточнить: …\]»\./, T.draft.reply)
+          .replace(/Документ · нажмите, чтобы открыть/, T.draft.open)
+          .replace(/Договор об оказании услуг № \[уточнить: номер договора\]/, D.draft.title)
+          .replace(/^Moní is not a substitute for personalized legal advice\. For your specific situation, consult a qualified lawyer\.$/, T.draft.disc);
       }
     });
     const panel = $('.dv-panel', m), overlay = $('.dv-overlay', m);
     const title = $('.dv-title', panel); if (title) title.textContent = D.draft.title;
     $('.dv-body', panel).innerHTML = '<div class="dv-sheet">' + D.draft.paras.map(function (p) { return '<div class="dv-para ' + (p.cls || '') + '">' + p.t + '</div>'; }).join('') + '</div>';
-    const comments = $('.dv-comments', panel); if (comments) { const ct = $('.dv-comments-title', comments); if (ct) ct.textContent = 'Your comments (0)'; }
-    $$('button, span, div', panel).forEach(function (n) { if (n.children.length === 0 && /Отправить замечания в чат/.test(n.textContent)) n.textContent = 'Send comments to chat'; });
+    const comments = $('.dv-comments', panel); if (comments) { const ct = $('.dv-comments-title', comments); if (ct) ct.textContent = T.draft.comments; }
+    $$('button, span, div', panel).forEach(function (n) { if (n.children.length === 0 && /Отправить замечания в чат/.test(n.textContent)) n.textContent = T.draft.send; });
     const marks = $$('.ph-mark', panel);
     const rSheet = FX.measure($('.dv-sheet', panel), B.el);
     tl.fromTo(overlay, { backgroundColor: 'rgba(0,0,0,0)' }, { backgroundColor: 'rgba(0,0,0,0.38)', duration: 0.8, ease: 'power2.inOut' }, 64.15);
@@ -765,9 +757,9 @@
     FX.whipBlur(tl, cam, 64.0, 0.8, 760, 'out');
     tl.fromTo(panel, { x: 60 }, { x: 0, duration: 0.9, ease: 'power3.out' }, 64.0);
     S('paper-page-turn', 64.1, 0.5);
-    const c1 = callout(over, 120, 300, 'Contract drafting', 'A first draft, <em>ready to edit.</em>',
-      '<div class="lede">The gaps you still need to fill are flagged in gold.</div>' +
-      '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">Services_Agreement.docx</div><div class="sub">Ready to edit · download in one click</div></div></div>');
+    const c1 = callout(over, 120, 300, T.draft.kick, T.draft.head,
+      '<div class="lede">' + T.draft.lede + '</div>' +
+      '<div class="file-out" style="position:relative;margin-top:34px"><div class="ico">W</div><div><div class="nm">' + T.draft.file + '</div><div class="sub">' + T.draft.sub + '</div></div></div>');
     const veil = el('div', 'layer', null, over);
     veil.style.background = 'linear-gradient(90deg, rgba(248,247,244,.98) 0%, rgba(248,247,244,.92) 38%, rgba(248,247,244,0) 47%)';
     over.insertBefore(veil, c1);
@@ -791,16 +783,16 @@
   function buildA() {
     const A = D.account, IC = A.icons;
     const cam = $('#sACam'), over = $('#sAOver');
-    const B = makeBrowser(cam, '/trial/en/login');
+    const B = makeBrowser(cam, T.loginPath);
     // page 1 — the real login card ("Log in to see your chat history")
     const mL = B.moni;
     mL.innerHTML = F.header + '<main class="main main-content"><div class="auth-page"><div class="auth-card">' +
-      '<img src="assets/brand/moni-logo.svg" alt="Moní" class="auth-logo light-logo">' +
-      '<div class="auth-title">Welcome back</div><div class="auth-sub">Log in to see your chat history</div>' +
-      '<div class="auth-field"><label>Email</label><input class="auth-input" type="text" placeholder="you@example.com"></div>' +
-      '<div class="auth-field"><label>Password</label><input class="auth-input" type="text" placeholder="Your password"></div>' +
-      '<button class="auth-submit" type="button">Log in</button>' +
-      '<div class="auth-foot"><a>Forgot password?</a><br>Don\'t have an account? <a>Sign up</a></div></div></div></main>';
+      '<img src="' + ASSETS + 'assets/brand/moni-logo.svg" alt="Moní" class="auth-logo light-logo">' +
+      '<div class="auth-title">' + T.login.title + '</div><div class="auth-sub">' + T.login.sub + '</div>' +
+      '<div class="auth-field"><label>' + T.login.email + '</label><input class="auth-input" type="text" placeholder="you@example.com"></div>' +
+      '<div class="auth-field"><label>' + T.login.pw + '</label><input class="auth-input" type="text" placeholder="' + T.login.pwPh + '"></div>' +
+      '<button class="auth-submit" type="button">' + T.login.submit + '</button>' +
+      '<div class="auth-foot">' + T.login.foot + '</div></div></div></main>';
     // page 2 — home, logged in: account in the header, chat history in the sidebar
     const mH = el('div', 'moni', null, $('.bw-view', B.el));
     mH.setAttribute('data-theme', 'light');
@@ -811,16 +803,16 @@
         '<button class="sb-act">' + IC.pin + '</button><button class="sb-act">' + IC.edit + '</button><button class="sb-act danger">' + IC.del + '</button></span></div>';
     }).join('');
     const chatA = '<div class="msg msg-user"><div class="msg-content">' + D.draftPrompt + '</div></div>' +
-      '<div class="msg msg-ai"><div class="msg-content"><p>Drafted a contract (services). Review it and fill in the «[specify: …]» marks.</p></div></div>';
+      '<div class="msg msg-ai"><div class="msg-content"><p>' + T.draft.reply + '</p></div></div>';
     const chatB = '<div class="msg msg-user"><div class="msg-content calc-q">' + CALC_IC + ' ' + D.calc.question + '</div></div>' +
-      '<div class="msg msg-ai calc-ans"><div class="calc-result-card" style="opacity:1"><div class="calc-result-header">' + CALC_IC + ' Income Tax</div>' +
+      '<div class="msg msg-ai calc-ans"><div class="calc-result-card" style="opacity:1"><div class="calc-result-header">' + CALC_IC + ' ' + T.calc.header + '</div>' +
       '<div class="calc-result-body"><div class="msg-content">' + D.calc.result + '</div></div></div></div>';
     mH.innerHTML = F.header.replace(/<a class="acct-login-btn"[^>]*>[^<]*<\/a>/, acct) +
       '<div class="chat-layer"><div class="chat-scroll"><div class="chat-area chat-a" style="display:flex">' + chatA + '</div>' +
       '<div class="chat-area chat-b" style="display:flex;position:absolute;left:0;right:0;top:0">' + chatB + '</div></div></div>' +
       '<div class="dock">' + F.modeBarChat + F.inputWrapChat + F.uploadNoticeChat + F.footerBottom + '</div>' +
-      '<div class="sb-overlay"></div><aside class="sidebar"><div class="sb-head"><span class="sb-head-title">Chats</span><button class="sb-collapse">' + IC.collapse + '</button></div>' +
-      '<button class="sb-new">' + IC.new + ' New chat</button><div class="sb-list">' + items + '</div></aside>';
+      '<div class="sb-overlay"></div><aside class="sidebar"><div class="sb-head"><span class="sb-head-title">' + T.chats + '</span><button class="sb-collapse">' + IC.collapse + '</button></div>' +
+      '<button class="sb-new">' + IC.new + ' ' + T.newChat + '</button><div class="sb-list">' + items + '</div></aside>';
     fakeInput($('.dock .input-form', mH));
     const sidebar = $('.sidebar', mH), overlay = $('.sb-overlay', mH), sbItems = $$('.sb-item', mH), chatAEl = $('.chat-a', mH), chatBEl = $('.chat-b', mH);
     const emailIn = $$('.auth-input', mL)[0], pwIn = $$('.auth-input', mL)[1], submit = $('.auth-submit', mL);
@@ -859,7 +851,7 @@
     const card = $('.auth-card', mL), urlDim = $('.bw-url .dim', B.el);
     tl.to(card, { opacity: 0, y: -24, duration: 0.25, ease: 'power2.in' }, 72.45);                      // the login card leaves first
     tl.fromTo(mH, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' }, 72.68);
-    toggleAt(72.68, function () { urlDim.textContent = '/trial/en/'; }, function () { urlDim.textContent = '/trial/en/login'; });
+    toggleAt(72.68, function () { urlDim.textContent = T.path; }, function () { urlDim.textContent = T.loginPath; });
     S('ui-success-soft', 72.7, 0.45);
     // whole page in view (the account sits top-right), caption on the left
     camS.to(tl, 72.6, 1.1, { fx: 340, fy: 360, s: 1.0 }, 'power3.inOut');
@@ -883,8 +875,7 @@
     cur.move(tl, 75.6, 0.6, ix + 260, 1000, 'power2.in');
 
     // ---- caption ----
-    const c1 = callout(over, 110, 330, 'Your account', 'Every chat, <em>saved.</em>',
-      '<div class="lede">Log in on any device and your whole history is there.</div>');
+    const c1 = callout(over, 110, 330, T.acct.kick, T.acct.head, '<div class="lede">' + T.acct.lede + '</div>');
     c1.style.width = '470px'; $('.display', c1).style.fontSize = '64px'; $('.lede', c1).style.maxWidth = '440px';
     calloutIn(c1, 73.15);
     S('ui-popup-dry', 73.2, 0.3);
@@ -970,16 +961,27 @@
     buildS7();
     buildS8();
     FX.flushInit(tl);
-    const cyr = [], tw = document.createTreeWalker($('#root'), NodeFilter.SHOW_TEXT, null);
-    while (tw.nextNode()) { if (/[\u0400-\u04FF]/.test(tw.currentNode.nodeValue)) cyr.push(tw.currentNode.nodeValue.trim().slice(0, 80)); }
-    window.__CYRILLIC = cyr;
-    if (cyr.length) console.warn('Cyrillic text in the film:', cyr);
+    // language guard: the English film shows no Cyrillic; the Tajik film no Latin words beyond brand names and codes
+    const foreign = [], tw = document.createTreeWalker($('#root'), NodeFilter.SHOW_TEXT, null);
+    while (tw.nextNode()) {
+      const v = tw.currentNode.nodeValue;
+      if (D.lang === 'en' ? /[\u0400-\u04FF]/.test(v) : /[A-Za-z]/.test(v.replace(D.latinOk, '')) || D.russianRe.test(v)) foreign.push(v.trim().slice(0, 80));
+    }
+    window[D.lang === 'en' ? '__CYRILLIC' : '__LATIN'] = foreign;
+    if (foreign.length) console.warn('Off-language text in the film:', foreign);
+    // the clips in the HTML must sit where the holds put their scenes
+    [['s1', 0, 8.2], ['s2', 8, 12.1], ['s3', 11.5, 26.2], ['s4', 26, 34.2], ['s5', 34, 52.2], ['sC', 52, 64.2],
+      ['s6', 64, 70.2], ['sA', 70, 78.2], ['s7', 78, 86.2], ['s8', 86, 96]].forEach(function (c) {
+      const e = document.getElementById(c[0]), a = +e.dataset.start, b = a + +e.dataset.duration;
+      if (Math.abs(a - W(c[1])) > 1e-3 || Math.abs(b - W(c[2])) > 1e-3) console.warn('clip timing', c[0], a, b, 'expected', W(c[1]), W(c[2]));
+    });
     tl.seek(0);
     window.__FILM_CUES = FX.cues.slice().sort(function (a, b) { return a.t - b.t; });
-    return { timeline: tl };   // wrapped: a GSAP timeline is a thenable and would stall the promise
+    window.__FILM_DURATION = W(96);
+    return { timeline: TL };   // wrapped: a GSAP timeline is a thenable and would stall the promise
   }
 
-  const faces = ['400 16px "General Sans"', '500 16px "General Sans"', '600 16px "General Sans"', '400 16px Nunito', '600 16px Nunito', '700 16px Nunito', '800 16px Nunito', 'italic 400 16px Nunito',
+  const faces = ['400 16px "General Sans"', '500 16px "General Sans"', '600 16px "General Sans"', '400 16px Geologica', '500 16px Geologica', '600 16px Geologica', '400 16px Nunito', '600 16px Nunito', '700 16px Nunito', '800 16px Nunito', 'italic 400 16px Nunito',
     '400 40px "Roboto Serif"', '500 40px "Roboto Serif"', 'italic 400 40px "Roboto Serif"', '400 16px Tinos', '700 16px Tinos'];
   /* index.html registers the timeline once this resolves (window.__timelines["main"]). */
   window.__buildFilm = function () {
