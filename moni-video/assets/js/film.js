@@ -370,14 +370,15 @@
     camS.to(tl, 26.0, 0.75, { fx: 960, fy: 540, s: 1 }, 'power4.out');                              // arrive from the right
     FX.whipBlur(tl, cam, 26.0, 0.75, 760, 'out');
     FX.waterfall(tl, FX.words($('#langHead')), 26.15, { stagger: 0.06, y: 40, blur: 8, dur: 0.75 });
-    // the 18 languages cascade in, then a soft gold wave runs through them
-    tl.fromTo(chips, { opacity: 0, y: 34, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out', stagger: 0.045 }, 26.5);
+    // Tajik, English, Russian cascade in (then "any other — just ask"), and a soft gold wave runs through them
+    tl.fromTo(chips, { opacity: 0, y: 34, filter: 'blur(6px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.7, ease: 'power3.out', stagger: 0.14 }, 26.5);
     chips.slice(0, -1).forEach(function (c, i) {
-      const t = 27.75 + i * 0.055;
+      const t = 27.75 + i * 0.16;
       tl.to(c, { backgroundColor: 'rgba(232,192,120,.42)', borderColor: 'rgba(193,141,72,.7)', duration: 0.3, ease: 'power2.out' }, t);
       tl.to(c, { backgroundColor: 'rgba(255,255,255,1)', borderColor: 'rgba(224,221,214,1)', duration: 0.6, ease: 'power2.inOut' }, t + 0.3);
     });
-    tl.to(chips[0], { backgroundColor: '#c18d48', borderColor: '#c18d48', color: '#1a1a1f', duration: 0.45, ease: 'power2.out' }, 29.3);   // the one being spoken
+    const spoken = chips[Math.max(0, D.languages.indexOf(D.spoken))];
+    tl.to(spoken, { backgroundColor: '#c18d48', borderColor: '#c18d48', color: '#1a1a1f', duration: 0.45, ease: 'power2.out' }, 29.3);   // the one being spoken
     S('shimmer-sparkle-sweep', 27.75, 0.3);
     // a question asked by voice: waveform → transcript → answer
     tl.fromTo(card, { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out' }, 27.0);

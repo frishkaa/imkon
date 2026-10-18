@@ -37,9 +37,9 @@ window.FILM = {
     question: 'Can an employer dismiss an employee during the probation period under the Labor Code of Tajikistan?'
   },
 
-  /* a sample of the languages Moní answers in (not the full list — the film names no total) */
-  languages: ['English', 'Russian', 'Tajik', 'Chinese', 'Kazakh', 'Uzbek', 'Arabic', 'Turkish', 'Italian',
-    'German', 'French', 'Spanish', 'Japanese', 'Hindi', 'Urdu', 'Persian', 'Korean', 'Kyrgyz'],
+  /* the three languages the film names; a dashed chip says any other works too (the film names no total) */
+  languages: ['Tajik', 'English', 'Russian'],
+  spoken: 'English',   // the voice question below is asked in English
   /* Moní's answer to the limitation-period question (captured in Russian and Tajik; shown in English). */
   voice: {
     q: 'What is the general limitation period under the Civil Code?',
@@ -159,7 +159,7 @@ FILM.str = {
   sourcesRe: /Sources/,
   qa: { kick: 'Legal Q&amp;A', head: 'Answers that cite <em>the law.</em>', lede: 'Every claim points to the exact article — here, the Labour Code.', chip: 'Labour Code · Art. 28' },
   src: { kick: 'Sources', head: 'Built on <em>current</em> legislation.', lede: 'Labour Code of the Republic of Tajikistan, as amended 17.06.2026.' },
-  more: 'and many more', voiceTag: 'Asked by voice',
+  more: 'Other languages too — just ask', voiceTag: 'Asked by voice',
   review: { title: 'Document review: Commercial Lease Agreement', risk: 'High risk', type: 'Lease',
     summary: '5 clauses conflict with the Civil Code of the Republic of Tajikistan or shift risk onto the tenant.',
     verified: 'verified', fix: 'Apply fixes and download', track: 'track changes (see what was edited)', found: 'issues found',

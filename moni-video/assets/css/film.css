@@ -210,9 +210,10 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .gold-wipe { position: absolute; top: -10%; bottom: -10%; width: 70%; left: 0; background: linear-gradient(90deg, rgba(232,192,120,0), rgba(232,192,120,.85) 45%, #c18d48 50%, rgba(232,192,120,.85) 55%, rgba(232,192,120,0)); z-index: 80; opacity: 0; }
 
 /* ---------- S4 · 18 languages ---------- */
-.lang-chips { position: absolute; left: 150px; top: 386px; width: 860px; display: flex; flex-wrap: wrap; gap: 16px 14px; }
-.lang-chip { display: inline-flex; align-items: center; padding: 13px 26px; border-radius: 999px; background: #fff; border: 1px solid #e0ddd6;
-  font-family: var(--film); font-weight: 600; font-size: 26px; color: var(--ink); box-shadow: 0 10px 26px -18px rgba(60,40,10,.4); }
+/* three named languages, stacked large, then the dashed "any other" chip */
+.lang-chips { position: absolute; left: 150px; top: 392px; width: 860px; display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
+.lang-chip { display: inline-flex; align-items: center; padding: 18px 44px; border-radius: 999px; background: #fff; border: 1px solid #e0ddd6;
+  font-family: var(--film); font-weight: 600; font-size: 46px; letter-spacing: -.02em; color: var(--ink); box-shadow: 0 14px 30px -20px rgba(60,40,10,.45); }
 .lang-card.voice-card { left: 1080px; width: 690px; min-height: 0; padding-bottom: 34px; }
 .lang-tag .mic-b { background: var(--gold); width: 44px; }
 .lang-tag .mic-b svg { width: 17px; height: 17px; }
@@ -241,7 +242,7 @@ body { font-family: var(--sans); color: var(--ink); -webkit-font-smoothing: anti
 .moni .sb-item.film-hover { background: var(--bg-tertiary); }
 .moni .sb-item.film-hover .sb-actions { opacity: 1; }
 .moni .chat-scroll .chat-area.chat-b { margin: 0 auto; }
-.lang-chip.more { background: transparent; border-style: dashed; color: var(--ink-2); box-shadow: none; }
+.lang-chip.more { background: transparent; border-style: dashed; color: var(--ink-2); box-shadow: none; font-size: 30px; padding: 16px 34px; margin-top: 8px; letter-spacing: 0; }
 /* the S2 logo flies over the S3 page as it fades up (S2 ends at 12.1 s) */
 #s2 { z-index: 3; }
 

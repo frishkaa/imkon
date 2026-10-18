@@ -47,7 +47,7 @@ captions, answers or findings are on screen, so a TV audience can read them:
 | 0–8 | Hook | The names of Tajik codes and articles drift in 3D. "Laws are written for everyone. But they read as if written for *no one.*" (from Moní's About page) |
 | 8–12 | Logo | The vector Moní logo; the gold swirl draws itself; "Tajik law, made simple with AI." The logo then flies into the site header |
 | 12–30 | Ask | tajiklaw.ai assembles around the logo. The cursor types the probation question, "Moní is thinking", then the real answer streams in with *Labour Code, Art. 28* highlighted and its sources listed |
-| 30–40 | Your language | "Ask in your language." A sample of the languages Moní answers in cascades in ("and many more"; the film gives no total). A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
+| 30–40 | Your language | "Ask in your language." Three large chips (Tajik, English, Russian), then "Other languages too — just ask"; the film gives no total. A question asked by voice is transcribed and answered (limitation period: three years, Civil Code Art. 214) |
 | 40–66 | Review | A lease is uploaded and sent. On the music's return (46 s) a scan line finds 5 problem clauses, each wired to Moní's review card. "Apply fixes" writes tracked changes into the document |
 | 66–80 | Calculator | Calculator mode opens, and the 17 calculation types scroll past. Income Tax, 8,000 TJS, then Calculate. Moní's step-by-step result and breakdown table follow; net pay **6,917.92 TJS** counts up (Tax Code Arts. 183, 191, 332) |
 | 80–86 | Drafting | A short beat: the drafted services agreement opens in the document viewer, with its `[specify: …]` gaps flagged |
@@ -109,9 +109,9 @@ Everything Moní "says" in the film is Moní's own output, captured on tajiklaw.
   Code of Tajikistan?"*.
   - It is trimmed to fit: sections 3–6 are omitted.
   - Citations are shown in English.
-- **Languages.** The film names no total, per the Moní team. The chips are a sample: English, Russian, Tajik,
-  Chinese, Kazakh, Uzbek, Arabic, Turkish, Italian, German, French, Spanish, Japanese, Hindi, Urdu, Persian,
-  Korean and Kyrgyz, followed by "and many more".
+- **Languages.** The film names three languages, Tajik, English and Russian, and a dashed chip: "Other languages
+  too — just ask" ("Забонҳои дигар ҳам — бипурсед"). It gives no total, per the Moní team. The chip that lights
+  up is the language of the voice question: English in the English film, Tajik in the Tajik one.
   - The voice answer (three years, Civil Code Art. 214) is Moní's answer to the same question asked in
     Russian and in Tajik, shown in English.
 - **Legislation.** The film says "thousands of Tajik legal acts", per the Moní team, rather than a figure.
