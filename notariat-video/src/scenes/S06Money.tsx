@@ -90,7 +90,7 @@ const Diagram: React.FC = () => {
         </div>
       </div>
       {RECIP.map((r, i) => {
-        const at = 70 + i * 26;
+        const at = 60 + i * 20;
         const got = ease(f, at + 20, at + 36);
         return (
           <div
@@ -124,7 +124,7 @@ const Diagram: React.FC = () => {
         ))}
         {RECIP.map((r, i) => {
           const p = branch(RY0 + i * RSTEP + RH / 2);
-          const at = 70 + i * 26;
+          const at = 60 + i * 20;
           return [0, 1].map((k) => <Mover key={`${i}-${k}`} path={p} t={interpolate(f, [at + k * 6, at + 24 + k * 6], [0, 1], clamp)} />);
         })}
       </svg>
@@ -148,10 +148,10 @@ export const S06Money: React.FC = () => {
         <Diagram />
       </Sequence>
       <SceneTag n={5} title="Движение денег по одной сделке" />
-      <Caption from={8} to={T0 + 150}>
+      <Caption from={8} to={T0 + 130}>
         Гражданин платит один раз — платформа сама распределяет суммы
       </Caption>
-      <Caption from={T0 + 155} to={S06_LEN} width={1640}>
+      <Caption from={T0 + 135} to={S06_LEN} width={1640}>
         Нотариус не держит бюджетные деньги. Каждая строка — в квитанции и в налоговой
       </Caption>
     </AbsoluteFill>

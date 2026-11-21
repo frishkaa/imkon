@@ -46,6 +46,6 @@ export const Main: React.FC = () => (
         return items;
       })}
     </TransitionSeries>
-    <Audio src={staticFile('music.wav')} volume={(f) => Math.min(1, f / 20) * Math.min(1, (TOTAL - f) / 60) * 0.85} />
+    <Audio src={staticFile('music.mp3')} volume={(f) => Math.min(1, f / 20) * Math.min(1, (TOTAL - f) / 60) * 0.85} />
   </AbsoluteFill>
 );

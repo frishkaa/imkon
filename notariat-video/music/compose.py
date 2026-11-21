@@ -4,7 +4,7 @@
 бас, лёгкая перкуссия. Без сторонних библиотек.
 
     python3 music/compose.py 100          # длительность ролика, сек
-    → music/theme.mid, public/music.wav
+    → music/theme.mid, public/music.mp3
 """
 import os
 import random
@@ -169,12 +169,12 @@ open(mid_path, 'wb').write(mid)
 sf = next(p for p in ['/usr/share/sounds/sf2/FluidR3_GM.sf2', '/usr/share/sounds/sf2/default-GM.sf2'] if os.path.exists(p))
 raw = os.path.join(HERE, 'theme_raw.wav')
 subprocess.run(['fluidsynth', '-ni', '-g', '0.6', '-r', '44100', '-F', raw, sf, mid_path], check=True, capture_output=True)
-out = os.path.join(ROOT, 'public', 'music.wav')
+out = os.path.join(ROOT, 'public', 'music.mp3')
 subprocess.run(
     [
         'ffmpeg', '-nostdin', '-loglevel', 'error', '-y', '-i', raw,
         '-af', f'atrim=0:{DURATION},afade=t=in:d=1.5,afade=t=out:st={DURATION - 5}:d=5,loudnorm=I=-18:TP=-2:LRA=11',
-        '-ar', '44100', out,
+        '-ar', '44100', '-c:a', 'libmp3lame', '-b:a', '192k', out,
     ],
     check=True,
 )

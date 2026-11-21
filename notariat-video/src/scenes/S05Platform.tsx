@@ -54,9 +54,9 @@ const Ui: React.FC = () => {
   const f = useCurrentFrame();
   const {fps} = useVideoConfig();
   const win = soft(f, fps, 0);
-  const scanY = interpolate(f, [120, 170], [0, 100], clamp);
-  const found = soft(f, fps, 168);
-  const unlock = ease(f, 250, 262);
+  const scanY = interpolate(f, [100, 140], [0, 100], clamp);
+  const found = soft(f, fps, 138);
+  const unlock = ease(f, 205, 215);
   return (
     <div
       style={{
@@ -125,7 +125,7 @@ const Ui: React.FC = () => {
                   <div style={{height: 10, marginTop: 8, background: '#DCE2EC', width: `${55 + (i % 3) * 12}%`}} />
                 </div>
               ))}
-              {f > 120 && f < 172 && <div style={{position: 'absolute', left: 0, right: 0, top: `${scanY}%`, height: 3, background: C.blue, boxShadow: `0 0 18px ${C.blue}`}} />}
+              {f > 100 && f < 142 && <div style={{position: 'absolute', left: 0, right: 0, top: `${scanY}%`, height: 3, background: C.blue, boxShadow: `0 0 18px ${C.blue}`}} />}
               <div style={{position: 'absolute', inset: 14, background: '#fff', padding: '16px 20px', border: `1px solid ${C.line}`, boxShadow: '0 10px 30px rgba(15,27,51,0.12)', opacity: found}}>
                 <div style={{fontSize: 22, fontWeight: 800, color: C.red}}>Найдены долги продавца</div>
                 {DEAL.debts.map((d) => (
@@ -141,7 +141,7 @@ const Ui: React.FC = () => {
         </div>
         <div style={{display: 'flex', alignItems: 'center', gap: 12, marginTop: 14}}>
           {PAYS.map((p, i) => {
-            const at = 190 + i * 12;
+            const at = 150 + i * 10;
             const ok = interpolate(f, [at, at + 12], [0, 1], clamp);
             return (
               <div key={p.label} style={{flex: 1, display: 'flex', alignItems: 'center', gap: 10, padding: '12px', background: ok > 0.5 ? C.greenSoft : C.paper2, border: `1px solid ${ok > 0.5 ? '#A7D3BC' : 'transparent'}`}}>
@@ -184,10 +184,10 @@ export const S05Platform: React.FC = () => {
         <Ui />
       </Sequence>
       <SceneTag n={4} title="Платформа «Нотариат»" />
-      <Caption from={8} to={T0 + 185} width={1700} bottom={52}>
+      <Caption from={8} to={T0 + 145} width={1700} bottom={52}>
         Платформа сама считает пошлину и налог, сверяет цену и проверяет долги
       </Caption>
-      <Caption from={T0 + 190} to={S05_LEN} bottom={52}>
+      <Caption from={T0 + 150} to={S05_LEN} bottom={52}>
         Сделка оформляется только после всех платежей
       </Caption>
     </AbsoluteFill>
