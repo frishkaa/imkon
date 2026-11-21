@@ -1,0 +1,22 @@
+# name  mixkit_id  start_sec  duration_sec  speed
+intro_mountain 51689 1.0 7.0 1
+build_timelapse 9686 0 21 3
+build_cranes 31450 1.5 4.5 1
+buyers_hardhats 13126 0.3 4.5 1
+meet_developer 23243 2.5 4.0 1
+handshake 15773 0.5 4.0 1
+papers_stack 45923 0.5 6.0 1
+paperwork 46504 3.0 6.0 1
+notary_meeting 23740 2.0 9.5 1
+docs_check 46977 4.0 4.0 1
+laptop 16108 0.8 3.5 1
+payment 47413 0.8 3.5 1
+crowd 4169 0 12 1
+stamp 39516 8.5 4.0 1
+signature 38492 1.0 3.0 1
+folder 12946 1.2 3.5 1
+keys_hardhats 13126 14.3 4.0 1
+keys_show 36136 1.0 3.5 1
+night_city 49845 0 11 1
+mountain_bg 51689 9 10 1
+family_sunset 6213 4 8.5 1
